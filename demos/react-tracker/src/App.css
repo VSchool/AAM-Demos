@@ -1,0 +1,444 @@
+/* ============================================
+   Project Tracker — Dark Theme
+   Colors: Coal/Charcoal/Beige/Amber palette
+   ============================================ */
+
+/* --- Reset & Base --- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: #0f0d0e;
+  color: #f9f4da;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --- Header --- */
+.header {
+  background: #1a1718;
+  border-bottom: 1px solid rgba(249, 244, 218, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fcba28;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  font-size: 1rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-link {
+  font-size: 0.9rem;
+  color: #f9f4da;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+.nav-link-accent {
+  background: #fcba28;
+  color: #0f0d0e;
+  opacity: 1;
+  font-weight: 600;
+}
+
+.nav-link-accent:hover {
+  background: #e5a820;
+}
+
+/* --- Main Content --- */
+.main-content {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* --- Project List --- */
+.list-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.list-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.project-count {
+  font-size: 0.85rem;
+  color: rgba(249, 244, 218, 0.5);
+}
+
+/* --- Search Bar --- */
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #231f20;
+  border: 1px solid rgba(249, 244, 218, 0.1);
+  border-radius: 0.75rem;
+  color: #f9f4da;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input::placeholder {
+  color: rgba(249, 244, 218, 0.35);
+}
+
+.search-input:focus {
+  border-color: #fcba28;
+}
+
+/* --- Status Filter Pills --- */
+.status-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.status-pill {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(249, 244, 218, 0.15);
+  background: transparent;
+  color: rgba(249, 244, 218, 0.6);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.status-pill:hover {
+  border-color: rgba(249, 244, 218, 0.3);
+  color: #f9f4da;
+}
+
+.status-pill.active {
+  background: #fcba28;
+  color: #0f0d0e;
+  border-color: #fcba28;
+  font-weight: 600;
+}
+
+/* --- Cards Grid --- */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  background: #231f20;
+  border: 1px solid rgba(249, 244, 218, 0.06);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: rgba(252, 186, 40, 0.3);
+  transform: translateY(-2px);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: rgba(249, 244, 218, 0.6);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- Badges --- */
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge-active {
+  background: rgba(11, 169, 91, 0.15);
+  color: #0ba95b;
+}
+
+.badge-complete {
+  background: rgba(18, 181, 229, 0.15);
+  color: #12b5e5;
+}
+
+.badge-planning {
+  background: rgba(123, 94, 167, 0.15);
+  color: #7b5ea7;
+}
+
+.badge-in-progress {
+  background: rgba(252, 186, 40, 0.15);
+  color: #fcba28;
+}
+
+/* --- Tags --- */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+  background: rgba(249, 244, 218, 0.06);
+  color: rgba(249, 244, 218, 0.55);
+}
+
+/* --- Empty State --- */
+.empty-state {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(249, 244, 218, 0.4);
+  font-size: 0.95rem;
+}
+
+/* --- Project Detail --- */
+.project-detail {
+  max-width: 640px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: #fcba28;
+  margin-bottom: 1.5rem;
+  transition: opacity 0.2s;
+}
+
+.back-link:hover {
+  opacity: 0.8;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.detail-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.detail-date {
+  font-size: 0.85rem;
+  color: rgba(249, 244, 218, 0.4);
+  margin-bottom: 2rem;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.detail-section h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(249, 244, 218, 0.45);
+  margin-bottom: 0.5rem;
+}
+
+.detail-section p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(249, 244, 218, 0.8);
+}
+
+.detail-not-found {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.detail-not-found h2 {
+  margin-bottom: 1rem;
+}
+
+/* --- Form --- */
+.form-container {
+  max-width: 560px;
+}
+
+.form-container h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(249, 244, 218, 0.55);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 0.75rem 1rem;
+  background: #231f20;
+  border: 1px solid rgba(249, 244, 218, 0.1);
+  border-radius: 0.75rem;
+  color: #f9f4da;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(249, 244, 218, 0.3);
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #fcba28;
+}
+
+.form-group select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f9f4da' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  background: #fcba28;
+  color: #0f0d0e;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start;
+}
+
+.submit-btn:hover {
+  background: #e5a820;
+}
+
+/* --- Responsive --- */
+@media (max-width: 600px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  .list-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAM Demos — Applied AI Mastery</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0f0d0e; color: #f9f4da; font-family: 'Outfit', system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 3rem 1rem; }
+    h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 0.5rem; }
+    .subtitle { color: rgba(249,244,218,0.5); font-size: 1rem; margin-bottom: 3rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; max-width: 960px; width: 100%; }
+    .card { background: linear-gradient(180deg, rgba(35,31,32,0.98), rgba(27,25,24,0.98)); border: 1px solid rgba(249,244,218,0.08); border-radius: 1.25rem; padding: 2rem; text-decoration: none; color: #f9f4da; transition: transform 0.16s ease, border-color 0.16s ease; }
+    .card:hover { transform: translateY(-2px); border-color: rgba(252,186,40,0.3); }
+    .card h2 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .card .badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 1rem; }
+    .badge-react { background: rgba(18,181,229,0.15); color: #12b5e5; }
+    .badge-vue { background: rgba(11,169,91,0.15); color: #0ba95b; }
+    .badge-next { background: rgba(249,244,218,0.1); color: #f9f4da; }
+    .card p { color: rgba(249,244,218,0.6); font-size: 0.9rem; line-height: 1.5; }
+    .footer { margin-top: 3rem; color: rgba(249,244,218,0.3); font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <h1>AAM Demos</h1>
+  <p class="subtitle">Applied AI Mastery — Curriculum Demo Apps</p>
+
+  <div class="grid">
+    <a href="react-tracker/" class="card">
+      <span class="badge badge-react">React</span>
+      <h2>Project Tracker</h2>
+      <p>React + Vite + React Router. useState, props drilling, .map() rendering, controlled forms.</p>
+    </a>
+
+    <a href="vue-tracker/" class="card">
+      <span class="badge badge-vue">Vue</span>
+      <h2>Project Tracker</h2>
+      <p>Vue 3 + Vite + Vue Router. ref(), v-model, v-for, defineProps, single-file components.</p>
+    </a>
+
+    <a href="nextjs-tracker/" class="card">
+      <span class="badge badge-next">Next.js</span>
+      <h2>Project Tracker</h2>
+      <p>Next.js App Router. File-based routing, server components, "use client", layout.js.</p>
+    </a>
+  </div>
+
+  <p class="footer">Same app, same data, three frameworks.</p>
+</body>
+</html>
