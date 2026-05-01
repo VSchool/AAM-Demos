@@ -14,35 +14,35 @@
 }
 
 :root {
-  /* Palette */
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #12121a;
-  --bg-card: #1a1a26;
-  --bg-card-hover: #22222e;
-  --bg-input: #14141e;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-medium: rgba(255, 255, 255, 0.1);
-  --border-accent: rgba(99, 140, 255, 0.3);
+  /* Palette — deep space, warm highlights */
+  --bg-primary: #0c0c14;
+  --bg-secondary: #0c0c14;
+  --bg-card: #161622;
+  --bg-card-hover: #1e1e2c;
+  --bg-input: #12121c;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-medium: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(120, 160, 255, 0.2);
 
-  --text-primary: #e8e8f0;
-  --text-secondary: #9898a8;
-  --text-muted: #68687a;
-  --text-accent: #638cff;
+  --text-primary: #e4e4ee;
+  --text-secondary: #8e8ea2;
+  --text-muted: #5c5c72;
+  --text-accent: #78a0ff;
 
-  --accent-blue: #638cff;
-  --accent-blue-dim: rgba(99, 140, 255, 0.15);
-  --accent-purple: #9b6dff;
-  --accent-purple-dim: rgba(155, 109, 255, 0.15);
-  --accent-teal: #4dd4ac;
-  --accent-teal-dim: rgba(77, 212, 172, 0.12);
-  --accent-amber: #f0b429;
-  --accent-amber-dim: rgba(240, 180, 41, 0.12);
-  --accent-red: #f06060;
-  --accent-red-dim: rgba(240, 96, 96, 0.12);
+  --accent-blue: #78a0ff;
+  --accent-blue-dim: rgba(120, 160, 255, 0.1);
+  --accent-purple: #a07cff;
+  --accent-purple-dim: rgba(160, 124, 255, 0.1);
+  --accent-teal: #50d0a8;
+  --accent-teal-dim: rgba(80, 208, 168, 0.08);
+  --accent-amber: #e8a820;
+  --accent-amber-dim: rgba(232, 168, 32, 0.1);
+  --accent-red: #e06060;
+  --accent-red-dim: rgba(224, 96, 96, 0.08);
 
-  --success: #4dd4ac;
-  --warning: #f0b429;
-  --error: #f06060;
+  --success: #50d0a8;
+  --warning: #e8a820;
+  --error: #e06060;
 
   /* Typography */
   --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
@@ -197,14 +197,14 @@ input:focus-visible {
 
 /* --- Header --- */
 .site-header {
-  background: var(--bg-secondary);
+  background: rgba(12, 12, 20, 0.85);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-4) var(--space-5);
   position: sticky;
   top: 0;
   z-index: 100;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
 }
 
 .header-inner {
@@ -251,29 +251,33 @@ input:focus-visible {
 .nav-link {
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   text-decoration: none;
   padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--font-body);
   transition: color var(--transition-fast), background var(--transition-fast);
 }
 
-.nav-link:hover,
-.nav-link.active {
+.nav-link:hover {
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .nav-link.active {
-  color: var(--accent-blue);
+  color: var(--text-primary);
+  background: rgba(120, 160, 255, 0.1);
 }
 
 .nav-favorites-count {
-  background: var(--accent-blue);
-  color: var(--bg-primary);
+  background: rgba(120, 160, 255, 0.15);
+  color: var(--accent-blue);
   font-size: 10px;
   font-weight: 700;
-  padding: 1px 6px;
+  padding: 2px 7px;
   border-radius: var(--radius-pill);
   margin-left: 4px;
 }
@@ -823,7 +827,7 @@ input:focus-visible {
 .view-tabs {
   display: flex;
   gap: 2px;
-  background: var(--bg-secondary);
+  background: rgba(22, 22, 34, 0.6);
   border-radius: var(--radius-md);
   padding: 3px;
   width: fit-content;
@@ -835,7 +839,7 @@ input:focus-visible {
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   background: transparent;
   border: none;
   padding: var(--space-2) var(--space-3);
@@ -849,8 +853,9 @@ input:focus-visible {
 }
 
 .view-tab.active {
-  background: var(--accent-blue);
-  color: var(--bg-primary);
+  background: rgba(120, 160, 255, 0.12);
+  color: var(--accent-blue);
+  font-weight: 600;
 }
 
 .view-panel {
