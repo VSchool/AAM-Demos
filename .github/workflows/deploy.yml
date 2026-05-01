@@ -50,6 +50,9 @@ jobs:
           cp -r single-page-demo _site/single-page-demo
           cp -r multi-page-demo _site/multi-page-demo
           cp -r multi-page-full-demo _site/multi-page-full-demo
+          # W4 static demos (no build needed)
+          cp -r demos/w4-polish-comparison _site/w4-polish-comparison
+          cp -r demos/w4-example-capstone _site/w4-example-capstone
 
       - uses: actions/upload-pages-artifact@v3
 
