@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — Jordan Rivera</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">JR</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button class="mobile-menu-btn" aria-label="Toggle menu">&#9776;</button>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h2>Contact</h2>
+            <p class="subtitle">Let's build something together</p>
+        </div>
+
+        <div class="contact-layout">
+            <div class="contact-info">
+                <h3>Get in touch</h3>
+                <p>I'm currently available for freelance work and open to full-time roles. If you have a project you'd like to discuss, or just want to say hi, drop me a message.</p>
+
+                <ul class="contact-methods">
+                    <li>
+                        <div class="icon">&#9993;</div>
+                        <div class="detail">
+                            jordan@example.com
+                            <span>Usually responds within 24 hours</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon">&#127760;</div>
+                        <div class="detail">
+                            github.com/jordanrivera
+                            <span>Open source contributions</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="icon">&#128205;</div>
+                        <div class="detail">
+                            Austin, TX
+                            <span>Open to remote work worldwide</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <!-- Interactive: Form with real-time validation + char counter -->
+                <form class="contact-form" id="contact-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Name *</label>
+                            <input type="text" id="name" placeholder="Your name">
+                            <span class="error-msg">Name must be at least 2 characters</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" placeholder="you@example.com">
+                            <span class="error-msg">Please enter a valid email address</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <select id="subject">
+                            <option value="">Choose a topic...</option>
+                            <option value="freelance">Freelance Project</option>
+                            <option value="fulltime">Full-Time Opportunity</option>
+                            <option value="collab">Collaboration</option>
+                            <option value="other">Something Else</option>
+                        </select>
+                        <span class="error-msg">Please select a subject</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message *</label>
+                        <textarea id="message" placeholder="Tell me about your project or idea..."></textarea>
+                        <span class="error-msg">Message must be at least 10 characters</span>
+                        <div class="char-count" id="char-count">0 / 500 characters</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+                <div class="form-success" id="form-success">
+                    <h3>Message sent successfully!</h3>
+                    <p>Thanks for reaching out. I'll get back to you within 24 hours.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Jordan Rivera. Built with HTML, CSS, and vanilla JavaScript.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

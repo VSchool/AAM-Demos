@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Chen — Full-Stack Developer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">AC</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h1>Hi, I'm <span>Alex Chen</span></h1>
+            <div class="typing-container">
+                <span id="typed-text"></span><span class="cursor">|</span>
+            </div>
+            <p>Full-stack developer passionate about building clean, performant web applications that solve real problems.</p>
+            <a href="projects.html" class="cta-btn">View My Work</a>
+        </section>
+
+        <section style="padding-top: 4rem;">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Have a project in mind? Let's talk.</p>
+            <div class="contact-wrapper">
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" placeholder="Your name" required>
+                        <span class="error-msg" id="name-error">Please enter your name</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="you@example.com" required>
+                        <span class="error-msg" id="email-error">Please enter a valid email</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" placeholder="Tell me about your project..." required></textarea>
+                        <span class="error-msg" id="message-error">Please enter a message</span>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+                <div class="form-success" id="form-success">
+                    <h3>Message sent!</h3>
+                    <p>Thanks for reaching out. I'll get back to you within 24 hours.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Alex Chen. Built with HTML, CSS, and JavaScript.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

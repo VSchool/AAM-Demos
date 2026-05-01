@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About — Jordan Rivera</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">JR</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button class="mobile-menu-btn" aria-label="Toggle menu">&#9776;</button>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h2>About Me</h2>
+            <p class="subtitle">Developer, designer, and problem solver</p>
+        </div>
+
+        <div class="about-content">
+            <div class="about-bio">
+                <p>I'm a full-stack developer with 5+ years of experience building web applications that people actually want to use. I started my journey with HTML and CSS, fell in love with JavaScript, and now work across the entire stack.</p>
+                <p>My philosophy is simple: write code that's easy to read, easy to maintain, and solves real problems. I believe the best applications are the ones users don't have to think about — everything just works.</p>
+                <p>When I'm not at my desk, you'll find me rock climbing at the local gym, experimenting with sourdough recipes, or volunteering as a mentor at Austin's Code Academy meetup.</p>
+            </div>
+            <div class="stats-sidebar">
+                <div class="stat-card">
+                    <div class="number">5+</div>
+                    <div class="label">Years Coding</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">40+</div>
+                    <div class="label">Projects Built</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">15</div>
+                    <div class="label">Happy Clients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number">4</div>
+                    <div class="label">OSS Libraries</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive: Skill bars animate on scroll -->
+        <div class="skills-section">
+            <h2>Skills</h2>
+            <p class="subtitle">Technologies I work with daily</p>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h4>Frontend</h4>
+                    <div class="skill-name"><span>JavaScript / TypeScript</span><span>95%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 95%; background: var(--accent);"></div></div>
+                    <div class="skill-name"><span>React / Next.js</span><span>90%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 90%; background: var(--accent);"></div></div>
+                    <div class="skill-name"><span>CSS / Tailwind</span><span>88%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 88%; background: var(--accent);"></div></div>
+                </div>
+                <div class="skill-card">
+                    <h4>Backend</h4>
+                    <div class="skill-name"><span>Node.js / Express</span><span>90%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 90%; background: var(--info);"></div></div>
+                    <div class="skill-name"><span>Python / Django</span><span>75%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 75%; background: var(--info);"></div></div>
+                    <div class="skill-name"><span>PostgreSQL / MongoDB</span><span>85%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 85%; background: var(--info);"></div></div>
+                </div>
+                <div class="skill-card">
+                    <h4>DevOps & Tools</h4>
+                    <div class="skill-name"><span>Docker / Kubernetes</span><span>70%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 70%; background: var(--success);"></div></div>
+                    <div class="skill-name"><span>AWS / Vercel</span><span>80%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 80%; background: var(--success);"></div></div>
+                    <div class="skill-name"><span>Git / CI-CD</span><span>92%</span></div>
+                    <div class="skill-bar"><div class="fill" style="--level: 92%; background: var(--success);"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline">
+            <h2 style="padding-left: 1.5rem; margin-bottom: 2rem;">Experience</h2>
+            <div class="timeline-item">
+                <span class="year">2023 — Present</span>
+                <h4>Senior Developer @ TechFlow Labs</h4>
+                <p>Leading frontend architecture for a SaaS product serving 50k+ users.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="year">2021 — 2023</span>
+                <h4>Full-Stack Developer @ PixelCraft</h4>
+                <p>Built and shipped 12 client projects across e-commerce, fintech, and healthtech.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="year">2020 — 2021</span>
+                <h4>Junior Developer @ StartupBridge</h4>
+                <p>First role out of bootcamp. Built internal tools and contributed to the main product.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="year">2019 — 2020</span>
+                <h4>Coding Bootcamp Graduate</h4>
+                <p>Intensive full-stack web development program. Built 8 projects in 14 weeks.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Jordan Rivera. Built with HTML, CSS, and vanilla JavaScript.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

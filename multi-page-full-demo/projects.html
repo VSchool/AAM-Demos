@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects — Jordan Rivera</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <a href="index.html" class="logo">JR</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+        <button class="mobile-menu-btn" aria-label="Toggle menu">&#9776;</button>
+    </nav>
+
+    <main>
+        <div class="page-header">
+            <h2>Projects</h2>
+            <p class="subtitle">Things I've built that I'm proud of</p>
+        </div>
+
+        <!-- Interactive: Filter buttons -->
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="frontend">Frontend</button>
+            <button class="filter-btn" data-filter="fullstack">Full-Stack</button>
+            <button class="filter-btn" data-filter="tool">Tools</button>
+        </div>
+
+        <div class="projects-grid">
+            <div class="project-card" data-category="fullstack">
+                <div class="card-visual" style="background: linear-gradient(135deg, #12B5E5 0%, #0F0D0E 100%);">
+                    &#9729;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>WeatherDash Pro</h3>
+                    <p class="description">Real-time weather dashboard with 7-day forecasts, interactive radar maps, severe weather alerts, and location bookmarks.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">OpenWeather API</span>
+                        <span class="tech-tag">Mapbox</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="fullstack">
+                <div class="card-visual" style="background: linear-gradient(135deg, #0BA95B 0%, #0F0D0E 100%);">
+                    &#9733;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>TaskFlow</h3>
+                    <p class="description">Kanban project management with real-time collaboration, drag-and-drop, team assignments, and Slack integration.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Next.js</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">WebSockets</span>
+                        <span class="tech-tag">Prisma</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="frontend">
+                <div class="card-visual" style="background: linear-gradient(135deg, #F38BA3 0%, #0F0D0E 100%);">
+                    &#9835;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>BeatStream</h3>
+                    <p class="description">Music discovery app that creates personalized playlists based on listening history, mood selection, and genre preferences.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Vue.js</span>
+                        <span class="tech-tag">Spotify API</span>
+                        <span class="tech-tag">D3.js</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="tool">
+                <div class="card-visual" style="background: linear-gradient(135deg, #FCBA28 0%, #0F0D0E 100%);">
+                    &#9881;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>DevMetrics CLI</h3>
+                    <p class="description">Command-line tool that analyzes git repos and generates reports on code quality, commit patterns, and team velocity.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Click</span>
+                        <span class="tech-tag">Git API</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="frontend">
+                <div class="card-visual" style="background: linear-gradient(135deg, #12B5E5 30%, #F38BA3 100%);">
+                    &#127912;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>DesignSnap</h3>
+                    <p class="description">Browser extension that extracts color palettes, fonts, and spacing from any website. One-click export to Figma.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Chrome Extension</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Figma API</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="tool">
+                <div class="card-visual" style="background: linear-gradient(135deg, #0BA95B 30%, #FCBA28 100%);">
+                    &#128640;
+                    <div class="overlay">
+                        <a href="#" class="btn btn-primary" style="font-size: 0.85rem; padding: 0.5rem 1.5rem;">View Details</a>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h3>DeployBot</h3>
+                    <p class="description">GitHub Action that automates preview deployments, runs lighthouse audits, and posts results as PR comments.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">GitHub Actions</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Lighthouse</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Jordan Rivera. Built with HTML, CSS, and vanilla JavaScript.</p>
+    </footer>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
