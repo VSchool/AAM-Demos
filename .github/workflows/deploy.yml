@@ -47,10 +47,11 @@ jobs:
           cp -r demos/react-tracker/dist _site/react-tracker
           cp -r demos/vue-tracker/dist _site/vue-tracker
           cp -r demos/nextjs-tracker/out _site/nextjs-tracker
-          cp -r single-page-demo _site/single-page-demo
-          cp -r multi-page-demo _site/multi-page-demo
-          cp -r multi-page-full-demo _site/multi-page-full-demo
-          # W4 static demos (no build needed)
+          # W4D3 static demos (no build needed)
+          cp -r demos/single-page-demo _site/single-page-demo
+          cp -r demos/multi-page-demo _site/multi-page-demo
+          cp -r demos/multi-page-full-demo _site/multi-page-full-demo
+          # W4D5 static demos
           cp -r demos/w4-polish-comparison _site/w4-polish-comparison
           cp -r demos/w4-example-capstone _site/w4-example-capstone
 
