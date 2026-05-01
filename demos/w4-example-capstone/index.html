@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Space Explorer — Browse NASA's Astronomy Picture of the Day archive. Built as a W4 capstone example.">
+  <title>Space Explorer — NASA APOD Browser</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Favicon (inline SVG data URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔭</text></svg>">
+</head>
+<body>
+
+  <!-- Skip link for keyboard users -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ============================================================
+       HEADER + NAV
+       RUBRIC: HTML/CSS — semantic <header>, <nav>, responsive layout
+       ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="header-inner">
+      <a href="#" class="site-logo" aria-label="Space Explorer home">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="16" cy="16" r="14" stroke="#638cff" stroke-width="2"/>
+          <circle cx="16" cy="16" r="5" fill="#638cff"/>
+          <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#638cff" stroke-width="1.5" transform="rotate(30 16 16)" opacity="0.5"/>
+          <ellipse cx="16" cy="16" rx="14" ry="6" stroke="#638cff" stroke-width="1.5" transform="rotate(-30 16 16)" opacity="0.5"/>
+        </svg>
+        <span class="site-logo-text">Space<span>Explorer</span></span>
+      </a>
+      <nav class="site-nav" aria-label="Main navigation">
+        <button class="nav-link active" data-tab="today" type="button">Today</button>
+        <button class="nav-link" data-tab="browse" type="button">Browse</button>
+        <button class="nav-link" data-tab="favorites" type="button">
+          Favorites <span class="nav-favorites-count" id="fav-count" style="display:none;">0</span>
+        </button>
+        <button class="nav-link" data-tab="about" type="button">About</button>
+      </nav>
+    </div>
+    <div class="rubric-badge-row" style="max-width:1200px;margin:var(--space-2) auto 0;">
+      <span class="rubric-badge rubric-badge--html">&#10003; RUBRIC: HTML/CSS</span>
+      <span class="rubric-badge rubric-badge--value">Semantic header, nav, responsive layout</span>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+       ============================================================ -->
+  <main class="site-main" id="main-content" role="main">
+
+    <!-- ======== VIEW TABS (mobile-friendly) ======== -->
+    <div class="view-tabs" role="tablist" aria-label="Content sections">
+      <button class="view-tab active" data-tab="today" role="tab" aria-selected="true" aria-controls="panel-today" type="button">Today's Image</button>
+      <button class="view-tab" data-tab="browse" role="tab" aria-selected="false" aria-controls="panel-browse" type="button">Browse by Date</button>
+      <button class="view-tab" data-tab="favorites" role="tab" aria-selected="false" aria-controls="panel-favorites" type="button">Favorites</button>
+      <button class="view-tab" data-tab="about" role="tab" aria-selected="false" aria-controls="panel-about" type="button">About</button>
+    </div>
+
+    <!-- ======== TODAY'S APOD ======== -->
+    <section class="view-panel active" id="panel-today" role="tabpanel" aria-labelledby="today-heading">
+      <div class="hero-section">
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--api">&#10003; RUBRIC: API</span>
+          <span class="rubric-badge rubric-badge--value">Fetches live data from NASA APOD API</span>
+        </div>
+
+        <h2 id="today-heading" class="sr-only">Today's Astronomy Picture of the Day</h2>
+
+        <!-- Loading state -->
+        <div class="loading-spinner" id="hero-spinner">
+          <div class="spinner-ring" role="status">
+            <span class="sr-only">Loading today's image...</span>
+          </div>
+          <p class="loading-text">Fetching today's image from NASA...</p>
+        </div>
+
+        <!-- Error state -->
+        <div class="error-message" id="hero-error" role="alert">
+          <h3>Houston, we have a problem</h3>
+          <p>Something went wrong loading today's image.</p>
+          <button class="btn btn-primary" id="hero-retry-btn" type="button">Try Again</button>
+        </div>
+
+        <!-- Success state -->
+        <article class="hero-card" id="hero-card" style="display:none;">
+          <div class="hero-image-wrapper" id="hero-image-wrapper">
+            <span class="hero-date-badge" id="hero-date-badge"></span>
+          </div>
+          <div class="hero-content">
+            <h2 class="hero-title" id="hero-title"></h2>
+            <p class="hero-copyright" id="hero-copyright"></p>
+            <p class="hero-explanation" id="hero-explanation"></p>
+            <div class="hero-actions">
+              <button class="btn btn-favorite" id="hero-fav-btn" type="button" aria-pressed="false">&#9734; Add to Favorites</button>
+              <a class="btn btn-secondary" id="hero-hd-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">View HD Image</a>
+            </div>
+
+            <div class="rubric-badge-row" style="margin-top:var(--space-4);">
+              <span class="rubric-badge rubric-badge--js">&#10003; RUBRIC: JavaScript</span>
+              <span class="rubric-badge rubric-badge--value">Event listeners, DOM manipulation, dynamic content</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ======== BROWSE BY DATE ======== -->
+    <section class="view-panel" id="panel-browse" role="tabpanel" aria-labelledby="browse-heading">
+      <div class="browse-section">
+        <div class="section-header">
+          <h2 class="section-title" id="browse-heading">Browse by Date</h2>
+          <div class="date-picker-group">
+            <label for="date-picker" class="sr-only">Select a date</label>
+            <input type="date" class="date-input" id="date-picker" aria-label="Choose a date to view NASA's picture from that day">
+            <button class="btn btn-primary" id="browse-btn" type="button">Fetch Image</button>
+          </div>
+        </div>
+
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--js">&#10003; RUBRIC: JavaScript</span>
+          <span class="rubric-badge rubric-badge--api">&#10003; RUBRIC: API</span>
+          <span class="rubric-badge rubric-badge--value">Date picker triggers new API call, renders result dynamically</span>
+        </div>
+
+        <!-- Loading state -->
+        <div class="loading-spinner" id="browse-spinner">
+          <div class="spinner-ring" role="status">
+            <span class="sr-only">Loading image...</span>
+          </div>
+          <p class="loading-text">Fetching image from NASA...</p>
+        </div>
+
+        <!-- Error state -->
+        <div class="error-message" id="browse-error" role="alert">
+          <h3>Could not load that image</h3>
+          <p>Something went wrong.</p>
+          <button class="btn btn-primary" id="browse-retry-btn" type="button">Try Again</button>
+        </div>
+
+        <!-- Result -->
+        <article class="browse-result" id="browse-result">
+          <div class="browse-image-wrapper" id="browse-image-wrapper"></div>
+          <div class="browse-content">
+            <h3 class="browse-title" id="browse-title"></h3>
+            <p class="browse-explanation" id="browse-explanation"></p>
+            <div class="browse-actions">
+              <button class="btn btn-favorite" id="browse-fav-btn" type="button" aria-pressed="false">&#9734; Add to Favorites</button>
+              <a class="btn btn-secondary" id="browse-hd-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">View HD Image</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ======== FAVORITES ======== -->
+    <section class="view-panel" id="panel-favorites" role="tabpanel" aria-labelledby="favorites-heading">
+      <div class="favorites-section">
+        <div class="section-header">
+          <h2 class="section-title" id="favorites-heading">Your Favorites</h2>
+          <button class="btn btn-danger" id="clear-favs-btn" type="button" style="display:none;">Clear All</button>
+        </div>
+
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--js">&#10003; RUBRIC: JavaScript</span>
+          <span class="rubric-badge rubric-badge--value">localStorage persistence, dynamic card rendering, state management</span>
+        </div>
+
+        <div class="favorites-empty" id="favorites-empty">
+          <div class="favorites-empty-icon" aria-hidden="true">&#9734;</div>
+          <p>No favorites yet. Browse images and click "Add to Favorites" to save them here.</p>
+        </div>
+
+        <div class="favorites-grid" id="favorites-grid" role="list"></div>
+      </div>
+    </section>
+
+    <!-- ======== ABOUT (Git + Deploy + Value) ======== -->
+    <section class="view-panel" id="panel-about" role="tabpanel" aria-labelledby="about-heading">
+
+      <!-- Git History -->
+      <div class="git-section">
+        <h2 class="section-title" id="about-heading">How This Was Built</h2>
+        <p style="color:var(--text-secondary);margin:var(--space-2) 0 var(--space-4);font-size:var(--text-sm);">
+          A capstone project isn't just the final product — it's the record of how you built it. Here's what a clean commit history looks like:
+        </p>
+
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--git">&#10003; RUBRIC: Git</span>
+          <span class="rubric-badge rubric-badge--value">Descriptive commits, logical progression, small focused changes</span>
+        </div>
+
+        <div class="commit-timeline">
+          <div class="commit-entry">
+            <p class="commit-hash">a1b2c3d</p>
+            <p class="commit-message">feat: scaffold HTML structure with semantic elements</p>
+            <p class="commit-detail">Header, nav, main, footer. Empty sections for each feature. No styling yet.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">d4e5f6a</p>
+            <p class="commit-message">style: add dark theme, typography, and base layout</p>
+            <p class="commit-detail">CSS custom properties, responsive grid, base-8 spacing system.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">b7c8d9e</p>
+            <p class="commit-message">feat: fetch today's APOD from NASA API</p>
+            <p class="commit-detail">async/await fetch, render image + title + explanation. No error handling yet.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">f0a1b2c</p>
+            <p class="commit-message">feat: add error handling and loading spinner</p>
+            <p class="commit-detail">Show spinner during fetch, friendly error message on failure, retry button.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">c3d4e5f</p>
+            <p class="commit-message">feat: add date picker to browse past images</p>
+            <p class="commit-detail">Date input with min/max bounds, fetches selected date's APOD.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">a6b7c8d</p>
+            <p class="commit-message">feat: add favorites with localStorage persistence</p>
+            <p class="commit-detail">Save/remove favorites, render grid, persist across page reloads.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">e9f0a1b</p>
+            <p class="commit-message">fix: handle video media type from API</p>
+            <p class="commit-detail">Some APODs are YouTube embeds, not images. Render iframe for videos.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">d2c3b4a</p>
+            <p class="commit-message">a11y: add skip link, ARIA labels, focus states</p>
+            <p class="commit-detail">Keyboard navigation, screen reader support, visible focus outlines.</p>
+          </div>
+          <div class="commit-entry">
+            <p class="commit-hash">f5e6d7c</p>
+            <p class="commit-message">style: responsive polish and mobile layout fixes</p>
+            <p class="commit-detail">Stack layout on small screens, adjust typography scale, test on mobile.</p>
+          </div>
+        </div>
+
+        <div class="git-tip">
+          <strong>Why this matters:</strong> Each commit tells a story. A reviewer (or future you) can read these messages
+          and understand what changed, why, and in what order. Notice: small focused commits,
+          conventional prefixes (<code style="font-family:var(--font-mono);font-size:var(--text-xs);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--accent-purple);">feat:</code>,
+          <code style="font-family:var(--font-mono);font-size:var(--text-xs);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--accent-purple);">fix:</code>,
+          <code style="font-family:var(--font-mono);font-size:var(--text-xs);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--accent-purple);">style:</code>,
+          <code style="font-family:var(--font-mono);font-size:var(--text-xs);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--accent-purple);">a11y:</code>),
+          and no "fixed stuff" or "update" messages.
+        </div>
+      </div>
+
+      <!-- Deployment Note -->
+      <div class="deploy-note">
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--deploy">&#10003; RUBRIC: Deployment</span>
+          <span class="rubric-badge rubric-badge--value">Live on the internet via GitHub Pages</span>
+        </div>
+        <p>
+          <strong>This site is deployed via GitHub Pages</strong> at
+          <code>vschool.github.io/AAM-Demos/demos/w4-example-capstone/</code>.
+          Deployment is automatic: push to the <code>main</code> branch, and GitHub Pages serves the updated files
+          within minutes. No build step needed — the HTML, CSS, and JS files are served as-is.
+        </p>
+        <p style="margin-top:var(--space-2);">
+          For your capstone, you'll push your project to your own GitHub repo and enable Pages in Settings &rarr; Pages &rarr;
+          select <code>main</code> branch. That's it — your project is live on the internet.
+        </p>
+      </div>
+
+      <!-- Value Proposition -->
+      <div class="deploy-note" style="border-left:3px solid var(--accent-blue);">
+        <div class="rubric-badge-row">
+          <span class="rubric-badge rubric-badge--html">&#10003; RUBRIC: Value</span>
+          <span class="rubric-badge rubric-badge--value">Solves a real problem with real data</span>
+        </div>
+        <p>
+          <strong>Space Explorer solves a real problem:</strong> NASA publishes an incredible astronomy image every day,
+          but their official page has no way to save favorites or browse the archive intuitively. This project
+          adds that missing layer — a personal, searchable, saveable interface to 30 years of space imagery.
+        </p>
+        <p style="margin-top:var(--space-2);">
+          It uses a <strong>real public API</strong> (not mock data), handles <strong>real edge cases</strong>
+          (videos vs. images, rate limits, missing dates), and provides <strong>real utility</strong>
+          (favorites persist across sessions via localStorage).
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       RUBRIC: HTML/CSS — semantic <footer>
+       ============================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <p class="footer-text">
+        Space Explorer &mdash; A W4 Capstone Example for
+        <a href="https://vschool.io" target="_blank" rel="noopener noreferrer">V School</a>'s
+        Applied AI Mastery program.<br>
+        Data provided by <a href="https://api.nasa.gov/" target="_blank" rel="noopener noreferrer">NASA Open APIs</a>.
+      </p>
+      <p class="scope-note">
+        Built with HTML, CSS, and vanilla JS only &mdash; no frameworks, no npm, no build tools.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts (loaded at end of body for performance) -->
+  <script src="app.js"></script>
+
+</body>
+</html>

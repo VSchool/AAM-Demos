@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - TaskFlow</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">TaskFlow</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ABOUT -->
+  <section class="about-section">
+    <h2>About This Project</h2>
+    <p>TaskFlow started as a capstone project during my time at V School's Applied AI Mastery program. The idea came from a real pain point: every team I've worked on struggled with prioritizing tasks effectively.</p>
+    <p>Most project management tools give you a list and leave you to figure out what matters. TaskFlow takes a different approach by using AI to analyze deadlines, dependencies, and team capacity to surface what needs attention right now.</p>
+    <p>The tech stack includes a React frontend, a Node.js API, and a Python ML service for the prioritization engine. The AI model was fine-tuned on anonymized project data to learn patterns in how successful teams sequence their work.</p>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="contact-section">
+    <h2>Get In Touch</h2>
+    <form class="contact-form" onsubmit="return false;">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="Jane Smith">
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="jane@example.com">
+
+      <label for="message">Message</label>
+      <textarea id="message" placeholder="Tell me what you think..."></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 TaskFlow. Built as a capstone project. <a href="index.html">Back to Home</a></p>
+  </footer>
+
+</body>
+</html>

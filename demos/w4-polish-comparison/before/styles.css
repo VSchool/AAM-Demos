@@ -1,0 +1,361 @@
+/* =============================================
+   "BEFORE" — Working But Ugly
+   Anti-patterns: inconsistent spacing, random colors,
+   mixed typography, no hover states, not responsive
+   ============================================= */
+
+/* No reset, no system */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #e8e8e8;
+  color: #333;
+}
+
+/* ---- NAV ---- */
+nav {
+  background: #2c3e50;
+  padding: 12px 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav .logo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #e74c3c;
+  font-family: Georgia, serif;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li a {
+  color: #f1c40f;
+  text-decoration: none;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+}
+
+/* ---- HERO ---- */
+.hero {
+  background: #3498db;
+  padding: 40px 23px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 52px;
+  color: #fff;
+  margin: 0 0 10px 0;
+  font-family: Impact, sans-serif;
+}
+
+.hero p {
+  font-size: 15px;
+  color: #ecf0f1;
+  margin: 0 0 18px 0;
+  max-width: none;
+  font-family: 'Times New Roman', serif;
+}
+
+.hero .cta-btn {
+  display: inline-block;
+  background: #e74c3c;
+  color: white;
+  padding: 10px 35px;
+  border: 3px solid #c0392b;
+  font-size: 20px;
+  text-decoration: none;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  border-radius: 0;
+}
+
+/* ---- CARDS SECTION ---- */
+.cards-section {
+  padding: 23px 10px;
+  background: #dfe6e9;
+}
+
+.cards-section h2 {
+  text-align: center;
+  font-size: 34px;
+  color: #8e44ad;
+  margin-bottom: 10px;
+  font-family: Verdana, sans-serif;
+}
+
+.cards-grid {
+  display: flex;
+  gap: 10px;
+  /* NOT responsive -- will overflow on mobile */
+}
+
+.card {
+  background: #fff;
+  border: 2px solid #bdc3c7;
+  padding: 15px;
+  width: 33.33%;
+  box-sizing: border-box;
+}
+
+.card h3 {
+  font-size: 26px;
+  color: #e67e22;
+  margin: 0 0 8px 0;
+  font-family: Georgia, serif;
+}
+
+.card p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.3;
+  margin: 0 0 12px 0;
+}
+
+.card .card-btn {
+  display: inline-block;
+  background: #27ae60;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  font-size: 11px;
+  border: none;
+  border-radius: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  background: #2c3e50;
+  color: #95a5a6;
+  padding: 40px 23px;
+  text-align: center;
+  font-size: 12px;
+}
+
+footer a {
+  color: #f39c12;
+  text-decoration: underline;
+}
+
+/* ---- ABOUT PAGE ---- */
+.about-section {
+  padding: 30px 23px;
+  max-width: none;
+  background: #ffeaa7;
+}
+
+.about-section h2 {
+  font-size: 38px;
+  color: #d63031;
+  font-family: 'Times New Roman', serif;
+  margin-bottom: 10px;
+}
+
+.about-section p {
+  font-size: 15px;
+  color: #2d3436;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+/* ---- CONTACT FORM ---- */
+.contact-section {
+  padding: 23px 10px;
+  background: #dfe6e9;
+}
+
+.contact-section h2 {
+  font-size: 30px;
+  color: #6c5ce7;
+  font-family: Verdana, sans-serif;
+  margin-bottom: 15px;
+}
+
+.contact-form {
+  max-width: 600px;
+}
+
+.contact-form label {
+  display: block;
+  font-size: 14px;
+  color: #2d3436;
+  margin-bottom: 3px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #b2bec3;
+  font-size: 14px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.contact-form textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+.contact-form button {
+  background: #e17055;
+  color: white;
+  border: 2px dashed #d63031;
+  padding: 12px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  border-radius: 5px;
+}
+
+/* ---- UI KIT SECTION (anti-pattern showcase) ---- */
+.ui-kit {
+  padding: 23px 10px;
+  background: #fff;
+  border-top: 3px solid #bdc3c7;
+}
+
+.ui-kit h2 {
+  font-size: 32px;
+  color: #2c3e50;
+  font-family: Verdana, sans-serif;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.ui-kit-group {
+  margin-bottom: 30px;
+}
+
+.ui-kit-group h3 {
+  font-size: 22px;
+  color: #8e44ad;
+  font-family: Georgia, serif;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+/* Typography scale -- all over the place */
+.type-scale .type-sample {
+  margin-bottom: 10px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-left: 3px solid #bdc3c7;
+}
+
+.type-scale .type-sample .label {
+  font-size: 11px;
+  color: #999;
+  display: block;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+}
+
+.type-52 { font-size: 52px; font-family: Impact, sans-serif; color: #333; }
+.type-38 { font-size: 38px; font-family: 'Times New Roman', serif; color: #d63031; }
+.type-34 { font-size: 34px; font-family: Verdana, sans-serif; color: #8e44ad; }
+.type-28 { font-size: 28px; font-family: Georgia, serif; color: #e74c3c; }
+.type-26 { font-size: 26px; font-family: Georgia, serif; color: #e67e22; }
+.type-15 { font-size: 15px; font-family: 'Times New Roman', serif; color: #555; }
+.type-14 { font-size: 14px; font-family: 'Courier New', monospace; color: #333; }
+.type-13 { font-size: 13px; font-family: Arial, sans-serif; color: #555; }
+.type-11 { font-size: 11px; font-family: Arial, sans-serif; color: #333; }
+
+/* Color palette -- mismatched */
+.color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 80px;
+  text-align: center;
+}
+
+.color-swatch .swatch-block {
+  width: 80px;
+  height: 60px;
+  border: 1px solid #ccc;
+  margin-bottom: 4px;
+}
+
+.color-swatch .swatch-label {
+  font-size: 10px;
+  color: #666;
+  font-family: 'Courier New', monospace;
+}
+
+/* Button showcase -- all different */
+.button-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-sample-1 {
+  display: inline-block;
+  background: #e74c3c;
+  color: white;
+  padding: 10px 35px;
+  border: 3px solid #c0392b;
+  font-size: 20px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-sample-2 {
+  display: inline-block;
+  background: #27ae60;
+  color: white;
+  padding: 8px 14px;
+  border: none;
+  font-size: 11px;
+  font-family: Arial, sans-serif;
+  border-radius: 20px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-sample-3 {
+  display: inline-block;
+  background: #e17055;
+  color: white;
+  border: 2px dashed #d63031;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-family: Georgia, serif;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-sample-4 {
+  display: inline-block;
+  background: #f1c40f;
+  color: #2c3e50;
+  padding: 6px 20px;
+  border: 1px solid #f39c12;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  border-radius: 0;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* No media queries at all -- completely breaks on mobile */
