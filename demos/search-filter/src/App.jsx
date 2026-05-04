@@ -31,10 +31,18 @@ function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Product Catalog</h1>
-        <p className="subtitle">Search and filter products in real time</p>
-      </header>
+      <div className="hero-banner">
+        <img
+          className="hero-image"
+          src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1200&q=80"
+          alt=""
+          aria-hidden="true"
+        />
+        <div className="hero-overlay">
+          <h1>Product Catalog</h1>
+          <p className="subtitle">Search and filter products in real time</p>
+        </div>
+      </div>
 
       <main className="app-main">
         <div className="search-bar">

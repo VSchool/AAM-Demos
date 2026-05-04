@@ -40,6 +40,12 @@ function About() {
           </p>
         </div>
 
+        <img
+          className="about-image"
+          src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&q=80"
+          alt="Open book on a table, representing the reading experience"
+        />
+
         <div className="concept-grid">
           {concepts.map((concept) => (
             <div key={concept.name} className="concept-card">
@@ -49,8 +55,8 @@ function About() {
           ))}
         </div>
 
-        <div className="concept-card" style={{ borderLeftColor: 'var(--accent)' }}>
-          <h3 style={{ color: 'var(--accent)' }}>Data Source</h3>
+        <div className="concept-card concept-card--data">
+          <h3>Data Source</h3>
           <p>
             All data comes from{' '}
             <a
