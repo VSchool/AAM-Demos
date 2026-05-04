@@ -39,6 +39,21 @@ jobs:
         working-directory: demos/nextjs-tracker
         run: npm ci && npm run build
 
+      # Build Search Filter (W5D2S2)
+      - name: Build Search Filter
+        working-directory: demos/search-filter
+        run: npm ci && npm run build
+
+      # Build Router Explorer (W5D2S3)
+      - name: Build Router Explorer
+        working-directory: demos/router-explorer
+        run: npm ci && npm run build
+
+      # Build Blog Reader (W5D2S3)
+      - name: Build Blog Reader
+        working-directory: demos/blog-reader
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -53,6 +68,10 @@ jobs:
           cp -r demos/multi-page-full-demo _site/multi-page-full-demo
           cp -r demos/w4-polish-comparison _site/w4-polish-comparison
           cp -r demos/w4-example-capstone _site/w4-example-capstone
+          # W5D2 React demos
+          cp -r demos/search-filter/dist _site/search-filter
+          cp -r demos/router-explorer/dist _site/router-explorer
+          cp -r demos/blog-reader/dist _site/blog-reader
 
       - uses: actions/upload-pages-artifact@v3
 
