@@ -25,6 +25,15 @@ export default async function ItemDetailPage({ params }: Props) {
       </Link>
 
       <div className="detail-card">
+        <div className="detail-image-wrap">
+          <img
+            src={item.image.replace("w=400&h=250", "w=600&h=340")}
+            alt={item.name}
+            className="detail-image"
+            loading="lazy"
+          />
+        </div>
+
         <div className="detail-top">
           <h1 className="detail-name">{item.name}</h1>
           <span className="detail-price">${item.price}</span>

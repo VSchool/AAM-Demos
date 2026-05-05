@@ -39,11 +39,13 @@ export default async function BookDetailPage({
         </Link>
 
         <div className="book-detail-header">
-          <div
-            className="book-detail-cover"
-            style={{ backgroundColor: book.coverColor }}
-          >
-            <div className="book-detail-cover-title">{book.title}</div>
+          <div className="book-detail-cover">
+            <img
+              src={book.coverImage}
+              alt={book.title}
+              loading="lazy"
+              className="book-detail-cover-img"
+            />
           </div>
 
           <div className="book-detail-info">

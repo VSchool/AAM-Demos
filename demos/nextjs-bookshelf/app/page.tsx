@@ -8,19 +8,30 @@ const featuredBooks = books.slice(0, 4);
 
 export default function HomePage() {
   return (
-    <main className="page-container">
-      <section className="hero">
-        <h1>
-          Your <span className="accent">Bookshelf</span> Awaits
-        </h1>
-        <p>
-          Discover essential programming books curated for engineers. Browse,
-          search, and save your favorites — all built with Next.js App Router.
-        </p>
-        <Link href="/books" className="hero-cta">
-          Browse All Books
-        </Link>
+    <main>
+      <section className="hero-banner">
+        <img
+          src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1600&h=600&q=80&fit=crop"
+          alt="Library with bookshelves"
+          className="hero-banner-bg"
+          loading="eager"
+        />
+        <div className="hero-banner-overlay" />
+        <div className="hero-banner-content">
+          <h1>
+            Your <span className="accent">Bookshelf</span> Awaits
+          </h1>
+          <p>
+            Discover essential programming books curated for engineers. Browse,
+            search, and save your favorites.
+          </p>
+          <Link href="/books" className="hero-cta">
+            Browse All Books
+          </Link>
+        </div>
       </section>
+
+      <div className="page-container">
 
       <section>
         <div className="section-header">
@@ -43,6 +54,7 @@ export default function HomePage() {
         type="server"
         description="data fetched at build time, rendered on the server"
       />
+      </div>
     </main>
   );
 }
