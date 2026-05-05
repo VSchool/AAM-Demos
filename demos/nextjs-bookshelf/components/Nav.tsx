@@ -8,7 +8,7 @@ export default function Nav() {
 
   const links = [
     { href: "/", label: "Home" },
-    { href: "/books", label: "Books" },
+    { href: "/books", label: "Collection" },
     { href: "/favorites", label: "Favorites" },
   ];
 
@@ -21,7 +21,7 @@ export default function Nav() {
     <nav className="nav">
       <div className="nav-inner">
         <Link href="/" className="nav-logo">
-          <span className="nav-logo-icon">📚</span>
+          <span className="nav-logo-icon">📖</span>
           <span>Bookshelf</span>
         </Link>
         <ul className="nav-links">

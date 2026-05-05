@@ -35,9 +35,10 @@ export default function FavoritesPage() {
   // Prevent hydration mismatch — render nothing until client-mounted
   if (!mounted) {
     return (
-      <main className="page-container">
+      <main className="page-container" style={{ paddingTop: "7rem" }}>
         <div className="section-header">
-          <h2>Your Favorites</h2>
+          <span className="section-label">Your Library</span>
+          <h2>Favorites</h2>
           <p>Loading your saved books...</p>
         </div>
       </main>
@@ -47,9 +48,10 @@ export default function FavoritesPage() {
   const favoriteBooks = books.filter((book) => favoriteIds.includes(book.id));
 
   return (
-    <main className="page-container">
+    <main className="page-container" style={{ paddingTop: "7rem" }}>
       <div className="section-header">
-        <h2>Your Favorites</h2>
+        <span className="section-label">Your Library</span>
+        <h2>Favorites</h2>
         <p>
           {favoriteBooks.length > 0
             ? `You've saved ${favoriteBooks.length} book${favoriteBooks.length === 1 ? "" : "s"}`
@@ -65,14 +67,14 @@ export default function FavoritesPage() {
         </div>
       ) : (
         <div className="favorites-empty">
-          <div className="favorites-empty-icon">📚</div>
+          <div className="favorites-empty-icon">📖</div>
           <h2>No favorites yet</h2>
           <p>
             Click the heart icon on any book to save it to your favorites list.
             Your selections are stored in localStorage.
           </p>
           <Link href="/books" className="favorites-cta">
-            Browse Books
+            Browse Collection
           </Link>
         </div>
       )}

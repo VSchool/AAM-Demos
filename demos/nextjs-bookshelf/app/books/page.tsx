@@ -3,15 +3,16 @@ import SearchBar from "@/components/SearchBar";
 import ComponentLabel from "@/components/ComponentLabel";
 
 export const metadata = {
-  title: "All Books — Bookshelf",
+  title: "Collection — Bookshelf",
 };
 
 export default function BooksPage() {
   return (
-    <main className="page-container">
+    <main className="page-container" style={{ paddingTop: "7rem" }}>
       <div className="section-header">
+        <span className="section-label">Full Collection</span>
         <h2>All Books</h2>
-        <p>Browse the full collection — search by title or author</p>
+        <p>Browse the complete library — search by title or author</p>
       </div>
 
       <SearchBar books={books} />

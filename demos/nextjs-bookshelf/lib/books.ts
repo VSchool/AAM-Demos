@@ -19,7 +19,7 @@ export const books: Book[] = [
     category: "Software Engineering",
     year: 1999,
     coverColor: "#4A90D9",
-    coverImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "clean-code",
@@ -30,7 +30,7 @@ export const books: Book[] = [
     category: "Software Engineering",
     year: 2008,
     coverColor: "#E74C3C",
-    coverImage: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "designing-data-intensive-applications",
@@ -41,7 +41,7 @@ export const books: Book[] = [
     category: "Systems Design",
     year: 2017,
     coverColor: "#2ECC71",
-    coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "you-dont-know-js",
@@ -52,7 +52,7 @@ export const books: Book[] = [
     category: "JavaScript",
     year: 2014,
     coverColor: "#F1C40F",
-    coverImage: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "refactoring",
@@ -63,7 +63,7 @@ export const books: Book[] = [
     category: "Software Engineering",
     year: 2018,
     coverColor: "#9B59B6",
-    coverImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "system-design-interview",
@@ -74,7 +74,7 @@ export const books: Book[] = [
     category: "Systems Design",
     year: 2020,
     coverColor: "#E67E22",
-    coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "eloquent-javascript",
@@ -85,7 +85,7 @@ export const books: Book[] = [
     category: "JavaScript",
     year: 2018,
     coverColor: "#1ABC9C",
-    coverImage: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&h=400&fit=crop&q=80",
   },
   {
     id: "art-of-readable-code",
@@ -96,7 +96,7 @@ export const books: Book[] = [
     category: "Software Engineering",
     year: 2011,
     coverColor: "#E84393",
-    coverImage: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400&h=250&q=80&fit=crop",
+    coverImage: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop&q=80",
   },
 ];
 

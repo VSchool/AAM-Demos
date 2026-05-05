@@ -16,11 +16,12 @@ export default function BookCard({ book }: BookCardProps) {
           loading="lazy"
           className="book-card-cover-img"
         />
+        <div className="book-card-cover-overlay" />
+        <span className="book-card-category">{book.category}</span>
       </div>
       <div className="book-card-body">
-        <span className="book-card-category">{book.category}</span>
         <h3 className="book-card-title">{book.title}</h3>
-        <p className="book-card-author">{book.author}</p>
+        <p className="book-card-author">by {book.author}</p>
         <p className="book-card-description">{book.description}</p>
       </div>
       <div className="book-card-footer">

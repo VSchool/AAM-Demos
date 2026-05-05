@@ -32,10 +32,10 @@ export default async function BookDetailPage({
   }
 
   return (
-    <main className="page-container">
+    <main className="page-container" style={{ paddingTop: "7rem" }}>
       <div className="book-detail">
         <Link href="/books" className="back-link">
-          ← Back to all books
+          ← Back to collection
         </Link>
 
         <div className="book-detail-header">
@@ -49,13 +49,13 @@ export default async function BookDetailPage({
           </div>
 
           <div className="book-detail-info">
-            <h1>{book.title}</h1>
-            <p className="book-detail-author">by {book.author}</p>
-
             <div className="book-detail-meta">
               <span className="book-detail-tag category">{book.category}</span>
               <span className="book-detail-tag year">{book.year}</span>
             </div>
+
+            <h1>{book.title}</h1>
+            <p className="book-detail-author">by {book.author}</p>
 
             <p className="book-detail-description">{book.description}</p>
 
