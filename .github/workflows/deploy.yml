@@ -54,6 +54,16 @@ jobs:
         working-directory: demos/blog-reader
         run: npm ci && npm run build
 
+      # Build Next.js Bookshelf (W5D3S2)
+      - name: Build Next.js Bookshelf
+        working-directory: demos/nextjs-bookshelf
+        run: npm ci && npm run build
+
+      # Build Next.js Polish Demo (W5D3S3)
+      - name: Build Next.js Polish Demo
+        working-directory: demos/nextjs-polish-demo
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -72,6 +82,9 @@ jobs:
           cp -r demos/search-filter/dist _site/search-filter
           cp -r demos/router-explorer/dist _site/router-explorer
           cp -r demos/blog-reader/dist _site/blog-reader
+          # W5D3 Next.js demos
+          cp -r demos/nextjs-bookshelf/out _site/nextjs-bookshelf
+          cp -r demos/nextjs-polish-demo/out _site/nextjs-polish-demo
 
       - uses: actions/upload-pages-artifact@v3
 
