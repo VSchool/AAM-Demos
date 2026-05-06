@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevKit Hub — Vue Router Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Design Tokens ─────────────────────────────────────── */
+    :root {
+      --bg:       #18181B;
+      --surface:  #27272A;
+      --surface-hover: #303035;
+      --text:     #FAFAFA;
+      --text-muted: #A1A1AA;
+      --indigo:   #818CF8;
+      --indigo-dim: rgba(129, 140, 248, 0.15);
+      --rose:     #FB7185;
+      --rose-dim: rgba(251, 113, 133, 0.12);
+      --sky:      #38BDF8;
+      --amber:    #FBBF24;
+      --amber-dim: rgba(251, 191, 36, 0.15);
+      --radius:   1rem;
+      --shadow:   0 4px 24px rgba(0,0,0,0.35);
+      --font-heading: 'Sora', sans-serif;
+      --font-body:    'Nunito Sans', sans-serif;
+      --transition:   0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── Base ──────────────────────────────────────────────── */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--sky); text-decoration: none; transition: color var(--transition); }
+    a:hover { color: var(--indigo); }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--indigo);
+      outline-offset: 2px;
+    }
+
+    /* ── Top Nav ───────────────────────────────────────────── */
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(24, 24, 27, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(250, 250, 250, 0.06);
+    }
+    .nav-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+      display: flex;
+      align-items: center;
+      height: 60px;
+      gap: 2rem;
+    }
+    .nav-brand {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .nav-brand .brand-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--indigo);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+    }
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+    }
+    .nav-links a {
+      display: block;
+      padding: 0.5rem 0.85rem;
+      border-radius: 0.5rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: color var(--transition), background var(--transition);
+      position: relative;
+    }
+    .nav-links a:hover {
+      color: var(--text);
+      background: rgba(250, 250, 250, 0.04);
+    }
+    .nav-links a.router-link-active {
+      color: var(--indigo);
+    }
+    .nav-links a.router-link-active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0.85rem;
+      right: 0.85rem;
+      height: 2px;
+      background: var(--indigo);
+      border-radius: 1px;
+    }
+
+    /* ── Main Content Area ─────────────────────────────────── */
+    .main-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+      min-height: calc(100vh - 60px);
+    }
+
+    /* ── Route Transition ──────────────────────────────────── */
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .fade-enter-from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    .fade-leave-to {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    /* ── Hero Section (Home) ───────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--amber);
+      background: var(--amber-dim);
+      padding: 0.3rem 0.9rem;
+      border-radius: 2rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 .accent { color: var(--indigo); }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--bg);
+      background: var(--rose);
+      padding: 0.75rem 1.75rem;
+      border-radius: 2rem;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(251, 113, 133, 0.3);
+      color: var(--bg);
+    }
+
+    /* ── Section Headings ──────────────────────────────────── */
+    .section-heading {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Item Cards Grid ───────────────────────────────────── */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.25rem;
+    }
+    .item-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid rgba(250, 250, 250, 0.06);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: rgba(129, 140, 248, 0.2);
+    }
+    .item-card:focus-visible {
+      outline: 2px solid var(--indigo);
+      outline-offset: 2px;
+    }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .card-title {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .badge {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+    }
+    .badge-category {
+      color: var(--amber);
+      background: var(--amber-dim);
+    }
+    .badge-difficulty {
+      color: var(--indigo);
+      background: var(--indigo-dim);
+    }
+
+    /* ── Detail Page ───────────────────────────────────────── */
+    .detail-page { padding-top: 1rem; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      transition: color var(--transition);
+    }
+    .back-link:hover { color: var(--indigo); }
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .detail-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      flex-shrink: 0;
+    }
+    .detail-title-group { flex: 1; }
+    .detail-title-group h1 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .detail-title-group p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .detail-badges {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .detail-body {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid rgba(250, 250, 250, 0.06);
+    }
+    .detail-body h2 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+    .detail-body p {
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+    }
+    .detail-body p:last-child { margin-bottom: 0; }
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .feature-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+    .feature-list li::before {
+      content: '>';
+      color: var(--indigo);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Not Found State ───────────────────────────────────── */
+    .not-found {
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+    .not-found-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.6;
+    }
+    .not-found h2 {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .not-found p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--bg);
+      background: var(--rose);
+      padding: 0.65rem 1.5rem;
+      border-radius: 2rem;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(251, 113, 133, 0.3);
+      color: var(--bg);
+    }
+
+    /* ── About Page ────────────────────────────────────────── */
+    .about-page { padding-top: 1rem; }
+    .about-page h1 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+    }
+    .about-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid rgba(250, 250, 250, 0.06);
+    }
+    .about-card p {
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .about-card p:last-child { margin-bottom: 0; }
+    .about-stack {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+    }
+    .stack-tag {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 2rem;
+      background: var(--indigo-dim);
+      color: var(--indigo);
+    }
+
+    /* ── Footer ────────────────────────────────────────────── */
+    .site-footer {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem;
+      text-align: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(250, 250, 250, 0.06);
+    }
+    .site-footer code {
+      font-size: 0.78rem;
+      background: var(--surface);
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    /* ── Responsive ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.75rem; }
+      .items-grid { grid-template-columns: 1fr; }
+      .detail-header { flex-direction: column; }
+      .nav-inner { gap: 1rem; }
+      .nav-links a { padding: 0.4rem 0.6rem; font-size: 0.82rem; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Vue 3 + Vue Router 4 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.prod.js"></script>
+
+  <script>
+    const { createApp, ref, computed, defineComponent } = Vue;
+    const { createRouter, createWebHashHistory, useRoute, useRouter, RouterLink, RouterView } = VueRouter;
+
+    // ── Sample Data ─────────────────────────────────────────
+    const items = [
+      {
+        id: 1,
+        title: 'Vue.js Fundamentals',
+        emoji: '\uD83D\uDFE2',
+        color: '#10B981',
+        colorDim: 'rgba(16, 185, 129, 0.15)',
+        category: 'Course',
+        difficulty: 'Beginner',
+        description: 'Build reactive interfaces from scratch with the progressive JavaScript framework.',
+        longDescription: 'This hands-on course covers the core concepts of Vue.js including reactivity, component composition, template syntax, and the Options API vs Composition API. By the end you will be building single-page applications confidently.',
+        features: [
+          'Reactive data binding and computed properties',
+          'Component props, emits, and slots',
+          'Composition API with setup() and script setup',
+          'State management patterns without Vuex'
+        ]
+      },
+      {
+        id: 2,
+        title: 'TypeScript Essentials',
+        emoji: '\uD83D\uDD37',
+        color: '#3B82F6',
+        colorDim: 'rgba(59, 130, 246, 0.15)',
+        category: 'Course',
+        difficulty: 'Beginner',
+        description: 'Add type safety to your JavaScript projects and catch bugs before runtime.',
+        longDescription: 'TypeScript builds on JavaScript by adding static type definitions. This course teaches you how to leverage interfaces, generics, unions, and utility types to write safer, more maintainable code that scales.',
+        features: [
+          'Type annotations, interfaces, and type aliases',
+          'Generics for reusable typed functions',
+          'Union types and discriminated unions',
+          'Integrating TypeScript into existing JS projects'
+        ]
+      },
+      {
+        id: 3,
+        title: 'Vite Build Tool',
+        emoji: '\u26A1',
+        color: '#A855F7',
+        colorDim: 'rgba(168, 85, 247, 0.15)',
+        category: 'Tool',
+        difficulty: 'Intermediate',
+        description: 'Lightning-fast development server and optimized production builds for modern web apps.',
+        longDescription: 'Vite leverages native ES modules and esbuild to deliver near-instant dev server startup. Learn how to configure Vite for Vue, React, or vanilla projects, customize the build pipeline, and optimize for production.',
+        features: [
+          'Instant dev server with hot module replacement',
+          'Rollup-based production bundling',
+          'Plugin ecosystem and custom plugin authoring',
+          'Environment variables and multi-page app config'
+        ]
+      },
+      {
+        id: 4,
+        title: 'Pinia State Management',
+        emoji: '\uD83C\uDF4D',
+        color: '#F59E0B',
+        colorDim: 'rgba(245, 158, 11, 0.15)',
+        category: 'Library',
+        difficulty: 'Intermediate',
+        description: 'The official Vue store library \u2014 intuitive, type-safe, and devtools-friendly.',
+        longDescription: 'Pinia replaced Vuex as the recommended state management for Vue. It offers a simpler API, full TypeScript support, and seamless Vue DevTools integration. Learn to define stores, use getters, and manage async actions.',
+        features: [
+          'defineStore with state, getters, and actions',
+          'Full TypeScript inference out of the box',
+          'Hot module replacement for stores during dev',
+          'Composable store patterns and store-to-store access'
+        ]
+      },
+      {
+        id: 5,
+        title: 'Vitest Testing Framework',
+        emoji: '\uD83E\uDDEA',
+        color: '#EC4899',
+        colorDim: 'rgba(236, 72, 153, 0.15)',
+        category: 'Tool',
+        difficulty: 'Intermediate',
+        description: 'Blazing-fast unit testing powered by Vite with a Jest-compatible API.',
+        longDescription: 'Vitest reuses your Vite config so there is zero duplicate setup for testing. It supports snapshots, mocking, code coverage, and component testing with a familiar describe/it/expect API.',
+        features: [
+          'Shared Vite config \u2014 no separate test bundler',
+          'Jest-compatible API (describe, it, expect)',
+          'In-source testing and type-safe mocking',
+          'Built-in code coverage with c8 or istanbul'
+        ]
+      },
+      {
+        id: 6,
+        title: 'Nuxt 3 Full-Stack',
+        emoji: '\uD83D\uDE80',
+        color: '#06B6D4',
+        colorDim: 'rgba(6, 182, 212, 0.15)',
+        category: 'Framework',
+        difficulty: 'Advanced',
+        description: 'Server-side rendering, API routes, and file-based routing built on Vue 3 and Nitro.',
+        longDescription: 'Nuxt 3 is the full-stack Vue framework. It handles SSR, SSG, and hybrid rendering automatically. Learn file-based routing, server API routes with Nitro, auto-imports, and deploying to edge platforms.',
+        features: [
+          'File-based routing with dynamic and catch-all routes',
+          'Server API routes powered by Nitro engine',
+          'Auto-imports for composables and components',
+          'Hybrid rendering \u2014 SSR, SSG, and ISR per route'
+        ]
+      }
+    ];
+
+    // ── Home Component ──────────────────────────────────────
+    const HomePage = defineComponent({
+      setup() {
+        const featured = computed(() => items.slice(0, 3));
+        return { featured };
+      },
+      template: `
+        <div>
+          <section class="hero">
+            <span class="hero-badge">Vue Router Demo</span>
+            <h1>Your <span class="accent">DevKit</span> Hub</h1>
+            <p>Explore courses, tools, and libraries for the modern Vue ecosystem. Every link here uses client-side routing \u2014 no page reloads.</p>
+            <router-link to="/items" class="hero-cta" aria-label="Browse all items">
+              Browse All Items \u2192
+            </router-link>
+          </section>
+
+          <h2 class="section-heading">Featured</h2>
+          <div class="items-grid">
+            <router-link
+              v-for="item in featured"
+              :key="item.id"
+              :to="'/items/' + item.id"
+              class="item-card"
+              :aria-label="'View details for ' + item.title"
+            >
+              <div class="card-icon" :style="{ background: item.colorDim }">
+                <span>{{ item.emoji }}</span>
+              </div>
+              <div class="card-title">{{ item.title }}</div>
+              <div class="card-desc">{{ item.description }}</div>
+              <div class="card-meta">
+                <span class="badge badge-category">{{ item.category }}</span>
+                <span class="badge badge-difficulty">{{ item.difficulty }}</span>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      `
+    });
+
+    // ── Items List Component ────────────────────────────────
+    const ItemsPage = defineComponent({
+      setup() {
+        return { items };
+      },
+      template: `
+        <div>
+          <h1 class="section-heading" style="margin-top: 0.5rem;">All Items</h1>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
+            {{ items.length }} resources in the collection. Click any card to see full details.
+          </p>
+          <div class="items-grid">
+            <router-link
+              v-for="item in items"
+              :key="item.id"
+              :to="'/items/' + item.id"
+              class="item-card"
+              :aria-label="'View details for ' + item.title"
+            >
+              <div class="card-icon" :style="{ background: item.colorDim }">
+                <span>{{ item.emoji }}</span>
+              </div>
+              <div class="card-title">{{ item.title }}</div>
+              <div class="card-desc">{{ item.description }}</div>
+              <div class="card-meta">
+                <span class="badge badge-category">{{ item.category }}</span>
+                <span class="badge badge-difficulty">{{ item.difficulty }}</span>
+              </div>
+            </router-link>
+          </div>
+        </div>
+      `
+    });
+
+    // ── Item Detail Component ───────────────────────────────
+    const ItemDetail = defineComponent({
+      setup() {
+        const route = useRoute();
+        const router = useRouter();
+
+        const item = computed(() => {
+          const id = parseInt(route.params.id);
+          return items.find(i => i.id === id) || null;
+        });
+
+        function goToItems() {
+          router.push('/items');
+        }
+
+        return { item, goToItems };
+      },
+      template: `
+        <div class="detail-page" v-if="item">
+          <router-link to="/items" class="back-link" aria-label="Back to items list">
+            \u2190 Back to items
+          </router-link>
+          <div class="detail-header">
+            <div class="detail-icon" :style="{ background: item.colorDim }">
+              <span>{{ item.emoji }}</span>
+            </div>
+            <div class="detail-title-group">
+              <h1>{{ item.title }}</h1>
+              <p>{{ item.description }}</p>
+              <div class="detail-badges">
+                <span class="badge badge-category">{{ item.category }}</span>
+                <span class="badge badge-difficulty">{{ item.difficulty }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="detail-body">
+            <h2>Overview</h2>
+            <p>{{ item.longDescription }}</p>
+            <h2>Key Features</h2>
+            <ul class="feature-list">
+              <li v-for="f in item.features" :key="f">{{ f }}</li>
+            </ul>
+            <router-link to="/items" class="back-link" aria-label="Back to items list">
+              \u2190 Back to all items
+            </router-link>
+          </div>
+        </div>
+
+        <div class="not-found" v-else>
+          <div class="not-found-icon">\uD83D\uDD0D</div>
+          <h2>Item Not Found</h2>
+          <p>There is no item with that ID. It may have been removed or the URL is incorrect.</p>
+          <button class="btn-primary" @click="goToItems">
+            Go to Items \u2192
+          </button>
+        </div>
+      `
+    });
+
+    // ── About Component ─────────────────────────────────────
+    const AboutPage = defineComponent({
+      template: `
+        <div class="about-page">
+          <h1>About DevKit Hub</h1>
+          <div class="about-card">
+            <p>
+              DevKit Hub is a demo application built with <strong>Vue 3</strong> and
+              <strong>Vue Router 4</strong> to demonstrate client-side routing patterns.
+              Every navigation on this page happens without a full-page reload \u2014 the
+              browser URL updates, the back button works, and the content transitions
+              smoothly.
+            </p>
+            <p>
+              This demo uses <code>createWebHashHistory()</code> so it works on
+              static hosts like GitHub Pages without server-side URL rewriting. In a
+              production app with server control you would typically switch to
+              <code>createWebHistory()</code> for cleaner URLs.
+            </p>
+            <p>
+              The entire application is a single <code>index.html</code> file with no
+              build step \u2014 Vue and Vue Router are loaded from CDN. This keeps the
+              demo portable and easy to inspect.
+            </p>
+            <div class="about-stack">
+              <span class="stack-tag">Vue 3</span>
+              <span class="stack-tag">Vue Router 4</span>
+              <span class="stack-tag">Composition API</span>
+              <span class="stack-tag">Hash History</span>
+              <span class="stack-tag">No Build Step</span>
+            </div>
+          </div>
+        </div>
+      `
+    });
+
+    // ── Router ──────────────────────────────────────────────
+    const routes = [
+      { path: '/',           name: 'home',       component: HomePage },
+      { path: '/items',      name: 'items',      component: ItemsPage },
+      { path: '/items/:id',  name: 'itemDetail', component: ItemDetail },
+      { path: '/about',      name: 'about',      component: AboutPage },
+    ];
+
+    const router = createRouter({
+      history: createWebHashHistory(),
+      routes,
+      scrollBehavior() {
+        return { top: 0 };
+      }
+    });
+
+    // ── Root App ────────────────────────────────────────────
+    const App = defineComponent({
+      template: `
+        <nav class="top-nav" aria-label="Main navigation">
+          <div class="nav-inner">
+            <router-link to="/" class="nav-brand" aria-label="DevKit Hub home">
+              <span class="brand-icon">\u25B2</span>
+              DevKit Hub
+            </router-link>
+            <ul class="nav-links">
+              <li><router-link to="/" exact-active-class="router-link-active">Home</router-link></li>
+              <li><router-link to="/items" active-class="router-link-active">Items</router-link></li>
+              <li><router-link to="/about" active-class="router-link-active">About</router-link></li>
+            </ul>
+          </div>
+        </nav>
+        <main class="main-content" role="main">
+          <router-view v-slot="{ Component }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" />
+            </transition>
+          </router-view>
+        </main>
+        <footer class="site-footer">
+          Vue Router Demo \u2014 built with <code>Vue 3</code> + <code>Vue Router 4</code> +
+          <code>createWebHashHistory()</code>
+        </footer>
+      `
+    });
+
+    const app = createApp(App);
+    app.use(router);
+    app.mount('#app');
+  </script>
+</body>
+</html>

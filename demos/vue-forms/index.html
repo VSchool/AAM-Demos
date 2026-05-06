@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Forms Demo — v-model &amp; Two-Way Binding</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ========== RESET ========== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ========== CUSTOM PROPERTIES ========== */
+    :root {
+      --bg: #1A1A2E;
+      --surface: #16213E;
+      --surface-hover: #1a2847;
+      --text: #E8E8E8;
+      --text-muted: #A0A0B8;
+      --accent: #F0A500;
+      --accent-hover: #d99400;
+      --error: #FF6B6B;
+      --success: #0BA95B;
+      --success-hover: #099a50;
+      --info: #A78BFA;
+      --border: rgba(232, 232, 232, 0.1);
+      --border-focus: rgba(240, 165, 0, 0.5);
+      --glow-accent: rgba(240, 165, 0, 0.15);
+      --glow-error: rgba(255, 107, 107, 0.15);
+      --glow-success: rgba(11, 169, 91, 0.15);
+      --radius: 0.75rem;
+      --radius-sm: 0.5rem;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    /* ========== BASE ========== */
+    html { font-size: 16px; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ========== LAYOUT ========== */
+    .app-header {
+      text-align: center;
+      padding: 2rem 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .app-header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .app-header h1 span { color: var(--accent); }
+    .app-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .badge {
+      display: inline-block;
+      background: var(--glow-accent);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    .app-body {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    /* ========== CARDS ========== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-title .icon {
+      font-size: 1.2rem;
+    }
+
+    /* ========== FORM ========== */
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    .form-group label .required {
+      color: var(--error);
+      margin-left: 0.15rem;
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px var(--glow-accent);
+    }
+    .form-input.has-error,
+    .form-select.has-error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px var(--glow-error);
+    }
+    .form-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .form-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23A0A0B8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.9rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    .form-select option {
+      background: var(--surface);
+      color: var(--text);
+    }
+    .error-msg {
+      font-size: 0.8rem;
+      color: var(--error);
+      margin-top: 0.35rem;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.25s, transform 0.25s;
+    }
+    .error-msg.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== BUTTONS ========== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s, transform 0.1s;
+    }
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+    .btn-primary:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    /* ========== LIVE PREVIEW ========== */
+    .preview-card {
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(22, 33, 62, 0.8) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .preview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--info));
+    }
+    .preview-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--info);
+      margin-bottom: 1rem;
+    }
+    .preview-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      word-break: break-word;
+    }
+    .preview-title.placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+    }
+    .preview-description {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+    .preview-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .preview-tag {
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--glow-accent);
+      color: var(--accent);
+    }
+    .preview-tag.rating {
+      background: var(--glow-success);
+      color: var(--success);
+    }
+    .preview-empty {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+
+    /* ========== SOURCE CODE PANEL ========== */
+    .source-panel {
+      grid-column: 1 / -1;
+    }
+    .source-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--info);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-bottom: 1rem;
+    }
+    .source-toggle:hover {
+      background: rgba(167, 139, 250, 0.08);
+    }
+    .source-toggle .chevron {
+      transition: transform 0.25s;
+      font-size: 0.7rem;
+    }
+    .source-toggle .chevron.open {
+      transform: rotate(90deg);
+    }
+    .source-code {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      overflow-x: auto;
+      max-height: 520px;
+      overflow-y: auto;
+    }
+    .source-code pre {
+      margin: 0;
+      font-family: var(--font-code);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      color: #c9d1d9;
+      white-space: pre;
+    }
+    .source-code .highlight {
+      background: rgba(240, 165, 0, 0.12);
+      display: inline;
+      padding: 0 0.2rem;
+      border-radius: 3px;
+    }
+    .source-code .comment { color: #6e7681; }
+    .source-code .keyword { color: #ff7b72; }
+    .source-code .string { color: #a5d6ff; }
+    .source-code .fn { color: #d2a8ff; }
+    .source-code .attr { color: #79c0ff; }
+    .source-code .tag { color: #7ee787; }
+
+    /* ========== ITEMS LIST ========== */
+    .items-section {
+      grid-column: 1 / -1;
+    }
+    .items-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .items-header h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .items-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+    }
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.15s;
+      animation: cardIn 0.35s ease-out;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .item-card:hover {
+      border-color: rgba(240, 165, 0, 0.25);
+      transform: translateY(-2px);
+    }
+    .item-card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      word-break: break-word;
+    }
+    .item-card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+    .item-card-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .item-card-tag {
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+    }
+    .item-card-tag.category {
+      background: var(--glow-accent);
+      color: var(--accent);
+    }
+    .item-card-tag.rating {
+      background: var(--glow-success);
+      color: var(--success);
+    }
+    .item-card-tag.time {
+      background: rgba(167, 139, 250, 0.12);
+      color: var(--info);
+    }
+    .items-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+
+    /* ========== SPINNER ========== */
+    .spinner {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      border: 2px solid rgba(26, 26, 46, 0.3);
+      border-top-color: var(--bg);
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ========== SUCCESS FLASH ========== */
+    .success-flash {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: var(--success);
+      color: #0a0a0a;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 16px rgba(11, 169, 91, 0.3);
+      opacity: 0;
+      transform: translateY(-12px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+      z-index: 100;
+    }
+    .success-flash.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 800px) {
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+      .source-panel,
+      .items-section {
+        grid-column: 1;
+      }
+    }
+
+    /* ========== FOCUS VISIBLE ========== */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ========== SCROLLBAR ========== */
+    .source-code::-webkit-scrollbar { width: 6px; height: 6px; }
+    .source-code::-webkit-scrollbar-track { background: transparent; }
+    .source-code::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="badge">Vue 3 Demo</div>
+    <h1>Forms in <span>Vue</span></h1>
+    <p>Two-way data binding with v-model, computed validation, and reactive UI</p>
+  </header>
+
+  <!-- Success toast -->
+  <div class="success-flash" :class="{ show: showSuccess }">Item added successfully</div>
+
+  <main class="app-body">
+    <!-- Left column: Form -->
+    <div class="card">
+      <div class="card-title">
+        <span class="icon" aria-hidden="true">+</span>
+        New Item Form
+      </div>
+
+      <form @submit.prevent="handleSubmit" novalidate>
+        <!-- Title -->
+        <div class="form-group">
+          <label for="item-title">Title <span class="required" aria-label="required">*</span></label>
+          <input
+            id="item-title"
+            type="text"
+            class="form-input"
+            :class="{ 'has-error': attempted && titleError }"
+            v-model="form.title"
+            placeholder="Enter item title..."
+            autocomplete="off"
+          >
+          <div class="error-msg" :class="{ visible: attempted && titleError }">
+            {{ titleError }}
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label for="item-desc">Description</label>
+          <textarea
+            id="item-desc"
+            class="form-textarea"
+            v-model="form.description"
+            placeholder="Describe this item..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Category -->
+        <div class="form-group">
+          <label for="item-category">Category</label>
+          <select id="item-category" class="form-select" v-model="form.category">
+            <option value="">Select a category</option>
+            <option value="Feature">Feature</option>
+            <option value="Bug Fix">Bug Fix</option>
+            <option value="Enhancement">Enhancement</option>
+            <option value="Documentation">Documentation</option>
+          </select>
+        </div>
+
+        <!-- Rating -->
+        <div class="form-group">
+          <label for="item-rating">Priority Rating <span class="required" aria-label="required">*</span></label>
+          <select
+            id="item-rating"
+            class="form-select"
+            :class="{ 'has-error': attempted && ratingError }"
+            v-model="form.rating"
+          >
+            <option value="">Select priority</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+            <option value="Critical">Critical</option>
+          </select>
+          <div class="error-msg" :class="{ visible: attempted && ratingError }">
+            {{ ratingError }}
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :disabled="!isValid || saving"
+          >
+            <span v-if="saving" class="spinner" aria-label="Saving"></span>
+            <span v-if="saving">Saving...</span>
+            <span v-else>Add Item</span>
+          </button>
+          <button type="button" class="btn btn-secondary" @click="resetForm">
+            Clear
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right column: Live Preview -->
+    <div>
+      <div class="preview-card">
+        <div class="preview-label">Live Preview</div>
+
+        <div v-if="hasPreviewContent">
+          <div class="preview-title">{{ form.title || 'Untitled' }}</div>
+          <div class="preview-description" v-if="form.description">{{ form.description }}</div>
+          <div class="preview-description" v-else style="font-style: italic;">No description yet...</div>
+          <div class="preview-meta">
+            <span class="preview-tag" v-if="form.category">{{ form.category }}</span>
+            <span class="preview-tag rating" v-if="form.rating">{{ form.rating }}</span>
+          </div>
+        </div>
+
+        <div v-else class="preview-empty">
+          Start typing in the form to see a live preview here. Every keystroke updates this card instantly through v-model binding.
+        </div>
+      </div>
+    </div>
+
+    <!-- Source Code Panel -->
+    <div class="source-panel">
+      <button class="source-toggle" @click="showSource = !showSource" :aria-expanded="showSource">
+        <span class="chevron" :class="{ open: showSource }">&#9654;</span>
+        {{ showSource ? 'Hide' : 'Show' }} Vue Source Code
+      </button>
+
+      <div v-if="showSource" class="source-code">
+        <pre><span class="comment">// Vue 3 Composition API — Form with v-model</span>
+
+<span class="keyword">const</span> { createApp, ref, computed } = <span class="fn">Vue</span>
+
+<span class="fn">createApp</span>({
+  <span class="fn">setup</span>() {
+    <span class="comment">// Reactive form state — each field bound via <span class="highlight">v-model</span></span>
+    <span class="keyword">const</span> form = <span class="fn">ref</span>({
+      title: <span class="string">''</span>,
+      description: <span class="string">''</span>,
+      category: <span class="string">''</span>,
+      rating: <span class="string">''</span>
+    })
+
+    <span class="keyword">const</span> attempted = <span class="fn">ref</span>(<span class="keyword">false</span>)
+    <span class="keyword">const</span> saving = <span class="fn">ref</span>(<span class="keyword">false</span>)
+    <span class="keyword">const</span> items = <span class="fn">ref</span>([])
+
+    <span class="comment">// Computed validation — reactive, re-evaluates on every change</span>
+    <span class="keyword">const</span> titleError = <span class="fn">computed</span>(() => {
+      <span class="keyword">if</span> (!form.value.title.trim()) <span class="keyword">return</span> <span class="string">'Title is required'</span>
+      <span class="keyword">if</span> (form.value.title.trim().length &lt; 3) <span class="keyword">return</span> <span class="string">'Min 3 characters'</span>
+      <span class="keyword">return</span> <span class="string">''</span>
+    })
+
+    <span class="keyword">const</span> ratingError = <span class="fn">computed</span>(() => {
+      <span class="keyword">if</span> (!form.value.rating) <span class="keyword">return</span> <span class="string">'Priority is required'</span>
+      <span class="keyword">return</span> <span class="string">''</span>
+    })
+
+    <span class="comment">// <span class="highlight">Computed isValid</span> — bound to :disabled on submit button</span>
+    <span class="keyword">const</span> isValid = <span class="fn">computed</span>(() => {
+      <span class="keyword">return</span> !titleError.value && !ratingError.value
+    })
+
+    <span class="comment">// Submit handler — "Saving..." for 300ms, then reset</span>
+    <span class="keyword">async function</span> <span class="fn">handleSubmit</span>() {
+      attempted.value = <span class="keyword">true</span>
+      <span class="keyword">if</span> (!isValid.value) <span class="keyword">return</span>
+
+      saving.value = <span class="keyword">true</span>
+      <span class="keyword">await new</span> <span class="fn">Promise</span>(r => <span class="fn">setTimeout</span>(r, <span class="string">300</span>))
+
+      items.value.unshift({ ...form.value, id: <span class="fn">Date.now</span>() })
+      form.value = { title: <span class="string">''</span>, description: <span class="string">''</span>, category: <span class="string">''</span>, rating: <span class="string">''</span> }
+      attempted.value = <span class="keyword">false</span>
+      saving.value = <span class="keyword">false</span>
+    }
+
+    <span class="keyword">return</span> { form, attempted, saving, items,
+             titleError, ratingError, isValid, handleSubmit }
+  }
+}).<span class="fn">mount</span>(<span class="string">'#app'</span>)</pre>
+      </div>
+    </div>
+
+    <!-- Submitted Items -->
+    <div class="items-section">
+      <div class="items-header">
+        <h2>Submitted Items</h2>
+        <span class="items-count">{{ items.length }} item{{ items.length !== 1 ? 's' : '' }}</span>
+      </div>
+
+      <div class="items-grid">
+        <div v-if="items.length === 0" class="items-empty">
+          No items yet. Fill out the form above and click "Add Item" to see cards appear here.
+        </div>
+
+        <div
+          v-for="item in items"
+          :key="item.id"
+          class="item-card"
+        >
+          <div class="item-card-title">{{ item.title }}</div>
+          <div class="item-card-desc" v-if="item.description">{{ item.description }}</div>
+          <div class="item-card-meta">
+            <span class="item-card-tag category" v-if="item.category">{{ item.category }}</span>
+            <span class="item-card-tag rating" v-if="item.rating">{{ item.rating }}</span>
+            <span class="item-card-tag time">{{ formatTime(item.id) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script>
+const { createApp, ref, computed } = Vue
+
+createApp({
+  setup() {
+    // Reactive form state
+    const form = ref({
+      title: '',
+      description: '',
+      category: '',
+      rating: ''
+    })
+
+    const attempted = ref(false)
+    const saving = ref(false)
+    const items = ref([])
+    const showSource = ref(false)
+    const showSuccess = ref(false)
+
+    // Computed validation
+    const titleError = computed(() => {
+      if (!form.value.title.trim()) return 'Title is required'
+      if (form.value.title.trim().length < 3) return 'Minimum 3 characters'
+      return ''
+    })
+
+    const ratingError = computed(() => {
+      if (!form.value.rating) return 'Priority rating is required'
+      return ''
+    })
+
+    const isValid = computed(() => {
+      return !titleError.value && !ratingError.value
+    })
+
+    const hasPreviewContent = computed(() => {
+      return form.value.title || form.value.description || form.value.category || form.value.rating
+    })
+
+    // Submit handler
+    async function handleSubmit() {
+      attempted.value = true
+      if (!isValid.value) return
+
+      saving.value = true
+      await new Promise(resolve => setTimeout(resolve, 300))
+
+      items.value.unshift({
+        title: form.value.title.trim(),
+        description: form.value.description.trim(),
+        category: form.value.category,
+        rating: form.value.rating,
+        id: Date.now()
+      })
+
+      // Reset
+      form.value = { title: '', description: '', category: '', rating: '' }
+      attempted.value = false
+      saving.value = false
+
+      // Success flash
+      showSuccess.value = true
+      setTimeout(() => { showSuccess.value = false }, 1800)
+    }
+
+    function resetForm() {
+      form.value = { title: '', description: '', category: '', rating: '' }
+      attempted.value = false
+    }
+
+    function formatTime(timestamp) {
+      const d = new Date(timestamp)
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+
+    return {
+      form,
+      attempted,
+      saving,
+      items,
+      showSource,
+      showSuccess,
+      titleError,
+      ratingError,
+      isValid,
+      hasPreviewContent,
+      handleSubmit,
+      resetForm,
+      formatTime
+    }
+  }
+}).mount('#app')
+</script>
+</body>
+</html>

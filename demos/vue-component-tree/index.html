@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vue Component Tree — Build Your Vue App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Palette ───────────────────────────────────────── */
+    :root {
+      --bg:        #0A1628;
+      --surface:   #1E293B;
+      --surface-2: #273549;
+      --border:    #334155;
+      --text:      #F8FAFC;
+      --text-dim:  #94A3B8;
+      --cyan:      #06B6D4;
+      --violet:    #A78BFA;
+      --emerald:   #10B981;
+      --amber:     #F59E0B;
+      --rose:      #F43F5E;
+      --cyan-dim:  rgba(6,182,212,0.12);
+      --violet-dim:rgba(167,139,250,0.12);
+      --emerald-dim:rgba(16,185,129,0.12);
+    }
+
+    /* ── Typography ────────────────────────────────────── */
+    body {
+      font-family: 'DM Sans', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    h1, h2, h3, h4, h5 {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Layout: split-screen ──────────────────────────── */
+    .app-shell {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Left panel — the Vue app */
+    .app-panel {
+      flex: 0 0 60%;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+
+    /* Right panel — DevTools inspector */
+    .inspector-panel {
+      flex: 0 0 40%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      overflow-y: auto;
+    }
+
+    /* ── Top bar ───────────────────────────────────────── */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .top-bar h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .top-bar .vue-logo {
+      width: 22px;
+      height: 22px;
+    }
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Header component ──────────────────────────────── */
+    .vue-header {
+      padding: 2rem 1.5rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .vue-header h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .vue-header p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    /* ── Item grid ─────────────────────────────────────── */
+    .item-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+    }
+
+    /* ── ItemCard ───────────────────────────────────────── */
+    .item-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 1rem 1.125rem;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+    .item-card:hover {
+      border-color: var(--cyan);
+      background: var(--surface-2);
+    }
+    .item-card.selected {
+      border-color: var(--emerald);
+      box-shadow: 0 0 0 1px var(--emerald), inset 0 0 0 1px rgba(16,185,129,0.1);
+    }
+    .item-card .card-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .item-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    .item-card .card-author {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .item-card .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+    .card-tag {
+      font-size: 0.65rem;
+      padding: 0.125rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+    .tag-fiction     { background: var(--violet-dim); color: var(--violet); }
+    .tag-nonfiction  { background: var(--cyan-dim);   color: var(--cyan);   }
+    .tag-classic     { background: var(--emerald-dim); color: var(--emerald); }
+    .selected-badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.6rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      background: var(--emerald-dim);
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    /* ── EmptyState ─────────────────────────────────────── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      color: var(--text-dim);
+      text-align: center;
+    }
+    .empty-state .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.6;
+    }
+
+    /* ── Footer ─────────────────────────────────────────── */
+    .vue-footer {
+      margin-top: auto;
+      padding: 0.75rem 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .vue-footer .status-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--emerald);
+      margin-right: 0.35rem;
+    }
+
+    /* ── Inspector ──────────────────────────────────────── */
+    .inspector-header {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .inspector-header h2 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .inspector-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .inspector-tab {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-align: center;
+      cursor: pointer;
+      color: var(--text-dim);
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+      background: transparent;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .inspector-tab:hover {
+      color: var(--text);
+    }
+    .inspector-tab.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+    }
+    .inspector-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    /* ── Component Tree ─────────────────────────────────── */
+    .tree-node {
+      margin-bottom: 0.125rem;
+    }
+    .tree-label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 500;
+      cursor: default;
+      transition: background 0.15s;
+    }
+    .tree-label:hover {
+      background: rgba(248,250,252,0.04);
+    }
+    .tree-label.highlighted {
+      background: var(--cyan-dim);
+    }
+    .tree-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-app     { background: var(--amber); }
+    .dot-header  { background: var(--cyan); }
+    .dot-list    { background: var(--violet); }
+    .dot-card    { background: var(--emerald); }
+    .dot-empty   { background: var(--text-dim); }
+    .dot-footer  { background: var(--rose); }
+
+    .tree-children {
+      margin-left: 1.25rem;
+      border-left: 1px solid var(--border);
+      padding-left: 0.5rem;
+    }
+
+    .tree-arrow {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      transition: transform 0.15s;
+      width: 0.75rem;
+      text-align: center;
+    }
+    .tree-arrow.open {
+      transform: rotate(90deg);
+    }
+
+    /* ── Props panel ────────────────────────────────────── */
+    .props-section {
+      margin-bottom: 1rem;
+    }
+    .props-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--text-dim);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .prop-row {
+      display: flex;
+      align-items: flex-start;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 4px;
+    }
+    .prop-row:hover {
+      background: rgba(248,250,252,0.03);
+    }
+    .prop-key {
+      color: var(--violet);
+      font-family: 'Space Grotesk', monospace;
+      font-weight: 500;
+      min-width: 80px;
+      flex-shrink: 0;
+    }
+    .prop-val {
+      color: var(--emerald);
+      font-family: 'Space Grotesk', monospace;
+      word-break: break-all;
+    }
+    .prop-val.string { color: var(--emerald); }
+    .prop-val.number { color: var(--amber); }
+    .prop-val.array  { color: var(--cyan); }
+    .prop-val.null   { color: var(--text-dim); }
+
+    /* ── Event log ──────────────────────────────────────── */
+    .event-log {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .event-entry {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      animation: fadeSlideIn 0.3s ease;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .event-time {
+      color: var(--text-dim);
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.65rem;
+      min-width: 48px;
+      flex-shrink: 0;
+      padding-top: 0.1rem;
+    }
+    .event-body {
+      flex: 1;
+    }
+    .event-source {
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .event-source.card-src   { color: var(--emerald); }
+    .event-source.list-src   { color: var(--violet); }
+    .event-source.app-src    { color: var(--amber); }
+    .event-msg {
+      color: var(--text-dim);
+    }
+    .event-highlight {
+      color: var(--cyan);
+      font-weight: 500;
+    }
+
+    .event-empty {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 2rem 1rem;
+      opacity: 0.7;
+    }
+
+    /* ── State panel ────────────────────────────────────── */
+    .state-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .state-block h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .state-json {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 0.75rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .json-key   { color: var(--violet); }
+    .json-str   { color: var(--emerald); }
+    .json-num   { color: var(--amber); }
+    .json-null  { color: var(--text-dim); }
+    .json-brace { color: var(--text-dim); }
+
+    .state-updated {
+      animation: statePulse 0.6s ease;
+    }
+    @keyframes statePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(6,182,212,0.3); }
+      50%  { box-shadow: 0 0 0 4px rgba(6,182,212,0.15); }
+      100% { box-shadow: 0 0 0 0 rgba(6,182,212,0); }
+    }
+
+    /* ── Clear button ───────────────────────────────────── */
+    .clear-btn {
+      font-size: 0.7rem;
+      font-family: 'DM Sans', sans-serif;
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      margin-left: auto;
+    }
+    .clear-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    /* ── Scrollbar ──────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    /* ── Responsive ─────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .app-shell {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      .app-panel {
+        flex: none;
+        min-height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        overflow-y: visible;
+      }
+      .inspector-panel {
+        flex: none;
+        min-height: 50vh;
+        overflow-y: visible;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-shell">
+
+      <!-- ═══ LEFT: Vue App ═══ -->
+      <div class="app-panel">
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <h1>
+            <svg class="vue-logo" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M78.8 10L64 35.4 49.2 10H0l64 110L128 10H78.8z" fill="#42b883"/>
+              <path d="M78.8 10L64 35.4 49.2 10H25.6L64 76 102.4 10H78.8z" fill="#35495e"/>
+            </svg>
+            Vue Component Tree
+          </h1>
+          <span class="badge">Vue 3 &middot; Composition API</span>
+        </div>
+
+        <!-- Header Component -->
+        <app-header :title="headerTitle" :subtitle="headerSubtitle"></app-header>
+
+        <!-- ItemList (or EmptyState) -->
+        <item-list
+          :items="items"
+          :selected-id="selectedItem ? selectedItem.id : null"
+          @select="handleSelect"
+        ></item-list>
+
+        <!-- Footer -->
+        <app-footer :item-count="items.length" :selected-name="selectedItem ? selectedItem.title : null"></app-footer>
+      </div>
+
+      <!-- ═══ RIGHT: Inspector ═══ -->
+      <div class="inspector-panel">
+        <div class="inspector-header">
+          <h2>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="#06B6D4" stroke-width="1.5"/><path d="M5 5h6M5 8h4M5 11h5" stroke="#06B6D4" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Component Inspector
+          </h2>
+        </div>
+
+        <!-- Tabs -->
+        <div class="inspector-tabs">
+          <button
+            class="inspector-tab"
+            :class="{ active: inspectorTab === 'tree' }"
+            @click="inspectorTab = 'tree'"
+          >Tree</button>
+          <button
+            class="inspector-tab"
+            :class="{ active: inspectorTab === 'props' }"
+            @click="inspectorTab = 'props'"
+          >Props</button>
+          <button
+            class="inspector-tab"
+            :class="{ active: inspectorTab === 'events' }"
+            @click="inspectorTab = 'events'"
+          >Events</button>
+          <button
+            class="inspector-tab"
+            :class="{ active: inspectorTab === 'state' }"
+            @click="inspectorTab = 'state'"
+          >State</button>
+        </div>
+
+        <div class="inspector-body">
+
+          <!-- ── Tree Tab ─────────────────────────────── -->
+          <div v-if="inspectorTab === 'tree'">
+            <div class="tree-node">
+              <div class="tree-label" :class="{ highlighted: highlightedComponent === 'App' }">
+                <span class="tree-arrow open">&#9654;</span>
+                <span class="tree-dot dot-app"></span>
+                &lt;App&gt;
+              </div>
+              <div class="tree-children">
+                <div class="tree-node">
+                  <div class="tree-label" :class="{ highlighted: highlightedComponent === 'Header' }">
+                    <span class="tree-arrow" style="visibility:hidden">&#9654;</span>
+                    <span class="tree-dot dot-header"></span>
+                    &lt;Header&gt;
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-label" :class="{ highlighted: highlightedComponent === 'ItemList' }">
+                    <span class="tree-arrow open">&#9654;</span>
+                    <span class="tree-dot dot-list"></span>
+                    &lt;ItemList&gt;
+                  </div>
+                  <div class="tree-children">
+                    <div class="tree-node" v-for="item in items" :key="'tree-'+item.id">
+                      <div class="tree-label" :class="{ highlighted: highlightedComponent === 'ItemCard-'+item.id }">
+                        <span class="tree-arrow" style="visibility:hidden">&#9654;</span>
+                        <span class="tree-dot dot-card"></span>
+                        &lt;ItemCard&gt;
+                        <span style="font-size:0.65rem;color:var(--text-dim);margin-left:0.25rem;">id={{ item.id }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tree-node" v-if="items.length === 0">
+                  <div class="tree-label" :class="{ highlighted: highlightedComponent === 'EmptyState' }">
+                    <span class="tree-arrow" style="visibility:hidden">&#9654;</span>
+                    <span class="tree-dot dot-empty"></span>
+                    &lt;EmptyState&gt;
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-label" :class="{ highlighted: highlightedComponent === 'Footer' }">
+                    <span class="tree-arrow" style="visibility:hidden">&#9654;</span>
+                    <span class="tree-dot dot-footer"></span>
+                    &lt;Footer&gt;
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Props Tab ────────────────────────────── -->
+          <div v-if="inspectorTab === 'props'">
+            <!-- App -->
+            <div class="props-section">
+              <div class="props-section-title">
+                <span class="tree-dot dot-app"></span> App
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">data:</span>
+                <span class="prop-val string">(root component — no props)</span>
+              </div>
+            </div>
+            <!-- Header -->
+            <div class="props-section">
+              <div class="props-section-title">
+                <span class="tree-dot dot-header"></span> Header
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">title:</span>
+                <span class="prop-val string">"{{ headerTitle }}"</span>
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">subtitle:</span>
+                <span class="prop-val string">"{{ headerSubtitle }}"</span>
+              </div>
+            </div>
+            <!-- ItemList -->
+            <div class="props-section">
+              <div class="props-section-title">
+                <span class="tree-dot dot-list"></span> ItemList
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">items:</span>
+                <span class="prop-val array">Array[{{ items.length }}]</span>
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">selectedId:</span>
+                <span class="prop-val" :class="selectedItem ? 'number' : 'null'">{{ selectedItem ? selectedItem.id : 'null' }}</span>
+              </div>
+            </div>
+            <!-- ItemCard (selected or first) -->
+            <div class="props-section" v-if="inspectedCard">
+              <div class="props-section-title">
+                <span class="tree-dot dot-card"></span> ItemCard <span style="color:var(--text-dim);font-weight:400;">({{ inspectedCard.title }})</span>
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">item:</span>
+                <span class="prop-val string">{ id: {{ inspectedCard.id }}, title: "{{ inspectedCard.title }}", ... }</span>
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">isSelected:</span>
+                <span class="prop-val" :class="selectedItem && selectedItem.id === inspectedCard.id ? 'number' : 'null'">{{ selectedItem && selectedItem.id === inspectedCard.id }}</span>
+              </div>
+            </div>
+            <!-- Footer -->
+            <div class="props-section">
+              <div class="props-section-title">
+                <span class="tree-dot dot-footer"></span> Footer
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">itemCount:</span>
+                <span class="prop-val number">{{ items.length }}</span>
+              </div>
+              <div class="prop-row">
+                <span class="prop-key">selectedName:</span>
+                <span class="prop-val" :class="selectedItem ? 'string' : 'null'">{{ selectedItem ? '"' + selectedItem.title + '"' : 'null' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── Events Tab ───────────────────────────── -->
+          <div v-if="inspectorTab === 'events'">
+            <div style="display:flex;align-items:center;margin-bottom:0.75rem;">
+              <span style="font-size:0.75rem;color:var(--text-dim);">Event log ({{ eventLog.length }})</span>
+              <button class="clear-btn" @click="eventLog = []" v-if="eventLog.length">Clear</button>
+            </div>
+            <div class="event-log" v-if="eventLog.length">
+              <div class="event-entry" v-for="(evt, i) in eventLog" :key="i" :style="{ background: evt.bg }">
+                <span class="event-time">{{ evt.time }}</span>
+                <div class="event-body">
+                  <span class="event-source" :class="evt.srcClass">{{ evt.source }}</span>
+                  <span class="event-msg"> {{ evt.action }} </span>
+                  <span class="event-highlight" v-if="evt.detail">{{ evt.detail }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="event-empty" v-else>
+              Click a card to see events flow up the component tree.
+            </div>
+          </div>
+
+          <!-- ── State Tab ────────────────────────────── -->
+          <div v-if="inspectorTab === 'state'">
+            <div class="state-block" :class="{ 'state-updated': stateJustUpdated }">
+              <h4>
+                <span class="tree-dot dot-app"></span>
+                App — Reactive State
+              </h4>
+              <div class="state-json" v-html="formattedState"></div>
+            </div>
+            <div class="state-block">
+              <h4>
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#06B6D4" stroke-width="1.5"/><path d="M8 5v3l2 2" stroke="#06B6D4" stroke-width="1.2" stroke-linecap="round"/></svg>
+                Last Event
+              </h4>
+              <div class="state-json" v-if="lastEventSummary" v-html="lastEventSummary"></div>
+              <div class="state-json" v-else style="color:var(--text-dim);">No events yet.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script>
+    const { createApp, ref, computed, defineComponent, h } = Vue;
+
+    /* ── Data ─────────────────────────────────────────── */
+    const BOOKS = [
+      { id: 1, title: 'The Pragmatic Programmer', author: 'David Thomas & Andrew Hunt', pages: 352, genre: 'nonfiction', icon: '\u{1F4D8}' },
+      { id: 2, title: 'Dune',                     author: 'Frank Herbert',              pages: 688, genre: 'fiction',    icon: '\u{1F3DC}\u{FE0F}' },
+      { id: 3, title: 'Thinking, Fast and Slow',   author: 'Daniel Kahneman',            pages: 499, genre: 'nonfiction', icon: '\u{1F9E0}' },
+      { id: 4, title: 'Neuromancer',               author: 'William Gibson',             pages: 271, genre: 'fiction',    icon: '\u{1F916}' },
+      { id: 5, title: 'The Art of War',            author: 'Sun Tzu',                    pages: 68,  genre: 'classic',   icon: '\u{2694}\u{FE0F}' },
+      { id: 6, title: 'Clean Code',                author: 'Robert C. Martin',           pages: 464, genre: 'nonfiction', icon: '\u{2728}' }
+    ];
+
+    /* ── Header Component ────────────────────────────── */
+    const AppHeader = defineComponent({
+      name: 'Header',
+      props: { title: String, subtitle: String },
+      template: `
+        <div class="vue-header">
+          <h2>{{ title }}</h2>
+          <p>{{ subtitle }}</p>
+        </div>
+      `
+    });
+
+    /* ── ItemCard Component ──────────────────────────── */
+    const ItemCard = defineComponent({
+      name: 'ItemCard',
+      props: {
+        item: Object,
+        isSelected: Boolean
+      },
+      emits: ['select'],
+      template: `
+        <div class="item-card" :class="{ selected: isSelected }" @click="$emit('select', item)">
+          <span class="selected-badge" v-if="isSelected">SELECTED</span>
+          <div class="card-icon">{{ item.icon }}</div>
+          <h3>{{ item.title }}</h3>
+          <div class="card-author">{{ item.author }}</div>
+          <div class="card-meta">
+            <span class="card-tag" :class="'tag-' + item.genre">{{ item.genre }}</span>
+            <span>{{ item.pages }} pages</span>
+          </div>
+        </div>
+      `
+    });
+
+    /* ── EmptyState Component ────────────────────────── */
+    const EmptyState = defineComponent({
+      name: 'EmptyState',
+      template: `
+        <div class="empty-state">
+          <div class="empty-icon">\u{1F4DA}</div>
+          <p>No items to display.</p>
+        </div>
+      `
+    });
+
+    /* ── ItemList Component ──────────────────────────── */
+    const ItemList = defineComponent({
+      name: 'ItemList',
+      props: {
+        items: Array,
+        selectedId: { type: Number, default: null }
+      },
+      emits: ['select'],
+      components: { ItemCard, EmptyState },
+      template: `
+        <div v-if="items.length" class="item-grid">
+          <item-card
+            v-for="item in items"
+            :key="item.id"
+            :item="item"
+            :is-selected="item.id === selectedId"
+            @select="$emit('select', $event)"
+          />
+        </div>
+        <empty-state v-else />
+      `
+    });
+
+    /* ── Footer Component ────────────────────────────── */
+    const AppFooter = defineComponent({
+      name: 'Footer',
+      props: {
+        itemCount: Number,
+        selectedName: { type: String, default: null }
+      },
+      template: `
+        <div class="vue-footer">
+          <span><span class="status-dot"></span>{{ itemCount }} items loaded</span>
+          <span v-if="selectedName">Selected: {{ selectedName }}</span>
+          <span v-else style="opacity:0.5;">No selection</span>
+        </div>
+      `
+    });
+
+    /* ── App ─────────────────────────────────────────── */
+    const app = createApp({
+      components: { AppHeader, ItemList, AppFooter },
+      setup() {
+        const items = ref(BOOKS);
+        const selectedItem = ref(null);
+        const headerTitle = ref('Reading List');
+        const headerSubtitle = ref('Click a book to select it and watch events flow through the component tree.');
+
+        // Inspector state
+        const inspectorTab = ref('tree');
+        const eventLog = ref([]);
+        const highlightedComponent = ref(null);
+        const stateJustUpdated = ref(false);
+
+        function getTime() {
+          const d = new Date();
+          return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        }
+
+        function addEvent(source, action, detail, srcClass, bg) {
+          eventLog.value.unshift({
+            time: getTime(),
+            source, action, detail, srcClass, bg
+          });
+          // Cap at 50 entries
+          if (eventLog.value.length > 50) eventLog.value.length = 50;
+        }
+
+        function flashHighlight(name, duration) {
+          highlightedComponent.value = name;
+          setTimeout(() => {
+            if (highlightedComponent.value === name) {
+              highlightedComponent.value = null;
+            }
+          }, duration);
+        }
+
+        function handleSelect(item) {
+          const prev = selectedItem.value;
+          selectedItem.value = item;
+
+          // Animate tree highlights in sequence
+          flashHighlight('ItemCard-' + item.id, 1800);
+          setTimeout(() => flashHighlight('ItemList', 1400), 300);
+          setTimeout(() => flashHighlight('App', 1200), 600);
+
+          // Log event chain
+          addEvent('ItemCard', 'emitted', "'select' \u2192 { id: " + item.id + ', title: "' + item.title + '" }', 'card-src', 'rgba(16,185,129,0.06)');
+          setTimeout(() => {
+            addEvent('ItemList', 're-emitted', "'select' \u2191 to App", 'list-src', 'rgba(167,139,250,0.06)');
+          }, 300);
+          setTimeout(() => {
+            addEvent('App', 'received event,', 'updating selectedItem \u2192 "' + item.title + '"', 'app-src', 'rgba(245,158,11,0.06)');
+          }, 600);
+
+          // Pulse the state block
+          stateJustUpdated.value = false;
+          setTimeout(() => { stateJustUpdated.value = true; }, 650);
+          setTimeout(() => { stateJustUpdated.value = false; }, 1300);
+
+          // Switch to events tab on first click
+          if (eventLog.value.length <= 3) {
+            inspectorTab.value = 'events';
+          }
+        }
+
+        const inspectedCard = computed(() => {
+          return selectedItem.value || items.value[0] || null;
+        });
+
+        const formattedState = computed(() => {
+          const sel = selectedItem.value;
+          let lines = [];
+          lines.push('<span class="json-brace">{</span>');
+          lines.push('  <span class="json-key">headerTitle</span>: <span class="json-str">"' + headerTitle.value + '"</span>,');
+          lines.push('  <span class="json-key">headerSubtitle</span>: <span class="json-str">"' + headerSubtitle.value.substring(0, 40) + '..."</span>,');
+          lines.push('  <span class="json-key">items</span>: <span class="json-str">Array[' + items.value.length + ']</span>,');
+          if (sel) {
+            lines.push('  <span class="json-key">selectedItem</span>: <span class="json-brace">{</span>');
+            lines.push('    <span class="json-key">id</span>: <span class="json-num">' + sel.id + '</span>,');
+            lines.push('    <span class="json-key">title</span>: <span class="json-str">"' + sel.title + '"</span>,');
+            lines.push('    <span class="json-key">author</span>: <span class="json-str">"' + sel.author + '"</span>,');
+            lines.push('    <span class="json-key">pages</span>: <span class="json-num">' + sel.pages + '</span>,');
+            lines.push('    <span class="json-key">genre</span>: <span class="json-str">"' + sel.genre + '"</span>');
+            lines.push('  <span class="json-brace">}</span>');
+          } else {
+            lines.push('  <span class="json-key">selectedItem</span>: <span class="json-null">null</span>');
+          }
+          lines.push('<span class="json-brace">}</span>');
+          return lines.join('\n');
+        });
+
+        const lastEventSummary = computed(() => {
+          if (eventLog.value.length === 0) return '';
+          const last = eventLog.value[0];
+          return '<span class="json-key">' + last.source + '</span> <span class="json-str">' + last.action + '</span> ' + (last.detail ? '<span class="json-num">' + last.detail + '</span>' : '');
+        });
+
+        return {
+          items,
+          selectedItem,
+          headerTitle,
+          headerSubtitle,
+          inspectorTab,
+          eventLog,
+          highlightedComponent,
+          stateJustUpdated,
+          handleSelect,
+          inspectedCard,
+          formattedState,
+          lastEventSummary
+        };
+      }
+    });
+
+    app.mount('#app');
+  </script>
+</body>
+</html>
