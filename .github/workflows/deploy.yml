@@ -85,6 +85,12 @@ jobs:
           # W5D3 Next.js demos
           cp -r demos/nextjs-bookshelf/out _site/nextjs-bookshelf
           cp -r demos/nextjs-polish-demo/out _site/nextjs-polish-demo
+          # W5D4 Vue demos (static HTML, no build needed)
+          cp -r demos/vue-component-tree _site/vue-component-tree
+          cp -r demos/vue-forms _site/vue-forms
+          cp -r demos/vue-router-explorer _site/vue-router-explorer
+          cp -r demos/vue-routing-app _site/vue-routing-app
+          cp -r demos/vue-bookshelf _site/vue-bookshelf
 
       - uses: actions/upload-pages-artifact@v3
 
