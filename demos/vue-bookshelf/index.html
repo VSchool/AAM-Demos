@@ -3,856 +3,1000 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Bookshelf — Vue 3 Demo</title>
+  <title>Bookshelf — Vue 3 Demo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@400;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&display=swap" rel="stylesheet">
   <style>
-    /* ============================================================
-       VUE BOOKSHELF — Dark Library Theme
-       Palette: bg #1B1B2F, surface #27274A, text #E0DFD5,
-                gold #D4AF37, red #C0392B, blue #5DADE2, brown #6B4226
-       Typography: Merriweather (serif headings) + Lato (body)
-       ============================================================ */
+/* ===== Next.js Bookshelf Demo — Global Styles ===== */
+/* Professional redesign — editorial / literary aesthetic */
 
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+:root {
+  /* Palette — warm dark editorial */
+  --bg-primary: #0C0A09;
+  --bg-secondary: #1C1917;
+  --bg-card: #1C1917;
+  --bg-card-hover: #292524;
+  --bg-elevated: #292524;
+  --accent: #D4A574;
+  --accent-hover: #C49464;
+  --accent-light: rgba(212, 165, 116, 0.12);
+  --accent-glow: rgba(212, 165, 116, 0.25);
+  --secondary: #A78BFA;
+  --text-primary: #FAFAF9;
+  --text-secondary: #A8A29E;
+  --text-muted: #78716C;
+  --success: #4ADE80;
+  --warning: #FBBF24;
+  --border-subtle: rgba(168, 162, 158, 0.08);
+  --border-card: rgba(168, 162, 158, 0.1);
 
-    :root {
-      --bg: #1B1B2F;
-      --bg-deep: #12121F;
-      --surface: #27274A;
-      --surface-hover: #323260;
-      --text: #E0DFD5;
-      --text-muted: rgba(224, 223, 213, 0.55);
-      --text-dim: rgba(224, 223, 213, 0.35);
-      --gold: #D4AF37;
-      --gold-dim: rgba(212, 175, 55, 0.15);
-      --gold-glow: rgba(212, 175, 55, 0.25);
-      --red: #C0392B;
-      --red-dim: rgba(192, 57, 43, 0.15);
-      --blue: #5DADE2;
-      --blue-dim: rgba(93, 173, 226, 0.12);
-      --brown: #6B4226;
-      --brown-light: #8B5E3C;
-      --border: rgba(224, 223, 213, 0.08);
-      --border-hover: rgba(212, 175, 55, 0.3);
-      --radius: 0.625rem;
-      --radius-lg: 1rem;
-      --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.3);
-      --font-heading: 'Merriweather', Georgia, 'Times New Roman', serif;
-      --font-body: 'Lato', 'Segoe UI', system-ui, sans-serif;
-      --max-width: 1140px;
-    }
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2);
+  --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 12px rgba(212, 165, 116, 0.08);
+  --shadow-button: 0 2px 8px rgba(212, 165, 116, 0.3);
+  --shadow-hero: 0 20px 60px rgba(0, 0, 0, 0.5);
 
-    html {
-      scroll-behavior: smooth;
-    }
+  /* Radii */
+  --radius-card: 16px;
+  --radius-button: 10px;
+  --radius-pill: 100px;
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.6;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
+  /* Spacing */
+  --gap-cards: 1.75rem;
+  --padding-card: 1.5rem;
+  --max-width: 1200px;
+  --section-gap: 4rem;
 
-    a {
-      color: var(--gold);
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    a:hover {
-      color: #E8C84A;
-    }
+  /* Typography */
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
 
-    /* ===== TOP NAVIGATION ===== */
-    .top-nav {
-      background: var(--bg-deep);
-      border-bottom: 1px solid var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
-    }
+/* ===== Reset ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-    .nav-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-    }
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
 
-    .nav-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .nav-brand:hover {
-      color: var(--gold);
-    }
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-    .brand-icon {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--gold), var(--brown));
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-    }
+a {
+  color: inherit;
+  text-decoration: none;
+}
 
-    .brand-name {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
+img {
+  max-width: 100%;
+  display: block;
+}
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
 
-    .nav-links a {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .nav-links a:hover {
-      color: var(--text);
-      background: var(--gold-dim);
-    }
-    .nav-links a.router-link-active,
-    .nav-links a[aria-current="page"] {
-      color: var(--gold);
-      background: var(--gold-dim);
-      font-weight: 700;
-    }
+input {
+  font-family: inherit;
+}
 
-    .fav-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 18px;
-      height: 18px;
-      padding: 0 5px;
-      border-radius: 9px;
-      background: var(--red);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      margin-left: 4px;
-      line-height: 1;
-    }
+/* ===== Typography ===== */
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--text-primary);
+}
 
-    /* ===== LAYOUT ===== */
-    .page-container {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-      min-height: calc(100vh - 64px - 80px);
-    }
+h1 {
+  font-size: 3.25rem;
+  letter-spacing: -0.02em;
+}
 
-    /* ===== HERO (HOME) ===== */
-    .hero {
-      text-align: center;
-      padding: 4rem 2rem;
-      margin-bottom: 3rem;
-      background: linear-gradient(
-        180deg,
-        var(--surface) 0%,
-        rgba(27, 27, 47, 0) 100%
-      );
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(
-        ellipse at center,
-        var(--gold-glow) 0%,
-        transparent 60%
-      );
-      opacity: 0.3;
-      pointer-events: none;
-    }
+h2 {
+  font-size: 2.25rem;
+  letter-spacing: -0.01em;
+}
 
-    .hero h1 {
-      font-family: var(--font-heading);
-      font-size: 2.75rem;
-      font-weight: 900;
-      color: var(--text);
-      margin-bottom: 0.75rem;
-      position: relative;
-    }
-    .hero h1 span {
-      color: var(--gold);
-    }
+h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
 
-    .hero p {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 540px;
-      margin: 0 auto 2rem;
-      position: relative;
-    }
+p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
 
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 2rem;
-      background: var(--gold);
-      color: var(--bg-deep);
-      font-weight: 700;
-      font-size: 0.95rem;
-      border-radius: 9999px;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .hero-cta:hover {
-      background: #E8C84A;
-      color: var(--bg-deep);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px var(--gold-glow);
-    }
+/* ===== Layout ===== */
+.page-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+  flex: 1;
+}
 
-    /* ===== SECTION HEADINGS ===== */
-    .section-heading {
-      font-family: var(--font-heading);
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .section-heading .accent-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
+/* ===== Navigation ===== */
+.nav {
+  background: rgba(12, 10, 9, 0.6);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background 0.3s ease;
+}
 
-    /* ===== BOOK CARDS (portrait) ===== */
-    .book-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
+.nav-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 64px;
+}
 
-    .book-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: all 0.25s ease;
-      cursor: pointer;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-    }
-    .book-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-      box-shadow: var(--shadow);
-      color: var(--text);
-    }
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
 
-    .book-cover {
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .book-cover .cover-title {
-      font-family: var(--font-heading);
-      font-size: 1rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.95);
-      text-align: center;
-      padding: 1rem;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      line-height: 1.3;
-      position: relative;
-      z-index: 1;
-    }
-    .book-cover::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.4) 100%);
-    }
+.nav-logo-icon {
+  font-size: 1.25rem;
+}
 
-    .book-info {
-      padding: 1rem 1.25rem 1.25rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
+.nav-logo span {
+  color: var(--text-primary);
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+}
 
-    .book-info h3 {
-      font-family: var(--font-heading);
-      font-size: 1rem;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 0.25rem;
-    }
+.nav-links {
+  display: flex;
+  gap: 0.25rem;
+  list-style: none;
+}
 
-    .book-info .author {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  transition: color 0.2s, background 0.2s;
+}
 
-    .book-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: auto;
-    }
+.nav-link:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
 
-    .genre-badge {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 9999px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      background: var(--blue-dim);
-      color: var(--blue);
-    }
+.nav-link.active {
+  color: var(--accent);
+  background: var(--accent-light);
+}
 
-    .rating {
-      font-size: 0.85rem;
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+/* ===== Hero Banner ===== */
+.hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
 
-    /* ===== BOOKS PAGE (two-column) ===== */
-    .books-layout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 2rem;
-      align-items: start;
-    }
+.hero-banner-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.5) saturate(0.7);
+}
 
-    .sidebar {
-      position: sticky;
-      top: 88px;
-    }
+.hero-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(12, 10, 9, 0.3) 0%,
+      rgba(12, 10, 9, 0.2) 30%,
+      rgba(12, 10, 9, 0.6) 65%,
+      rgba(12, 10, 9, 0.95) 85%,
+      rgba(12, 10, 9, 1) 100%
+    );
+  z-index: 1;
+}
 
-    .sidebar-section {
-      margin-bottom: 2rem;
-    }
+.hero-banner-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 6rem 2rem 4rem;
+  max-width: 800px;
+}
 
-    .sidebar-section h4 {
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
 
-    .search-input {
-      width: 100%;
-      padding: 0.6rem 0.9rem;
-      padding-left: 2.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s ease;
-    }
-    .search-input::placeholder {
-      color: var(--text-dim);
-    }
-    .search-input:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px var(--gold-dim);
-    }
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: "";
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: var(--accent);
+  vertical-align: middle;
+  opacity: 0.5;
+}
 
-    .search-wrapper {
-      position: relative;
-    }
-    .search-icon {
-      position: absolute;
-      left: 0.75rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-dim);
-      font-size: 0.85rem;
-      pointer-events: none;
-    }
+.hero-eyebrow::before {
+  margin-right: 1rem;
+}
 
-    .genre-filters {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
+.hero-eyebrow::after {
+  margin-left: 1rem;
+}
 
-    .genre-btn {
-      display: block;
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: var(--radius);
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .genre-btn:hover {
-      color: var(--text);
-      background: var(--gold-dim);
-    }
-    .genre-btn.active {
-      color: var(--gold);
-      background: var(--gold-dim);
-      border-color: var(--gold-glow);
-      font-weight: 700;
-    }
+.hero-banner-content h1 {
+  font-family: var(--font-serif);
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text-primary);
+}
 
-    .results-count {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      margin-bottom: 1rem;
-    }
+.hero-banner-content h1 .accent {
+  color: var(--accent);
+  font-style: italic;
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
+}
 
-    /* ===== BOOK DETAIL ===== */
-    .detail-layout {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      gap: 3rem;
-      align-items: start;
-    }
+.hero-banner-content p {
+  font-size: 1.2rem;
+  max-width: 540px;
+  margin: 0 auto 3rem;
+  color: rgba(250, 250, 249, 0.65);
+  line-height: 1.8;
+  font-weight: 300;
+}
 
-    .detail-cover {
-      height: 420px;
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-    .detail-cover .cover-title {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      font-weight: 900;
-      color: rgba(255, 255, 255, 0.95);
-      text-align: center;
-      padding: 2rem;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-      line-height: 1.3;
-      position: relative;
-      z-index: 1;
-    }
-    .detail-cover::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, 0.35) 100%);
-    }
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--bg-primary);
+  padding: 1rem 2.5rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  box-shadow: var(--shadow-button);
+  transition: all 0.3s ease;
+}
 
-    .detail-info h1 {
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      font-weight: 900;
-      margin-bottom: 0.25rem;
-    }
+.hero-cta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(212, 165, 116, 0.35);
+}
 
-    .detail-author {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      margin-bottom: 1.5rem;
-    }
+/* ===== Section Headers ===== */
+.section-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
 
-    .detail-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
+.section-header {
+  margin-bottom: 3rem;
+}
 
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      font-size: 0.9rem;
-    }
-    .meta-item .label {
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .meta-item .value {
-      font-weight: 700;
-      color: var(--text);
-    }
-    .meta-item .value.gold {
-      color: var(--gold);
-    }
+.section-header h2 {
+  margin-bottom: 0.5rem;
+}
 
-    .detail-description {
-      font-size: 1.05rem;
-      line-height: 1.75;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      max-width: 600px;
-    }
+.section-header p {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 480px;
+}
 
-    .fav-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.75rem 1.5rem;
-      border-radius: 9999px;
-      border: 2px solid var(--border);
-      background: transparent;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-    .fav-toggle:hover {
-      border-color: var(--red);
-      color: var(--red);
-      background: var(--red-dim);
-    }
-    .fav-toggle.is-fav {
-      border-color: var(--red);
-      background: var(--red);
-      color: #fff;
-    }
+/* ===== Featured Section ===== */
+.featured-section {
+  padding: 5rem 0;
+}
 
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      margin-bottom: 2rem;
-      text-decoration: none;
-      transition: color 0.2s ease;
-    }
-    .back-link:hover {
-      color: var(--gold);
-    }
+.featured-divider {
+  width: 3rem;
+  height: 2px;
+  background: var(--accent);
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
 
-    /* ===== FAVORITES PAGE ===== */
-    .favorites-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
+/* ===== Book Grid ===== */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--gap-cards);
+}
 
-    .fav-card {
-      display: flex;
-      gap: 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      transition: all 0.2s ease;
-    }
-    .fav-card:hover {
-      border-color: var(--border-hover);
-    }
+/* ===== Book Card ===== */
+.book-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-card);
+}
 
-    .fav-cover-small {
-      width: 80px;
-      min-height: 110px;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    .fav-cover-small .cover-title {
-      font-family: var(--font-heading);
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
-      text-align: center;
-      padding: 0.5rem;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-      position: relative;
-      z-index: 1;
-      line-height: 1.3;
-    }
+.book-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-card-hover);
+}
 
-    .fav-details {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .fav-details h3 {
-      font-family: var(--font-heading);
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 0.15rem;
-    }
-    .fav-details .author {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-    }
-    .fav-details .fav-actions {
-      margin-top: auto;
-      display: flex;
-      gap: 0.5rem;
-    }
+.book-card-cover {
+  height: 220px;
+  position: relative;
+  overflow: hidden;
+}
 
-    .btn-remove {
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-remove:hover {
-      border-color: var(--red);
-      color: var(--red);
-      background: var(--red-dim);
-    }
+.book-card-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    .btn-view {
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius);
-      border: 1px solid var(--gold-glow);
-      background: var(--gold-dim);
-      color: var(--gold);
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn-view:hover {
-      background: var(--gold);
-      color: var(--bg-deep);
-    }
+.book-card:hover .book-card-cover-img {
+  transform: scale(1.05);
+}
 
-    /* ===== EMPTY STATE ===== */
-    .empty-state {
-      text-align: center;
-      padding: 4rem 2rem;
-    }
-    .empty-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      opacity: 0.5;
-    }
-    .empty-state h3 {
-      font-family: var(--font-heading);
-      font-size: 1.25rem;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-    }
-    .empty-state p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
-    }
-    .empty-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.6rem 1.5rem;
-      background: var(--gold-dim);
-      color: var(--gold);
-      border-radius: 9999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
-    .empty-cta:hover {
-      background: var(--gold);
-      color: var(--bg-deep);
-    }
+.book-card-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(12, 10, 9, 0.5) 0%,
+    rgba(12, 10, 9, 0) 50%
+  );
+  z-index: 1;
+}
 
-    /* ===== 404 ===== */
-    .not-found {
-      text-align: center;
-      padding: 6rem 2rem;
-    }
-    .not-found h1 {
-      font-family: var(--font-heading);
-      font-size: 6rem;
-      font-weight: 900;
-      color: var(--gold);
-      line-height: 1;
-      margin-bottom: 1rem;
-    }
-    .not-found h2 {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-    .not-found p {
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-    }
+.book-card-category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  display: inline-block;
+  background: rgba(12, 10, 9, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(212, 165, 116, 0.15);
+}
 
-    /* ===== FOOTER ===== */
-    .site-footer {
-      text-align: center;
-      padding: 2rem 1.5rem;
-      border-top: 1px solid var(--border);
-      color: var(--text-dim);
-      font-size: 0.8rem;
-    }
-    .site-footer a {
-      color: var(--text-muted);
-    }
-    .site-footer .tech-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.2rem 0.6rem;
-      background: var(--surface);
-      border-radius: 9999px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      margin-left: 0.25rem;
-    }
+.book-card-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-    /* ===== STAR RATING DISPLAY ===== */
-    .stars {
-      display: inline-flex;
-      gap: 2px;
-    }
-    .star {
-      color: var(--gold);
-      font-size: 0.9rem;
-    }
-    .star.empty {
-      color: var(--text-dim);
-    }
+.book-card-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
 
-    /* ===== TRANSITIONS ===== */
-    .fade-enter-active,
-    .fade-leave-active {
-      transition: opacity 0.2s ease;
-    }
-    .fade-enter-from,
-    .fade-leave-to {
-      opacity: 0;
-    }
+.book-card-author {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.85rem;
+  font-style: italic;
+}
 
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 768px) {
-      .books-layout {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        position: static;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-      .sidebar-section {
-        flex: 1;
-        min-width: 200px;
-        margin-bottom: 0;
-      }
-      .genre-filters {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-      .genre-btn {
-        width: auto;
-      }
-      .detail-layout {
-        grid-template-columns: 1fr;
-      }
-      .detail-cover {
-        height: 300px;
-        max-width: 280px;
-      }
-      .hero h1 {
-        font-size: 2rem;
-      }
-      .book-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      }
-      .nav-brand .brand-name {
-        display: none;
-      }
-      .nav-links a {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.8rem;
-      }
-    }
+.book-card-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
-    @media (max-width: 480px) {
-      .book-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-      }
-      .favorites-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+.book-card-footer {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.book-card-year {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.book-card-link {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 600;
+  transition: color 0.2s, gap 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.book-card-link:hover {
+  color: var(--text-primary);
+}
+
+/* ===== Favorite Button ===== */
+.favorite-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+}
+
+.favorite-btn:hover {
+  background: rgba(212, 165, 116, 0.08);
+  color: var(--accent);
+  border-color: rgba(212, 165, 116, 0.2);
+}
+
+.favorite-btn.favorited {
+  background: rgba(212, 165, 116, 0.12);
+  color: var(--accent);
+  border-color: rgba(212, 165, 116, 0.25);
+}
+
+.favorite-btn:active {
+  transform: scale(0.95);
+}
+
+.favorite-btn-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ===== Search Bar ===== */
+.search-container {
+  margin-bottom: 2.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  padding-left: 3.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-card);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.search-wrapper {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+/* ===== Book Detail Page ===== */
+.book-detail {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.book-detail-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3.5rem;
+  margin-bottom: 3rem;
+  align-items: start;
+}
+
+.book-detail-cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-hero);
+}
+
+.book-detail-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-detail-info {
+  padding-top: 0.5rem;
+}
+
+.book-detail-info h1 {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.15;
+}
+
+.book-detail-author {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.book-detail-meta {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.book-detail-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.book-detail-tag.category {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+}
+
+.book-detail-tag.year {
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(74, 222, 128, 0.15);
+}
+
+.book-detail-description {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+
+.book-detail-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 2.5rem;
+  transition: color 0.2s;
+  letter-spacing: 0.01em;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+/* ===== Featured Books (home page) ===== */
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--gap-cards);
+  margin-bottom: 3.5rem;
+}
+
+/* ===== Browse CTA ===== */
+.browse-cta-wrapper {
+  text-align: center;
+  padding-top: 1rem;
+}
+
+/* ===== Featured Quote / Callout ===== */
+.featured-callout {
+  position: relative;
+  margin: var(--section-gap) 0;
+  padding: 5rem 3rem;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  text-align: center;
+}
+
+.featured-callout-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.3) saturate(0.6);
+}
+
+.featured-callout-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(12, 10, 9, 0.85) 0%,
+    rgba(28, 25, 23, 0.75) 100%
+  );
+}
+
+.featured-callout-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.featured-callout-content blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.featured-callout-content cite {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ===== Favorites Page ===== */
+.favorites-empty {
+  text-align: center;
+  padding: 5rem 2rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.favorites-empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.4;
+}
+
+.favorites-empty h2 {
+  margin-bottom: 0.75rem;
+  font-size: 1.75rem;
+}
+
+.favorites-empty p {
+  margin-bottom: 2.5rem;
+  line-height: 1.7;
+}
+
+.favorites-cta {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg-primary);
+  padding: 0.75rem 2rem;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-button);
+  transition: all 0.25s ease;
+  letter-spacing: 0.02em;
+}
+
+.favorites-cta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* ===== Component Label ===== */
+.component-label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 4rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-button);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.component-label-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.component-label-dot.server {
+  background: var(--success);
+}
+
+.component-label-dot.client {
+  background: var(--secondary);
+}
+
+.component-label strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  background: var(--bg-secondary);
+  margin-top: auto;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.site-footer a {
+  color: var(--accent);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.site-footer a:hover {
+  color: var(--text-primary);
+}
+
+/* ===== No Results ===== */
+.no-results {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: var(--text-muted);
+}
+
+.no-results-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.4;
+}
+
+/* ===== Stats Row ===== */
+.stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  padding: 3rem 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin: var(--section-gap) 0;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 500;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  .hero-banner {
+    min-height: 85vh;
+  }
+
+  .hero-banner-content {
+    padding: 4rem 1.5rem 3rem;
+  }
+
+  .hero-banner-content h1 {
+    font-size: 2.75rem;
+  }
+
+  .hero-banner-content p {
+    font-size: 1.05rem;
+  }
+
+  .page-container {
+    padding: 3rem 1.25rem 4rem;
+  }
+
+  .book-detail-header {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .book-detail-cover {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .book-detail-info {
+    text-align: center;
+  }
+
+  .book-detail-info h1 {
+    font-size: 2rem;
+  }
+
+  .book-detail-meta {
+    justify-content: center;
+  }
+
+  .book-detail-actions {
+    justify-content: center;
+  }
+
+  .nav-inner {
+    padding: 0 1rem;
+  }
+
+  .nav-link {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .stats-row {
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .featured-callout {
+    padding: 3.5rem 2rem;
+    margin: 3rem 0;
+  }
+
+  .featured-callout-content blockquote {
+    font-size: 1.25rem;
+  }
+
+  .section-header {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-grid,
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-banner-content h1 {
+    font-size: 2.25rem;
+  }
+
+  .stats-row {
+    gap: 1.5rem;
+  }
+}
   </style>
 </head>
 <body>
@@ -864,148 +1008,108 @@
   <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.prod.js"></script>
 
   <script>
-    const { createApp, ref, computed, reactive, watch, onMounted, toRefs } = Vue;
+    const { createApp, ref, computed, reactive, watch, onMounted } = Vue;
     const { createRouter, createWebHashHistory, useRoute, useRouter, RouterLink, RouterView } = VueRouter;
 
     // =========================================================
-    // DATA — 12 books with CSS gradient covers
+    // DATA — Same 8 books from the Next.js version
     // =========================================================
-    const BOOKS = [
+    const books = [
       {
-        id: 'the-design-of-everyday-things',
-        title: 'The Design of Everyday Things',
-        author: 'Don Norman',
-        genre: 'Design',
-        rating: 4.5,
-        featured: true,
-        coverGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        description: 'A powerful primer on how good design makes products useful, understandable, and satisfying. Norman shows why some products delight users while others frustrate them, and how designers can build things that actually work for people. Essential reading for anyone building products people will use.'
+        id: "pragmatic-programmer",
+        title: "The Pragmatic Programmer",
+        author: "Andrew Hunt & David Thomas",
+        description: "A timeless guide to software craftsmanship that covers everything from personal responsibility to architecture. It introduced concepts like DRY (Don't Repeat Yourself) and the Broken Window Theory to the programming world.",
+        category: "Software Engineering",
+        year: 1999,
+        coverImage: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'thinking-fast-and-slow',
-        title: 'Thinking, Fast and Slow',
-        author: 'Daniel Kahneman',
-        genre: 'Psychology',
-        rating: 4.7,
-        featured: true,
-        coverGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-        description: 'Kahneman takes us on a tour of the mind and explains the two systems that drive the way we think. System 1 is fast, intuitive, and emotional; System 2 is slower, more deliberative, and more logical. Understanding these systems changes how you see decisions, risk, and happiness.'
+        id: "clean-code",
+        title: "Clean Code",
+        author: "Robert C. Martin",
+        description: "A handbook of agile software craftsmanship focused on writing readable, maintainable code. Martin walks through real-world examples of messy code and demonstrates step-by-step how to refactor it into clean, professional-quality software.",
+        category: "Software Engineering",
+        year: 2008,
+        coverImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'sapiens',
-        title: 'Sapiens',
-        author: 'Yuval Noah Harari',
-        genre: 'History',
-        rating: 4.6,
-        featured: true,
-        coverGradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-        description: 'A sweeping narrative of humankind from the Stone Age to the Silicon Age. Harari explores how Homo sapiens came to dominate the planet through cognitive revolutions, agricultural shifts, and shared myths. Bold, provocative, and impossible to put down.'
+        id: "designing-data-intensive-applications",
+        title: "Designing Data-Intensive Applications",
+        author: "Martin Kleppmann",
+        description: "A deep dive into the architecture of systems that handle large volumes of data. Kleppmann covers databases, stream processing, and distributed systems with remarkable clarity, making complex infrastructure concepts accessible.",
+        category: "Systems Design",
+        year: 2017,
+        coverImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'atomic-habits',
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        genre: 'Self-Help',
-        rating: 4.8,
-        featured: true,
-        coverGradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
-        description: 'Small changes, remarkable results. Clear reveals a practical framework for improving every day by building good habits, breaking bad ones, and mastering the tiny behaviors that lead to big outcomes. The 1% better every day philosophy that actually works.'
+        id: "you-dont-know-js",
+        title: "You Don't Know JS",
+        author: "Kyle Simpson",
+        description: "A series that digs into the core mechanisms of JavaScript, covering scope, closures, prototypes, and async patterns. Simpson challenges developers to move beyond surface-level understanding and truly master the language.",
+        category: "JavaScript",
+        year: 2014,
+        coverImage: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'dune',
-        title: 'Dune',
-        author: 'Frank Herbert',
-        genre: 'Fiction',
-        rating: 4.4,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-        description: 'Set on the desert planet Arrakis, this epic science fiction novel follows Paul Atreides as he navigates political intrigue, ecological wonder, and the destiny of entire civilizations. A masterwork of world-building that defined an entire genre.'
+        id: "refactoring",
+        title: "Refactoring",
+        author: "Martin Fowler",
+        description: "The definitive guide to improving the design of existing code without changing its behavior. Fowler provides a catalog of refactoring techniques with clear motivations, mechanics, and examples for each transformation.",
+        category: "Software Engineering",
+        year: 2018,
+        coverImage: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'the-lean-startup',
-        title: 'The Lean Startup',
-        author: 'Eric Ries',
-        genre: 'Business',
-        rating: 4.2,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
-        description: 'How today\'s entrepreneurs use continuous innovation to create radically successful businesses. Ries introduces the build-measure-learn loop and shows why failing fast, pivoting early, and validating assumptions beats traditional business planning.'
+        id: "system-design-interview",
+        title: "System Design Interview",
+        author: "Alex Xu",
+        description: "A practical guide to tackling system design questions with a step-by-step framework. Each chapter walks through designing a real system like a rate limiter, URL shortener, or chat application from scratch.",
+        category: "Systems Design",
+        year: 2020,
+        coverImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'the-pragmatic-programmer',
-        title: 'The Pragmatic Programmer',
-        author: 'David Thomas & Andrew Hunt',
-        genre: 'Technology',
-        rating: 4.6,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-        description: 'From journeyman to master. This classic book examines the core processes of software development — from gathering requirements to delivering tested code. Filled with practical advice, analogies, and tips that make you a better programmer.'
+        id: "eloquent-javascript",
+        title: "Eloquent JavaScript",
+        author: "Marijn Haverbeke",
+        description: "A modern introduction to programming through JavaScript that balances fundamentals with practical projects. The book includes interactive exercises and builds real applications like a pixel art editor and a platform game.",
+        category: "JavaScript",
+        year: 2018,
+        coverImage: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=600&h=400&fit=crop&q=80"
       },
       {
-        id: 'educated',
-        title: 'Educated',
-        author: 'Tara Westover',
-        genre: 'Memoir',
-        rating: 4.7,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%)',
-        description: 'Born to survivalists in the mountains of Idaho, Tara Westover had no formal education until she was seventeen. Her memoir charts a journey from her isolated childhood through self-education to a PhD from Cambridge. A testament to the transformative power of learning.'
-      },
-      {
-        id: 'deep-work',
-        title: 'Deep Work',
-        author: 'Cal Newport',
-        genre: 'Self-Help',
-        rating: 4.3,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-        description: 'Rules for focused success in a distracted world. Newport makes the case that deep, concentrated work is both increasingly rare and increasingly valuable. He provides strategies for cultivating this ability and transforming your professional output.'
-      },
-      {
-        id: 'zero-to-one',
-        title: 'Zero to One',
-        author: 'Peter Thiel',
-        genre: 'Business',
-        rating: 4.1,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #0c3483 0%, #a2b6df 50%, #6b8cce 100%)',
-        description: 'Notes on startups, or how to build the future. Thiel argues that creating something new (going from zero to one) is far more valuable than copying what works (going from one to n). A contrarian guide to thinking about innovation and building monopolies.'
-      },
-      {
-        id: 'project-hail-mary',
-        title: 'Project Hail Mary',
-        author: 'Andy Weir',
-        genre: 'Fiction',
-        rating: 4.8,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #e8198b 0%, #c7eafd 100%)',
-        description: 'A lone astronaut must save the earth from disaster in this propulsive, science-driven adventure from the author of The Martian. Ryland Grace wakes up on a spaceship with no memory of how he got there, and the clock is ticking. Pure science-nerd joy.'
-      },
-      {
-        id: 'the-art-of-war',
-        title: 'The Art of War',
-        author: 'Sun Tzu',
-        genre: 'History',
-        rating: 4.0,
-        featured: false,
-        coverGradient: 'linear-gradient(135deg, #c71d6f 0%, #d09693 100%)',
-        description: 'The most influential book on military strategy ever written, and still relevant 2,500 years later. Sun Tzu\'s concise principles on conflict, leadership, and preparation have been applied to everything from business negotiations to sports coaching.'
+        id: "art-of-readable-code",
+        title: "The Art of Readable Code",
+        author: "Dustin Boswell & Trevor Fouler",
+        description: "A concise guide focused on the single most important aspect of code quality: readability. The authors provide practical techniques for naming, commenting, and structuring code so that other developers can understand it quickly.",
+        category: "Software Engineering",
+        year: 2011,
+        coverImage: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop&q=80"
       }
     ];
 
+    // Helper functions
+    function getBookById(id) {
+      return books.find(book => book.id === id);
+    }
+
+    // Derive stats
+    const categories = new Set(books.map(b => b.category));
+    const earliestYear = Math.min(...books.map(b => b.year));
+    const latestYear = Math.max(...books.map(b => b.year));
+
     // =========================================================
     // COMPOSABLE: useFavorites()
-    // Shared reactive state backed by localStorage
     // =========================================================
     const favoritesState = reactive({
-      ids: JSON.parse(localStorage.getItem('vue-bookshelf-favorites') || '[]')
+      ids: JSON.parse(localStorage.getItem('bookshelf-favorites') || '[]')
     });
 
-    // Watch for changes and sync to localStorage
     watch(
       () => [...favoritesState.ids],
       (newIds) => {
-        localStorage.setItem('vue-bookshelf-favorites', JSON.stringify(newIds));
+        localStorage.setItem('bookshelf-favorites', JSON.stringify(newIds));
       },
       { deep: true }
     );
@@ -1014,7 +1118,7 @@
       const favoriteIds = computed(() => favoritesState.ids);
 
       const favoriteBooks = computed(() =>
-        BOOKS.filter(b => favoritesState.ids.includes(b.id))
+        books.filter(b => favoritesState.ids.includes(b.id))
       );
 
       const favoriteCount = computed(() => favoritesState.ids.length);
@@ -1032,69 +1136,150 @@
         }
       }
 
-      function removeFavorite(bookId) {
-        const idx = favoritesState.ids.indexOf(bookId);
-        if (idx > -1) {
-          favoritesState.ids.splice(idx, 1);
-        }
-      }
-
-      return { favoriteIds, favoriteBooks, favoriteCount, isFavorite, toggleFavorite, removeFavorite };
+      return { favoriteIds, favoriteBooks, favoriteCount, isFavorite, toggleFavorite };
     }
 
     // =========================================================
-    // HELPER: Star rating component
+    // COMPONENT: FavoriteButton
     // =========================================================
-    const StarRating = {
-      props: { rating: { type: Number, required: true } },
+    const FavoriteButton = {
+      props: {
+        bookId: { type: String, required: true }
+      },
+      setup(props) {
+        const { isFavorite, toggleFavorite } = useFavorites();
+        const favorited = computed(() => isFavorite(props.bookId));
+
+        function toggle() {
+          toggleFavorite(props.bookId);
+        }
+
+        return { favorited, toggle };
+      },
       template: `
-        <span class="stars" :aria-label="rating + ' out of 5 stars'">
-          <span v-for="i in 5" :key="i"
-                class="star"
-                :class="{ empty: i > Math.round(rating) }">&#9733;</span>
-        </span>
+        <button
+          class="favorite-btn"
+          :class="{ favorited: favorited }"
+          @click.prevent.stop="toggle"
+          :aria-label="favorited ? 'Remove from favorites' : 'Add to favorites'"
+        >
+          <span class="favorite-btn-icon">{{ favorited ? '\u2665' : '\u2661' }}</span>
+          <span>{{ favorited ? 'Saved' : 'Save' }}</span>
+        </button>
       `
     };
 
     // =========================================================
-    // COMPONENT: AppNav
+    // COMPONENT: BookCard
+    // =========================================================
+    const BookCard = {
+      components: { FavoriteButton },
+      props: {
+        book: { type: Object, required: true }
+      },
+      template: `
+        <div class="book-card">
+          <div class="book-card-cover">
+            <img
+              :src="book.coverImage"
+              :alt="book.title"
+              loading="lazy"
+              class="book-card-cover-img"
+            />
+            <div class="book-card-cover-overlay"></div>
+            <span class="book-card-category">{{ book.category }}</span>
+          </div>
+          <div class="book-card-body">
+            <h3 class="book-card-title">{{ book.title }}</h3>
+            <p class="book-card-author">by {{ book.author }}</p>
+            <p class="book-card-description">{{ book.description }}</p>
+          </div>
+          <div class="book-card-footer">
+            <span class="book-card-year">{{ book.year }}</span>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <favorite-button :book-id="book.id" />
+              <router-link :to="'/books/' + book.id" class="book-card-link">
+                Details &rarr;
+              </router-link>
+            </div>
+          </div>
+        </div>
+      `
+    };
+
+    // =========================================================
+    // COMPONENT: ComponentLabel
+    // =========================================================
+    const ComponentLabel = {
+      props: {
+        type: { type: String, default: 'reactive' },
+        description: { type: String, required: true }
+      },
+      template: `
+        <div class="component-label">
+          <span class="component-label-dot" :class="type"></span>
+          <span>
+            <strong>Vue Component</strong>
+            &mdash; {{ description }}
+          </span>
+        </div>
+      `
+    };
+
+    // =========================================================
+    // COMPONENT: Nav
     // =========================================================
     const AppNav = {
       setup() {
-        const { favoriteCount } = useFavorites();
-        return { favoriteCount };
+        const route = useRoute();
+        const links = [
+          { path: '/', label: 'Home' },
+          { path: '/books', label: 'Collection' },
+          { path: '/favorites', label: 'Favorites' }
+        ];
+
+        function isActive(linkPath) {
+          if (linkPath === '/') {
+            return route.path === '/';
+          }
+          return route.path.startsWith(linkPath);
+        }
+
+        return { links, isActive };
       },
       template: `
-        <nav class="top-nav" role="navigation" aria-label="Main navigation">
+        <nav class="nav">
           <div class="nav-inner">
-            <router-link to="/" class="nav-brand" aria-label="The Bookshelf home">
-              <span class="brand-icon" aria-hidden="true">&#128218;</span>
-              <span class="brand-name">The Bookshelf</span>
+            <router-link to="/" class="nav-logo">
+              <span class="nav-logo-icon">\uD83D\uDCD6</span>
+              <span>Bookshelf</span>
             </router-link>
-            <div class="nav-links">
-              <router-link to="/" exact-active-class="router-link-active">Home</router-link>
-              <router-link to="/books" active-class="router-link-active">Books</router-link>
-              <router-link to="/favorites" active-class="router-link-active">
-                Favorites
-                <span v-if="favoriteCount > 0" class="fav-count" aria-label="favorites count">{{ favoriteCount }}</span>
-              </router-link>
-            </div>
+            <ul class="nav-links">
+              <li v-for="link in links" :key="link.path">
+                <router-link
+                  :to="link.path"
+                  class="nav-link"
+                  :class="{ active: isActive(link.path) }"
+                >
+                  {{ link.label }}
+                </router-link>
+              </li>
+            </ul>
           </div>
         </nav>
       `
     };
 
     // =========================================================
-    // COMPONENT: AppFooter
+    // COMPONENT: Footer
     // =========================================================
     const AppFooter = {
       template: `
         <footer class="site-footer">
           <p>
             Built with
-            <span class="tech-badge">Vue 3</span>
-            <span class="tech-badge">Vue Router 4</span>
-            &mdash; AAM Course 2 Demo
+            <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer">Vue.js</a>
+            &mdash; AIM Curriculum Demo
           </p>
         </footer>
       `
@@ -1104,173 +1289,145 @@
     // VIEW: Home
     // =========================================================
     const HomeView = {
-      components: { StarRating },
+      components: { BookCard, ComponentLabel },
       setup() {
-        const featuredBooks = computed(() => BOOKS.filter(b => b.featured));
-        return { featuredBooks };
+        const featuredBooks = books.slice(0, 4);
+        return {
+          featuredBooks,
+          totalBooks: books.length,
+          totalCategories: categories.size,
+          earliestYear,
+          latestYear
+        };
       },
       template: `
-        <div>
-          <section class="hero">
-            <h1>Welcome to <span>The Bookshelf</span></h1>
-            <p>A curated collection of books that shaped how we think, build, and create. Browse, search, and save your favorites.</p>
-            <router-link to="/books" class="hero-cta">
-              Browse All Books &#8594;
-            </router-link>
+        <main>
+          <section class="hero-banner">
+            <img
+              src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1400&h=800&fit=crop&q=80"
+              alt="Grand library interior with rows of illuminated bookshelves"
+              class="hero-banner-bg"
+              loading="eager"
+            />
+            <div class="hero-banner-overlay"></div>
+            <div class="hero-banner-content">
+              <span class="hero-eyebrow">Curated for Engineers</span>
+              <h1>Build Your <span class="accent">Library</span></h1>
+              <p>A carefully curated collection of the most influential programming books — the ones that change how you think about code.</p>
+              <router-link to="/books" class="hero-cta">Explore the Collection</router-link>
+            </div>
           </section>
 
-          <h2 class="section-heading">
-            Featured Picks
-            <span class="accent-line"></span>
-          </h2>
+          <div class="page-container">
+            <div class="stats-row">
+              <div class="stat-item">
+                <span class="stat-number">{{ totalBooks }}</span>
+                <span class="stat-label">Books</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ totalCategories }}</span>
+                <span class="stat-label">Categories</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ earliestYear }}</span>
+                <span class="stat-label">Earliest</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-number">{{ latestYear }}</span>
+                <span class="stat-label">Latest</span>
+              </div>
+            </div>
 
-          <div class="book-grid">
-            <router-link
-              v-for="book in featuredBooks"
-              :key="book.id"
-              :to="'/books/' + book.id"
-              class="book-card"
-            >
-              <div class="book-cover" :style="{ background: book.coverGradient }">
-                <span class="cover-title">{{ book.title }}</span>
+            <section class="featured-section">
+              <div class="section-header">
+                <span class="section-label">Handpicked</span>
+                <h2>Featured Books</h2>
+                <p>Classics every developer should read at least once</p>
               </div>
-              <div class="book-info">
-                <h3>{{ book.title }}</h3>
-                <p class="author">{{ book.author }}</p>
-                <div class="book-meta">
-                  <span class="genre-badge">{{ book.genre }}</span>
-                  <span class="rating">
-                    <star-rating :rating="book.rating" />
-                    <span>{{ book.rating }}</span>
-                  </span>
-                </div>
+              <div class="featured-grid">
+                <book-card v-for="book in featuredBooks" :key="book.id" :book="book" />
               </div>
-            </router-link>
+              <div class="browse-cta-wrapper">
+                <router-link to="/books" class="hero-cta">View All {{ totalBooks }} Books</router-link>
+              </div>
+            </section>
+
+            <section class="featured-callout">
+              <img
+                src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&h=600&fit=crop&q=80"
+                alt="Warm library reading room with natural light"
+                class="featured-callout-bg"
+                loading="lazy"
+              />
+              <div class="featured-callout-overlay"></div>
+              <div class="featured-callout-content">
+                <blockquote>&ldquo;A reader lives a thousand lives before he dies. The man who never reads lives only one.&rdquo;</blockquote>
+                <cite>George R.R. Martin</cite>
+              </div>
+            </section>
+
+            <component-label
+              type="server"
+              description="reactive data computed at mount time, rendered by Vue"
+            />
           </div>
-        </div>
+        </main>
       `
     };
 
     // =========================================================
-    // VIEW: Books (two-column with sidebar filters)
+    // VIEW: Books (Collection with search)
     // =========================================================
     const BooksView = {
-      components: { StarRating },
+      components: { BookCard, ComponentLabel },
       setup() {
-        const searchQuery = ref('');
-        const activeGenre = ref('All');
+        const query = ref('');
 
-        const genres = computed(() => {
-          const g = new Set(BOOKS.map(b => b.genre));
-          return ['All', ...Array.from(g).sort()];
+        const filtered = computed(() => {
+          const q = query.value.trim().toLowerCase();
+          if (!q) return books;
+          return books.filter(
+            book =>
+              book.title.toLowerCase().includes(q) ||
+              book.author.toLowerCase().includes(q)
+          );
         });
 
-        // computed() — auto-tracked, auto-cached
-        const filteredBooks = computed(() => {
-          let result = BOOKS;
-
-          if (activeGenre.value !== 'All') {
-            result = result.filter(b => b.genre === activeGenre.value);
-          }
-
-          const q = searchQuery.value.trim().toLowerCase();
-          if (q) {
-            result = result.filter(b =>
-              b.title.toLowerCase().includes(q) ||
-              b.author.toLowerCase().includes(q) ||
-              b.genre.toLowerCase().includes(q)
-            );
-          }
-
-          return result;
-        });
-
-        function setGenre(genre) {
-          activeGenre.value = genre;
-        }
-
-        return { searchQuery, activeGenre, genres, filteredBooks, setGenre };
+        return { query, filtered };
       },
       template: `
-        <div>
-          <h1 class="section-heading">
-            All Books
-            <span class="accent-line"></span>
-          </h1>
-
-          <div class="books-layout">
-            <aside class="sidebar" role="complementary" aria-label="Book filters">
-              <div class="sidebar-section">
-                <h4>Search</h4>
-                <div class="search-wrapper">
-                  <span class="search-icon" aria-hidden="true">&#128269;</span>
-                  <input
-                    v-model="searchQuery"
-                    type="text"
-                    class="search-input"
-                    placeholder="Search title, author, genre..."
-                    aria-label="Search books"
-                  >
-                </div>
-              </div>
-
-              <div class="sidebar-section">
-                <h4>Genre</h4>
-                <div class="genre-filters" role="group" aria-label="Filter by genre">
-                  <button
-                    v-for="genre in genres"
-                    :key="genre"
-                    class="genre-btn"
-                    :class="{ active: activeGenre === genre }"
-                    @click="setGenre(genre)"
-                    :aria-pressed="activeGenre === genre"
-                  >
-                    {{ genre }}
-                  </button>
-                </div>
-              </div>
-            </aside>
-
-            <main>
-              <p class="results-count">
-                {{ filteredBooks.length }} book{{ filteredBooks.length !== 1 ? 's' : '' }} found
-              </p>
-
-              <div v-if="filteredBooks.length > 0" class="book-grid">
-                <router-link
-                  v-for="book in filteredBooks"
-                  :key="book.id"
-                  :to="'/books/' + book.id"
-                  class="book-card"
-                >
-                  <div class="book-cover" :style="{ background: book.coverGradient }">
-                    <span class="cover-title">{{ book.title }}</span>
-                  </div>
-                  <div class="book-info">
-                    <h3>{{ book.title }}</h3>
-                    <p class="author">{{ book.author }}</p>
-                    <div class="book-meta">
-                      <span class="genre-badge">{{ book.genre }}</span>
-                      <span class="rating">
-                        <star-rating :rating="book.rating" />
-                        <span>{{ book.rating }}</span>
-                      </span>
-                    </div>
-                  </div>
-                </router-link>
-              </div>
-
-              <div v-else class="empty-state">
-                <div class="empty-icon">&#128269;</div>
-                <h3>No books found</h3>
-                <p>Try adjusting your search or clearing the genre filter.</p>
-                <button class="empty-cta" @click="searchQuery = ''; setGenre('All')">
-                  Clear Filters
-                </button>
-              </div>
-            </main>
+        <main class="page-container" style="padding-top: 7rem;">
+          <div class="section-header">
+            <span class="section-label">Full Collection</span>
+            <h2>All Books</h2>
+            <p>Browse the complete library — search by title or author</p>
           </div>
-        </div>
+
+          <div class="search-container">
+            <div class="search-wrapper">
+              <span class="search-icon">\uD83D\uDD0D</span>
+              <input
+                type="text"
+                class="search-input"
+                placeholder="Search by title or author..."
+                v-model="query"
+              />
+            </div>
+          </div>
+
+          <div v-if="filtered.length > 0" class="book-grid">
+            <book-card v-for="book in filtered" :key="book.id" :book="book" />
+          </div>
+          <div v-else class="no-results">
+            <div class="no-results-icon">\uD83D\uDCD6</div>
+            <p>No books found matching &ldquo;{{ query }}&rdquo;</p>
+          </div>
+
+          <component-label
+            type="client"
+            description="uses v-model for reactive search filtering with computed properties"
+          />
+        </main>
       `
     };
 
@@ -1278,81 +1435,60 @@
     // VIEW: Book Detail
     // =========================================================
     const BookDetailView = {
-      components: { StarRating },
+      components: { FavoriteButton, ComponentLabel },
       setup() {
         const route = useRoute();
-        const { isFavorite, toggleFavorite } = useFavorites();
-
-        const book = computed(() =>
-          BOOKS.find(b => b.id === route.params.id)
-        );
-
-        const isFav = computed(() =>
-          book.value ? isFavorite(book.value.id) : false
-        );
-
-        function toggle() {
-          if (book.value) toggleFavorite(book.value.id);
-        }
-
-        return { book, isFav, toggle };
+        const book = computed(() => getBookById(route.params.id));
+        return { book };
       },
       template: `
-        <div v-if="book">
-          <router-link to="/books" class="back-link">
-            &#8592; Back to all books
-          </router-link>
+        <main class="page-container" style="padding-top: 7rem;">
+          <div v-if="book" class="book-detail">
+            <router-link to="/books" class="back-link">
+              &larr; Back to collection
+            </router-link>
 
-          <div class="detail-layout">
-            <div class="detail-cover" :style="{ background: book.coverGradient }">
-              <span class="cover-title">{{ book.title }}</span>
-            </div>
-
-            <div class="detail-info">
-              <h1>{{ book.title }}</h1>
-              <p class="detail-author">by {{ book.author }}</p>
-
-              <div class="detail-meta">
-                <div class="meta-item">
-                  <div>
-                    <div class="label">Genre</div>
-                    <div class="value">{{ book.genre }}</div>
-                  </div>
-                </div>
-                <div class="meta-item">
-                  <div>
-                    <div class="label">Rating</div>
-                    <div class="value gold">
-                      <star-rating :rating="book.rating" />
-                      {{ book.rating }}
-                    </div>
-                  </div>
-                </div>
+            <div class="book-detail-header">
+              <div class="book-detail-cover">
+                <img
+                  :src="book.coverImage"
+                  :alt="book.title"
+                  loading="lazy"
+                  class="book-detail-cover-img"
+                />
               </div>
 
-              <p class="detail-description">{{ book.description }}</p>
+              <div class="book-detail-info">
+                <div class="book-detail-meta">
+                  <span class="book-detail-tag category">{{ book.category }}</span>
+                  <span class="book-detail-tag year">{{ book.year }}</span>
+                </div>
 
-              <button
-                class="fav-toggle"
-                :class="{ 'is-fav': isFav }"
-                @click="toggle"
-                :aria-label="isFav ? 'Remove from favorites' : 'Add to favorites'"
-              >
-                <span aria-hidden="true">{{ isFav ? '&#10084;' : '&#9825;' }}</span>
-                {{ isFav ? 'In Your Favorites' : 'Add to Favorites' }}
-              </button>
+                <h1>{{ book.title }}</h1>
+                <p class="book-detail-author">by {{ book.author }}</p>
+
+                <p class="book-detail-description">{{ book.description }}</p>
+
+                <div class="book-detail-actions">
+                  <favorite-button :book-id="book.id" />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div v-else class="not-found">
-          <h1>404</h1>
-          <h2>Book Not Found</h2>
-          <p>We couldn't find a book with that ID. It may have been removed or the URL is incorrect.</p>
-          <router-link to="/books" class="empty-cta">
-            &#8592; Browse All Books
-          </router-link>
-        </div>
+            <component-label
+              type="server"
+              :description="'reactive route param — route: /books/' + book.id"
+            />
+          </div>
+
+          <div v-else class="no-results">
+            <div class="no-results-icon">\uD83D\uDCD6</div>
+            <p>Book not found.</p>
+            <router-link to="/books" class="hero-cta" style="margin-top: 1.5rem;">
+              &larr; Back to collection
+            </router-link>
+          </div>
+        </main>
       `
     };
 
@@ -1360,73 +1496,55 @@
     // VIEW: Favorites
     // =========================================================
     const FavoritesView = {
+      components: { BookCard, ComponentLabel },
       setup() {
-        const { favoriteBooks, removeFavorite } = useFavorites();
-        return { favoriteBooks, removeFavorite };
+        const { favoriteBooks } = useFavorites();
+        return { favoriteBooks };
       },
       template: `
-        <div>
-          <h1 class="section-heading">
-            Your Favorites
-            <span class="accent-line"></span>
-          </h1>
-
-          <div v-if="favoriteBooks.length > 0" class="favorites-grid">
-            <div
-              v-for="book in favoriteBooks"
-              :key="book.id"
-              class="fav-card"
-            >
-              <div class="fav-cover-small" :style="{ background: book.coverGradient }">
-                <span class="cover-title">{{ book.title }}</span>
-              </div>
-              <div class="fav-details">
-                <h3>{{ book.title }}</h3>
-                <p class="author">{{ book.author }}</p>
-                <div class="fav-actions">
-                  <router-link :to="'/books/' + book.id" class="btn-view">
-                    View
-                  </router-link>
-                  <button class="btn-remove" @click="removeFavorite(book.id)">
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
+        <main class="page-container" style="padding-top: 7rem;">
+          <div class="section-header">
+            <span class="section-label">Your Library</span>
+            <h2>Favorites</h2>
+            <p v-if="favoriteBooks.length > 0">
+              You've saved {{ favoriteBooks.length }} book{{ favoriteBooks.length === 1 ? '' : 's' }}
+            </p>
+            <p v-else>Books you save will appear here</p>
           </div>
 
-          <div v-else class="empty-state">
-            <div class="empty-icon">&#128218;</div>
-            <h3>No favorites yet</h3>
-            <p>Browse the collection and add books you love to your favorites list.</p>
-            <router-link to="/books" class="empty-cta">
-              Browse Books &#8594;
-            </router-link>
+          <div v-if="favoriteBooks.length > 0" class="book-grid">
+            <book-card v-for="book in favoriteBooks" :key="book.id" :book="book" />
           </div>
-        </div>
+
+          <div v-else class="favorites-empty">
+            <div class="favorites-empty-icon">\uD83D\uDCD6</div>
+            <h2>No favorites yet</h2>
+            <p>Click the heart icon on any book to save it to your favorites list. Your selections are stored in localStorage.</p>
+            <router-link to="/books" class="favorites-cta">Browse Collection</router-link>
+          </div>
+
+          <component-label
+            type="client"
+            description="uses localStorage to persist favorites — no server required"
+          />
+        </main>
       `
     };
 
     // =========================================================
-    // APP LAYOUT (wraps nav + router-view + footer)
+    // APP LAYOUT
     // =========================================================
     const AppLayout = {
       components: { AppNav, AppFooter },
       template: `
         <app-nav />
-        <div class="page-container">
-          <router-view v-slot="{ Component }">
-            <transition name="fade" mode="out-in">
-              <component :is="Component" />
-            </transition>
-          </router-view>
-        </div>
+        <router-view />
         <app-footer />
       `
     };
 
     // =========================================================
-    // ROUTER — createWebHashHistory (no server required)
+    // ROUTER
     // =========================================================
     const routes = [
       {
