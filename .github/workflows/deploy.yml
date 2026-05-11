@@ -84,6 +84,11 @@ jobs:
         working-directory: demos/react-read-explain
         run: npm ci && npm run build
 
+      # Build React Component Tree (W5D1S2)
+      - name: Build React Component Tree
+        working-directory: demos/react-component-tree
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -116,6 +121,7 @@ jobs:
           cp -r demos/react-bakery-interactive/dist _site/react-bakery-interactive
           cp -r demos/react-bakery-four-states/dist _site/react-bakery-four-states
           cp -r demos/react-read-explain/dist _site/react-read-explain
+          cp -r demos/react-component-tree/dist _site/react-component-tree
 
       - uses: actions/upload-pages-artifact@v3
 

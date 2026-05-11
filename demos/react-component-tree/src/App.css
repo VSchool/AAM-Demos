@@ -1,0 +1,403 @@
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Layout ── */
+body {
+  background: #0C111B;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #E2E8F0;
+}
+
+.split-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  gap: 1px;
+  background: rgba(255,255,255,0.06);
+}
+
+.panel {
+  padding: 1.5rem;
+  background: #0C111B;
+}
+
+.panel-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: rgba(226,232,240,0.35);
+  margin-bottom: 1rem;
+}
+
+/* ── Bakery website (left panel) ── */
+.bakery {
+  border-radius: 12px;
+  border: 2px solid rgba(226,232,240,0.06);
+  overflow: hidden;
+  background: #FDF6ED;
+  cursor: pointer;
+  transition: outline 0.2s, outline-offset 0.2s;
+}
+
+.bakery.glow {
+  outline: 2px solid rgba(250,204,21,0.5);
+  outline-offset: 3px;
+}
+
+.bakery-header {
+  padding: 1.25rem 1.5rem;
+  background: #2D1B0E;
+  border-bottom: 1px solid rgba(253,246,237,0.1);
+  cursor: pointer;
+  transition: outline 0.2s, outline-offset 0.2s;
+}
+
+.bakery-header.glow {
+  outline: 2px solid rgba(56,189,248,0.5);
+  outline-offset: -2px;
+}
+
+.bakery-title {
+  font-family: 'DM Serif Display', serif;
+  color: #FDF6ED;
+  font-size: 1.5rem;
+  font-weight: 400;
+}
+
+.bakery-subtitle {
+  color: rgba(253,246,237,0.5);
+  font-size: 0.75rem;
+  margin-top: 0.15rem;
+}
+
+.bakery-cards {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  cursor: pointer;
+  transition: outline 0.2s, outline-offset 0.2s;
+}
+
+.bakery-cards.glow {
+  outline: 2px solid rgba(244,114,182,0.5);
+  outline-offset: -2px;
+}
+
+.bakery-card {
+  background: #FFFFFF;
+  border: 1px solid #E8DED0;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: outline 0.2s, outline-offset 0.2s, box-shadow 0.2s;
+}
+
+.bakery-card.glow {
+  outline: 2px solid rgba(34,197,94,0.5);
+  outline-offset: 2px;
+  box-shadow: 0 0 12px rgba(34,197,94,0.12);
+}
+
+.card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  color: #3C2A1E;
+  font-weight: 400;
+}
+
+.card-desc {
+  color: #8B7355;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.card-price {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #C67C4E;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+.bakery-footer {
+  padding: 0.75rem 1.5rem;
+  background: #2D1B0E;
+  border-top: 1px solid rgba(253,246,237,0.1);
+  text-align: center;
+  color: rgba(253,246,237,0.4);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: outline 0.2s, outline-offset 0.2s;
+}
+
+.bakery-footer.glow {
+  outline: 2px solid rgba(226,232,240,0.3);
+  outline-offset: -2px;
+}
+
+/* ── Tree panel (right panel) ── */
+.tree-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tree-diagram {
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(226,232,240,0.06);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+}
+
+/* Tree levels */
+.tree-level {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.level-2 {
+  gap: 0.5rem;
+}
+
+.level-3 {
+  gap: 0.4rem;
+}
+
+/* Tree nodes */
+.tree-node {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.tree-node:hover {
+  transform: scale(1.05);
+}
+
+.tree-node.dimmed {
+  opacity: 0.25;
+}
+
+.tree-node.active {
+  transform: scale(1.1);
+  box-shadow: 0 0 16px rgba(250,204,21,0.15);
+}
+
+/* Node colors */
+.node-app {
+  color: #FACC15;
+  border-color: rgba(250,204,21,0.5);
+  background: rgba(250,204,21,0.08);
+}
+
+.node-header {
+  color: #38BDF8;
+  border-color: rgba(56,189,248,0.4);
+  background: rgba(56,189,248,0.06);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.node-cardlist {
+  color: #F472B6;
+  border-color: rgba(244,114,182,0.4);
+  background: rgba(244,114,182,0.06);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.node-footer {
+  color: rgba(226,232,240,0.4);
+  border-color: rgba(226,232,240,0.15);
+  background: rgba(226,232,240,0.03);
+  font-size: 0.8rem;
+  padding: 0.4rem 0.85rem;
+}
+
+.node-card {
+  color: #22C55E;
+  border-color: rgba(34,197,94,0.4);
+  background: rgba(34,197,94,0.06);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+}
+
+/* Branches */
+.tree-branches {
+  position: relative;
+  height: 2.5rem;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.branches-3 .branch-line:nth-child(1) {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 0.75rem;
+  background: rgba(226,232,240,0.12);
+}
+
+.branches-3 .branch-horizontal {
+  position: absolute;
+  top: 0.75rem;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: rgba(226,232,240,0.12);
+}
+
+.branches-3 .branch-line:nth-child(3) {
+  position: absolute;
+  top: 0.75rem;
+  left: 10%;
+  width: 2px;
+  height: 0.75rem;
+  background: rgba(226,232,240,0.12);
+}
+
+.branches-3 .branch-line:nth-child(4) {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  width: 2px;
+  height: 0.75rem;
+  background: rgba(226,232,240,0.12);
+}
+
+.branches-3 .branch-line:nth-child(5) {
+  position: absolute;
+  top: 0.75rem;
+  right: 10%;
+  width: 2px;
+  height: 0.75rem;
+  background: rgba(226,232,240,0.12);
+}
+
+.branches-cards .branch-line:first-child {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 0.6rem;
+  background: rgba(226,232,240,0.1);
+}
+
+.branches-cards .branch-horizontal {
+  position: absolute;
+  top: 0.6rem;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: rgba(226,232,240,0.1);
+}
+
+.branches-cards .branch-line:nth-child(3) {
+  position: absolute;
+  top: 0.6rem;
+  left: 15%;
+  width: 2px;
+  height: 0.6rem;
+  background: rgba(226,232,240,0.1);
+}
+
+.branches-cards .branch-line:nth-child(4) {
+  position: absolute;
+  top: 0.6rem;
+  left: 38%;
+  width: 2px;
+  height: 0.6rem;
+  background: rgba(226,232,240,0.1);
+}
+
+.branches-cards .branch-line:nth-child(5) {
+  position: absolute;
+  top: 0.6rem;
+  left: 62%;
+  width: 2px;
+  height: 0.6rem;
+  background: rgba(226,232,240,0.1);
+}
+
+.branches-cards .branch-line:nth-child(6) {
+  position: absolute;
+  top: 0.6rem;
+  right: 15%;
+  width: 2px;
+  height: 0.6rem;
+  background: rgba(226,232,240,0.1);
+}
+
+.branch-label {
+  position: absolute;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.55rem;
+  color: rgba(226,232,240,0.2);
+  top: -0.15rem;
+}
+
+.branch-label.left { left: 15%; }
+.branch-label.center { left: 42%; }
+
+/* Props inspector */
+.props-inspector {
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(15,23,42,0.6);
+  border: 1px solid rgba(226,232,240,0.06);
+  font-family: 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: rgba(226,232,240,0.4);
+  min-height: 3.5rem;
+  line-height: 1.5;
+}
+
+.inspector-name {
+  font-weight: 700;
+}
+
+.node-color-app { color: #FACC15; }
+.node-color-header { color: #38BDF8; }
+.node-color-cardlist { color: #F472B6; }
+.node-color-footer { color: rgba(226,232,240,0.5); }
+.node-color-card { color: #22C55E; }
+
+.inspector-sep {
+  color: rgba(226,232,240,0.25);
+}
+
+.inspector-detail {
+  color: rgba(226,232,240,0.5);
+}
+
+.inspector-hint {
+  color: rgba(226,232,240,0.2);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .split-layout {
+    grid-template-columns: 1fr;
+  }
+}
