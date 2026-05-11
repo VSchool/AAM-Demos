@@ -15,7 +15,7 @@ const items = [
     title: 'Cinnamon Rolls',
     description: 'Warm, gooey rolls swirled with cinnamon and topped with cream cheese glaze.',
     price: '$4.75',
-    image: 'https://images.unsplash.com/photo-1509365390695-33aee754301f?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1585190775852-3e6bb2b80184?w=600&h=400&fit=crop',
   },
   {
     id: 3,
