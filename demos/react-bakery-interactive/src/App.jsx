@@ -8,7 +8,7 @@ const items = [
     title: 'Sourdough Loaf',
     description: 'Crusty artisan sourdough with a tangy, complex flavor. 24-hour fermented.',
     price: '$8.50',
-    image: 'https://images.unsplash.com/photo-1585478259715-876acc5be8eb?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop',
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ const items = [
     title: 'Baguette',
     description: 'Classic French baguette with a golden crust and soft, airy interior.',
     price: '$4.00',
-    image: 'https://images.unsplash.com/photo-1549931319-a545753467c8?w=600&h=400&fit=crop',
+    image: 'https://images.unsplash.com/photo-1568471173242-461f0a730452?w=600&h=400&fit=crop',
   },
 ]
 
