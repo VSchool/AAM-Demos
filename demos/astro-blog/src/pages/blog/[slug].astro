@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const dateStr = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="blog-post">
+    <header class="post-header">
+      <a href={`${base}blog/`} class="back-link">&larr; All posts</a>
+      <h1>{post.data.title}</h1>
+      <div class="post-meta">
+        <time datetime={post.data.pubDate.toISOString()}>{dateStr}</time>
+        <div class="post-tags">
+          {post.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      </div>
+    </header>
+    <div class="post-content">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    max-width: 100%;
+  }
+
+  .post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #21262D;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: #8B949E;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-decoration: none;
+    margin-bottom: 1rem;
+  }
+
+  .back-link:hover {
+    color: #58A6FF;
+  }
+
+  .post-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .post-meta time {
+    color: #8B949E;
+    font-size: 0.875rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.375rem;
+  }
+
+  .tag {
+    background: #21262D;
+    color: #8B949E;
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .post-content {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+</style>

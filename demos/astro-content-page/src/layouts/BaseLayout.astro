@@ -1,0 +1,182 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Find your balance at Still Point Yoga — classes for every body and every level.' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — Still Point Yoga</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href={`${import.meta.env.BASE_URL}`} class="logo">Still Point</a>
+        <nav>
+          <a href={`${import.meta.env.BASE_URL}`}>Home</a>
+          <a href={`${import.meta.env.BASE_URL}classes/`}>Classes</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-name">Still Point Yoga</p>
+        <p class="footer-tagline">Where movement meets stillness</p>
+        <p class="footer-copy">&copy; 2026 Still Point Yoga. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  /* ── Reset ── */
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --color-bg: #f7f5f0;
+    --color-text: #1a1a2e;
+    --color-accent: #7b6d8b;
+    --color-secondary: #d4a574;
+    --color-card: #ffffff;
+    --color-muted: #6b6b80;
+    --font-heading: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --radius: 0.75rem;
+    --max-width: 900px;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-secondary);
+  }
+</style>
+
+<style>
+  /* ── Header ── */
+  .site-header {
+    border-bottom: 1px solid rgba(26, 26, 46, 0.08);
+    padding: 1.25rem 1.5rem;
+  }
+
+  .header-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: 0.02em;
+  }
+
+  .logo:hover {
+    color: var(--color-accent);
+  }
+
+  nav {
+    display: flex;
+    gap: 2rem;
+  }
+
+  nav a {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+
+  nav a:hover {
+    color: var(--color-accent);
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    border-top: 1px solid rgba(26, 26, 46, 0.08);
+    padding: 3rem 1.5rem;
+    margin-top: 4rem;
+    text-align: center;
+  }
+
+  .footer-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .footer-name {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+</style>

@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="The story behind Rise & Grain bakery — quality, community, sustainability.">
+  <section class="about-hero content-column">
+    <h1>Our Story</h1>
+    <p class="lead">
+      Rise &amp; Grain started the way most good things do — with a question that
+      wouldn't leave us alone. What would happen if we slowed everything down?
+    </p>
+  </section>
+
+  <section class="story content-column">
+    <p>
+      In 2018, Maya Chen left her job at a Portland tech company and started baking
+      in a converted garage with a single deck oven and fifty pounds of locally
+      milled flour. The first loaves went to neighbors. Then farmers' market regulars.
+      Then a line started forming before the garage door even rolled up.
+    </p>
+    <p>
+      Today, Rise &amp; Grain occupies a sun-filled corner shop on Division Street,
+      but the process hasn't changed. Every loaf is hand-shaped. Every batch of flour
+      is sourced from farms within a hundred miles. We don't rush fermentation, and
+      we don't cut corners on ingredients. The bread takes as long as it takes — and
+      you can taste the difference.
+    </p>
+  </section>
+
+  <section class="values content-column">
+    <h2 class="section-title">What We Stand For</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <h3>Quality</h3>
+        <p>
+          Long fermentation, stone-milled flour, and no shortcuts. We'd rather bake
+          fewer loaves than compromise on a single one.
+        </p>
+      </div>
+      <div class="value-card">
+        <h3>Community</h3>
+        <p>
+          Bread has always been communal. Our baking classes, bread shares, and open
+          kitchen keep that tradition alive.
+        </p>
+      </div>
+      <div class="value-card">
+        <h3>Sustainability</h3>
+        <p>
+          Oregon-grown grain, compostable packaging, and a zero-waste kitchen. The
+          land feeds us — we take care of it in return.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-hero {
+    padding-top: 4rem;
+    padding-bottom: 2rem;
+    text-align: center;
+  }
+
+  .about-hero h1 {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .lead {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .story {
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+
+  .story p {
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .values {
+    padding-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .value-card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    box-shadow: var(--card-shadow);
+    border-top: 3px solid var(--secondary);
+    transition: transform 0.2s ease;
+  }
+
+  .value-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .value-card h3 {
+    font-size: 1.25rem;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .value-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 768px) {
+    .about-hero h1 {
+      font-size: 2.2rem;
+    }
+
+    .values-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

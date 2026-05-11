@@ -1,0 +1,71 @@
+/* Rise & Grain — Global Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+/* Reset */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Palette */
+:root {
+  --bg: #FDF8F0;
+  --text: #2C1810;
+  --accent: #C4742B;
+  --secondary: #5B8C3E;
+  --card-bg: #FFFFFF;
+  --card-shadow: 0 2px 12px rgba(44, 24, 16, 0.08);
+  --border-light: rgba(44, 24, 16, 0.06);
+  --text-muted: #6B5244;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Lato', 'Helvetica Neue', sans-serif;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #A35E1F;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+/* Utility: centered content column */
+.content-column {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}

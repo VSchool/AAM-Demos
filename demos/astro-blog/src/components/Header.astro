@@ -1,0 +1,101 @@
+---
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+
+const links = [
+  { href: `${base}`, label: 'Home' },
+  { href: `${base}blog/`, label: 'Blog' },
+  { href: `${base}about/`, label: 'About' },
+];
+
+function isActive(href: string): boolean {
+  if (href === base) {
+    return currentPath === base || currentPath === base.replace(/\/$/, '');
+  }
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href={base} class="site-logo">
+      <span class="logo-symbol">&gt;_</span>
+      <span class="logo-text">Dev Notes</span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      {links.map(link => (
+        <a
+          href={link.href}
+          class:list={['nav-link', { active: isActive(link.href) }]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid #21262D;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(13, 17, 23, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 3.5rem;
+  }
+
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #E6EDF3;
+    font-weight: 600;
+    font-size: 1.0625rem;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  .logo-symbol {
+    color: #58A6FF;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+
+  .site-nav {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    color: #8B949E;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: #E6EDF3;
+    background: rgba(230, 237, 243, 0.04);
+  }
+
+  .nav-link.active {
+    color: #E6EDF3;
+    background: rgba(88, 166, 255, 0.1);
+  }
+</style>

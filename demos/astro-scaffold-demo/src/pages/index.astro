@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Home">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Rise &amp; Grain</h1>
+      <p class="tagline">Hand-shaped sourdough since 2018</p>
+      <a href={`${base}about/`} class="cta">Our Story</a>
+    </div>
+    <div class="hero-image">
+      <img
+        src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=1200&q=80"
+        alt="Freshly baked artisan bread on a wooden cutting board"
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features content-column">
+    <h2 class="section-title">What We're About</h2>
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon" aria-hidden="true">&#127838;</span>
+        <h3>Fresh Daily</h3>
+        <p>Every loaf is mixed, shaped, and baked before dawn. By the time you walk in, the bread is still warm.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon" aria-hidden="true">&#127806;</span>
+        <h3>Local Grain</h3>
+        <p>We mill Oregon-grown wheat in small batches. You can taste the difference terroir makes in a loaf.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon" aria-hidden="true">&#129309;</span>
+        <h3>Community</h3>
+        <p>From weekend baking classes to our monthly bread share, we believe good bread brings people together.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 3rem;
+    align-items: center;
+  }
+
+  .hero-content {
+    padding-right: 1rem;
+  }
+
+  .hero h1 {
+    font-size: 3.2rem;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    line-height: 1.1;
+  }
+
+  .tagline {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: #FFF;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.75rem 2rem;
+    border-radius: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .cta:hover {
+    background: #A35E1F;
+    color: #FFF;
+    transform: translateY(-1px);
+  }
+
+  .hero-image {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+
+  /* Features */
+  .features {
+    padding-top: 3rem;
+    padding-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: var(--text);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 1rem;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 24px rgba(44, 24, 16, 0.12);
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    .hero-content {
+      padding-right: 0;
+      order: 2;
+    }
+
+    .hero-image {
+      order: 1;
+    }
+
+    .hero h1 {
+      font-size: 2.4rem;
+    }
+
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

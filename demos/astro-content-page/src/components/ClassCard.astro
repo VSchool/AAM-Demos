@@ -1,0 +1,85 @@
+---
+interface Props {
+  name: string;
+  duration: string;
+  level: string;
+  description: string;
+}
+
+const { name, duration, level, description } = Astro.props;
+
+const levelColors: Record<string, string> = {
+  'Beginner': '#0ba95b',
+  'Intermediate': '#d4a574',
+  'Advanced': '#c2555a',
+  'All Levels': '#7b6d8b',
+};
+
+const badgeColor = levelColors[level] || '#7b6d8b';
+---
+
+<article class="class-card">
+  <div class="card-header">
+    <h3>{name}</h3>
+    <span class="badge" style={`--badge-color: ${badgeColor}`}>{level}</span>
+  </div>
+  <p class="duration">{duration}</p>
+  <p class="description">{description}</p>
+</article>
+
+<style>
+  .class-card {
+    background: var(--color-card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(26, 26, 46, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .class-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 26, 46, 0.1);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    line-height: 1.2;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--badge-color);
+    background: color-mix(in srgb, var(--badge-color) 12%, transparent);
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+
+  .duration {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    line-height: 1.55;
+  }
+</style>

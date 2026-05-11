@@ -1,0 +1,58 @@
+---
+title: "AI Changed How I Review Code"
+description: "How I integrated AI into my code review workflow — and where I still trust my own eyes."
+pubDate: 2026-05-10
+tags: ["ai", "workflow"]
+---
+import Callout from '../../components/Callout.astro';
+
+Six months ago I started using AI as a first-pass code reviewer. Not as a replacement for human review — as a filter. The results surprised me.
+
+## The old workflow
+
+Before AI, my code review process was linear: open the PR, read every file, leave comments, approve or request changes. For a 400-line PR, that's 20-30 minutes of focused reading. For a 1,200-line refactor, it's an hour or more.
+
+The problem wasn't the time — it was the attention distribution. I'd spend cognitive energy on formatting issues, missing null checks, and naming inconsistencies. By the time I got to the architectural decisions, I was tired.
+
+## The new workflow
+
+Now I run the diff through an AI review first. It catches the mechanical stuff:
+
+- Unused imports
+- Inconsistent naming patterns
+- Missing error handling on async calls
+- Type assertions that could be narrower
+- Test files that don't cover edge cases the diff introduces
+
+That frees me to focus on what AI is bad at: **does this change make the system better?**
+
+<Callout type="warning">
+AI reviewers are confident even when they're wrong. I've seen suggestions to "fix" intentional patterns — like recommending early returns in a function where the sequential flow was the whole point. Always validate AI suggestions against the codebase's conventions, not just general best practices.
+</Callout>
+
+## What AI catches that I miss
+
+Honestly? Boring stuff. And that's the point.
+
+I once let a PR through with a `catch (e) {}` — an empty catch block that silently swallowed errors. I'd been focused on the business logic above it and my eyes skipped the error handling. The AI reviewer flagged it immediately.
+
+It also catches consistency issues across files. If one file uses `userId` and another uses `user_id`, the AI notices. I might not if they're 300 lines apart in the diff.
+
+## What AI misses that I catch
+
+Architecture. Every time.
+
+AI can tell you if a function handles errors correctly. It can't tell you if the function should exist at all. It can't see that a new utility duplicates logic that already lives in a shared module. It can't judge whether a new abstraction is premature or overdue.
+
+It also struggles with context that lives outside the diff. A change might look fine in isolation but conflict with a migration plan that was discussed in a Slack thread last week. Human reviewers carry that context; AI doesn't.
+
+## My current split
+
+- **AI handles:** style, types, error handling, test coverage gaps, import hygiene
+- **I handle:** architecture, naming (the hard kind), business logic correctness, system-level impact
+
+The result: my reviews are shorter, more focused, and catch more bugs. I spend less time on the stuff that doesn't require judgment and more time on the stuff that does.
+
+## The takeaway
+
+AI didn't make code review faster by doing it for me. It made it faster by doing the part I was worst at — maintaining attention to mechanical detail across hundreds of lines. The review is still mine. The tedium isn't.

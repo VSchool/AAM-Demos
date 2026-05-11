@@ -1,0 +1,68 @@
+---
+import ClassCard from './ClassCard.astro';
+
+const classes = [
+  {
+    name: 'Vinyasa Flow',
+    duration: '60 min',
+    level: 'Intermediate',
+    description: 'A dynamic, breath-led practice that links movement to breath in a continuous flow. Build heat, strength, and flexibility as you move through creative sequences.',
+  },
+  {
+    name: 'Yin Yoga',
+    duration: '75 min',
+    level: 'All Levels',
+    description: 'Long-held, passive poses that target deep connective tissues and fascia. A meditative practice that cultivates patience and stillness in both body and mind.',
+  },
+  {
+    name: 'Restorative',
+    duration: '60 min',
+    level: 'Beginner',
+    description: 'Fully supported poses using props to invite deep relaxation and nervous system recovery. The perfect antidote to a busy week — no effort required.',
+  },
+  {
+    name: 'Prenatal',
+    duration: '60 min',
+    level: 'All Levels',
+    description: 'Safe, nurturing movement designed for every trimester. Strengthen the body, ease common discomforts, and connect with your breath through this supported practice.',
+  },
+  {
+    name: 'Power Yoga',
+    duration: '75 min',
+    level: 'Advanced',
+    description: 'An athletic, high-intensity practice that builds serious strength and endurance. Expect arm balances, inversions, and a full-body challenge from start to finish.',
+  },
+];
+---
+
+<section class="class-grid-section">
+  <div class="grid-inner">
+    <div class="class-grid">
+      {classes.map((cls) => (
+        <ClassCard
+          name={cls.name}
+          duration={cls.duration}
+          level={cls.level}
+          description={cls.description}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .class-grid-section {
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .grid-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+
+  .class-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+</style>

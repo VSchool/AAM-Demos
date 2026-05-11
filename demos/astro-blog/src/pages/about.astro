@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About Kai Chen — software engineer and writer.">
+  <h1>About</h1>
+
+  <div class="about-content">
+    <p>
+      I'm Kai Chen, a software engineer based in Portland, OR. I've spent the last seven years
+      building web applications — starting with jQuery and PHP, through the React era, and now
+      into the content-first frameworks like Astro and SvelteKit.
+    </p>
+
+    <p>
+      I work on developer tooling at a mid-size SaaS company during the day. This blog is where
+      I write about the patterns, tools, and decisions that come up in that work. Nothing here is
+      sponsored or affiliate-linked. I write about what I actually use.
+    </p>
+
+    <h2>What I write about</h2>
+
+    <ul>
+      <li><strong>Frameworks and architecture</strong> &mdash; how to pick the right tool, not just the popular one</li>
+      <li><strong>TypeScript</strong> &mdash; patterns that reduce bugs without adding ceremony</li>
+      <li><strong>Developer workflows</strong> &mdash; code review, CI/CD, and the habits that compound</li>
+      <li><strong>AI in development</strong> &mdash; where it helps, where it doesn't, and how to tell the difference</li>
+    </ul>
+
+    <h2>About this site</h2>
+
+    <p>
+      Dev Notes is built with <a href="https://astro.build">Astro</a>. Content lives in Markdown and MDX
+      files managed through Astro's content collections. Pages are pre-rendered at build time &mdash; no
+      client-side JavaScript is shipped unless a component explicitly requests it.
+    </p>
+
+    <p>
+      Typography is set in <a href="https://fonts.google.com/specimen/Space+Grotesk">Space Grotesk</a> (headings),
+      <a href="https://fonts.google.com/specimen/IBM+Plex+Sans">IBM Plex Sans</a> (body), and
+      <a href="https://fonts.google.com/specimen/JetBrains+Mono">JetBrains Mono</a> (code). The color palette
+      is inspired by GitHub's dark theme.
+    </p>
+
+    <div class="contact-section">
+      <h2>Get in touch</h2>
+      <p>
+        Find me on <a href="https://github.com">GitHub</a> or <a href="https://bsky.app">Bluesky</a>.
+        For longer thoughts, email works &mdash; <code>kai@devnotes.example</code>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    margin-bottom: 1.5rem;
+  }
+
+  .about-content {
+    max-width: 100%;
+  }
+
+  .about-content p {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .about-content ul {
+    line-height: 1.75;
+  }
+
+  .contact-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #21262D;
+  }
+</style>

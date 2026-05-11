@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+import RecipeCard from '../components/RecipeCard.astro';
+import { recipes } from '../data/recipes.js';
+---
+<Layout title="Quick Bites — Astro Static">
+  <div class="home">
+    <section class="hero-section">
+      <h1 class="hero-title">Quick Bites</h1>
+      <p class="hero-subtitle">Simple recipes, made fast. Find your next favorite meal.</p>
+    </section>
+
+    <div class="recipe-grid">
+      {recipes.map((recipe) => (
+        <RecipeCard recipe={recipe} />
+      ))}
+    </div>
+
+    <p class="result-count">{recipes.length} recipes</p>
+  </div>
+</Layout>
+
+<style>
+  .home {
+    padding-bottom: 2rem;
+  }
+
+  .hero-section {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #6366F1;
+    margin-bottom: 0.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: #6B7280;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .result-count {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #9CA3AF;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .hero-title {
+      font-size: 2rem;
+    }
+    .recipe-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -89,6 +89,36 @@ jobs:
         working-directory: demos/react-component-tree
         run: npm ci && npm run build
 
+      # Build Astro Content Page (W5D2S1)
+      - name: Build Astro Content Page
+        working-directory: demos/astro-content-page
+        run: npm ci && npm run build
+
+      # Build Astro Scaffold Demo (W5D2S1)
+      - name: Build Astro Scaffold Demo
+        working-directory: demos/astro-scaffold-demo
+        run: npm ci && npm run build
+
+      # Build Astro Blog (W5D2S2)
+      - name: Build Astro Blog
+        working-directory: demos/astro-blog
+        run: npm ci && npm run build
+
+      # Build Astro Island Demo (W5D2S2)
+      - name: Build Astro Island Demo
+        working-directory: demos/astro-island
+        run: npm ci && npm run build
+
+      # Build React SPA Lighthouse (W5D2S3)
+      - name: Build React SPA Lighthouse
+        working-directory: demos/react-spa-lighthouse
+        run: npm ci && npm run build
+
+      # Build Astro Lighthouse (W5D2S3)
+      - name: Build Astro Lighthouse
+        working-directory: demos/astro-lighthouse
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -122,6 +152,9 @@ jobs:
           cp -r demos/react-bakery-four-states/dist _site/react-bakery-four-states
           cp -r demos/react-read-explain/dist _site/react-read-explain
           cp -r demos/react-component-tree/dist _site/react-component-tree
+          # W5D2S3 Lighthouse comparison pair
+          cp -r demos/react-spa-lighthouse/dist _site/react-spa-lighthouse
+          cp -r demos/astro-lighthouse/dist _site/astro-lighthouse
 
       - uses: actions/upload-pages-artifact@v3
 

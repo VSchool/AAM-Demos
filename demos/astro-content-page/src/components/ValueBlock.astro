@@ -1,0 +1,45 @@
+---
+interface Props {
+  icon: string;
+  heading: string;
+  text: string;
+}
+
+const { icon, heading, text } = Astro.props;
+---
+
+<div class="value-block">
+  <span class="value-icon">{icon}</span>
+  <h3>{heading}</h3>
+  <p>{text}</p>
+</div>
+
+<style>
+  .value-block {
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .value-icon {
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1;
+  }
+
+  h3 {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+    line-height: 1.55;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+</style>

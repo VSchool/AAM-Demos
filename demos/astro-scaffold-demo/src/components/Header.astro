@@ -1,0 +1,73 @@
+---
+// Header component — shared across all pages
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href={base} class="logo">Rise &amp; Grain</a>
+    <nav>
+      <a href={base} class:list={[{ active: currentPath === base || currentPath === '/' }]}>Home</a>
+      <a href={`${base}about/`} class:list={[{ active: currentPath.includes('/about') }]}>About</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-light);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-inner {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+
+  .logo:hover {
+    color: #A35E1F;
+  }
+
+  nav {
+    display: flex;
+    gap: 2rem;
+  }
+
+  nav a {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 2px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  nav a:hover {
+    color: var(--text);
+  }
+
+  nav a.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 700;
+  }
+</style>

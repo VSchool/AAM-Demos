@@ -1,0 +1,149 @@
+---
+const { recipe } = Astro.props;
+const href = `${import.meta.env.BASE_URL}recipe/${recipe.id}/`;
+---
+<a href={href} class="recipe-card">
+  <div class="card-image-wrapper">
+    <img
+      src={recipe.image}
+      alt={recipe.title}
+      class="card-image"
+      loading="lazy"
+      width="600"
+      height="375"
+    />
+    <span class="card-category">{recipe.category}</span>
+  </div>
+  <div class="card-body">
+    <h3 class="card-title">{recipe.title}</h3>
+    <p class="card-description">{recipe.description}</p>
+    <div class="card-meta">
+      <span class="meta-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        {recipe.time}
+      </span>
+      <span class="meta-item">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+        </svg>
+        {recipe.servings} servings
+      </span>
+      <span class={`difficulty difficulty-${recipe.difficulty.toLowerCase()}`}>
+        {recipe.difficulty}
+      </span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .recipe-card {
+    background: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    text-decoration: none;
+    color: #212529;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recipe-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+  }
+
+  .card-image-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .recipe-card:hover .card-image {
+    transform: scale(1.05);
+  }
+
+  .card-category {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background: #6366F1;
+    color: #FFFFFF;
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-title {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+    color: #212529;
+  }
+
+  .card-description {
+    font-size: 0.875rem;
+    color: #6B7280;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: #9CA3AF;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .difficulty {
+    margin-left: auto;
+    padding: 0.15rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .difficulty-easy {
+    background: #ECFDF5;
+    color: #059669;
+  }
+
+  .difficulty-medium {
+    background: #FFF7ED;
+    color: #D97706;
+  }
+
+  .difficulty-hard {
+    background: #FEF2F2;
+    color: #DC2626;
+  }
+</style>
