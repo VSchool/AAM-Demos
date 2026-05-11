@@ -64,6 +64,26 @@ jobs:
         working-directory: demos/nextjs-polish-demo
         run: npm ci && npm run build
 
+      # Build React Bakery Static (W5D1S2)
+      - name: Build React Bakery Static
+        working-directory: demos/react-bakery-static
+        run: npm ci && npm run build
+
+      # Build React Bakery Interactive (W5D1S2)
+      - name: Build React Bakery Interactive
+        working-directory: demos/react-bakery-interactive
+        run: npm ci && npm run build
+
+      # Build React Bakery Four States (W5D1S3)
+      - name: Build React Bakery Four States
+        working-directory: demos/react-bakery-four-states
+        run: npm ci && npm run build
+
+      # Build React Read Explain (W5D1S2)
+      - name: Build React Read Explain
+        working-directory: demos/react-read-explain
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -91,6 +111,11 @@ jobs:
           cp -r demos/vue-router-explorer _site/vue-router-explorer
           cp -r demos/vue-routing-app _site/vue-routing-app
           cp -r demos/vue-bookshelf _site/vue-bookshelf
+          # W5D1 React bakery progression + read-explain
+          cp -r demos/react-bakery-static/dist _site/react-bakery-static
+          cp -r demos/react-bakery-interactive/dist _site/react-bakery-interactive
+          cp -r demos/react-bakery-four-states/dist _site/react-bakery-four-states
+          cp -r demos/react-read-explain/dist _site/react-read-explain
 
       - uses: actions/upload-pages-artifact@v3
 

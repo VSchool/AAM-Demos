@@ -1,0 +1,245 @@
+/* ================================================
+   Daily Habits — Cool Productivity Theme
+   Fonts: Space Grotesk (headings) + Nunito Sans (body)
+   Palette: Slate / Indigo / Emerald on cool gray
+   ================================================ */
+
+/* --- Reset & Base --- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Nunito Sans', sans-serif;
+  background: #F0F4F8;
+  color: #1E293B;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- App Shell --- */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+
+.header {
+  background: #1E293B;
+  color: #F8FAFC;
+  padding: 28px 24px 24px;
+  text-align: center;
+}
+
+.header-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.header-subtitle {
+  font-size: 0.95rem;
+  color: #94A3B8;
+  font-weight: 400;
+}
+
+/* --- Main Content --- */
+
+.main {
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+/* --- Progress Bar --- */
+
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.85rem;
+  color: #64748B;
+  margin-bottom: 8px;
+}
+
+.progress-percentage {
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #6366F1;
+  font-size: 0.95rem;
+}
+
+.progress-track {
+  height: 8px;
+  background: #E2E8F0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #6366F1;
+  border-radius: 4px;
+  transition: width 0.35s ease;
+}
+
+/* --- Filter Tabs --- */
+
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filter-tab {
+  flex: 1;
+  padding: 8px 0;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #64748B;
+  font-family: 'Nunito Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-tab:hover {
+  border-color: #C7D2FE;
+  color: #6366F1;
+}
+
+.filter-tab.active {
+  background: #6366F1;
+  border-color: #6366F1;
+  color: #FFFFFF;
+}
+
+/* --- Habit List --- */
+
+.habit-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #94A3B8;
+  font-size: 0.9rem;
+  padding: 32px 0;
+}
+
+/* --- Habit Item --- */
+
+.habit-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: all 0.2s ease;
+}
+
+.habit-item.done {
+  border-left: 3px solid #10B981;
+}
+
+.habit-item.done .habit-name {
+  color: #94A3B8;
+  text-decoration: line-through;
+}
+
+/* --- Custom Checkbox --- */
+
+.habit-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.habit-checkbox input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #CBD5E1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.habit-checkbox input:checked + .checkmark {
+  background: #10B981;
+  border-color: #10B981;
+}
+
+.habit-checkbox input:checked + .checkmark::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: solid #FFFFFF;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+.habit-checkbox input:focus-visible + .checkmark {
+  outline: 2px solid #6366F1;
+  outline-offset: 2px;
+}
+
+/* --- Emoji & Info --- */
+
+.habit-emoji {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.habit-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.habit-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1E293B;
+  transition: color 0.2s ease;
+}
+
+.habit-streak {
+  font-size: 0.78rem;
+  color: #64748B;
+}
