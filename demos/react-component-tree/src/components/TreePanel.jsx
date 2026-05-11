@@ -1,4 +1,4 @@
-function TreePanel({ items, highlighted, onHighlight }) {
+function TreePanel({ title, items, highlighted, onHighlight, onUpdateTitle, onUpdateItem }) {
   const renderMap = {
     app: ['app', 'header', 'cardlist', 'card-1', 'card-2', 'card-3', 'card-4', 'footer'],
     header: ['header'],
@@ -25,15 +25,139 @@ function TreePanel({ items, highlighted, onHighlight }) {
     onHighlight(highlighted === key ? null : key)
   }
 
-  const propsInfo = {
-    app: 'Root component. Owns items array + title string. Passes data down to children.',
-    header: 'props: { title: "Maya\'s Bakery" }',
-    cardlist: 'props: { items: [{...}, {...}, {...}, {...}] } — maps each item to a <Card />',
-    footer: 'No props. Static content.',
+  // Build the props inspector content based on what's highlighted
+  function renderInspector() {
+    if (!highlighted) {
+      return <span className="inspector-hint">&larr; Click a component to inspect and edit its props</span>
+    }
+
+    if (highlighted === 'app') {
+      return (
+        <div className="inspector-content">
+          <div className="inspector-header">
+            <span className="inspector-name node-color-app">App</span>
+            <span className="inspector-tag">root &mdash; owns all data</span>
+          </div>
+          <div className="inspector-props">
+            <div className="prop-row">
+              <span className="prop-key">title</span>
+              <span className="prop-type">string</span>
+              <input
+                className="prop-input"
+                value={title}
+                onChange={(e) => onUpdateTitle(e.target.value)}
+              />
+            </div>
+            <div className="prop-row">
+              <span className="prop-key">items</span>
+              <span className="prop-type">Array({items.length})</span>
+              <span className="prop-value">[{items.map(i => i.title).join(', ')}]</span>
+            </div>
+          </div>
+          <div className="inspector-note">App passes title to Header and items to CardList</div>
+        </div>
+      )
+    }
+
+    if (highlighted === 'header') {
+      return (
+        <div className="inspector-content">
+          <div className="inspector-header">
+            <span className="inspector-name node-color-header">Header</span>
+            <span className="inspector-tag">receives from App</span>
+          </div>
+          <div className="inspector-props">
+            <div className="prop-row">
+              <span className="prop-key">title</span>
+              <span className="prop-type">string</span>
+              <input
+                className="prop-input"
+                value={title}
+                onChange={(e) => onUpdateTitle(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="inspector-note">Change the title above &mdash; watch the bakery header update</div>
+        </div>
+      )
+    }
+
+    if (highlighted === 'cardlist') {
+      return (
+        <div className="inspector-content">
+          <div className="inspector-header">
+            <span className="inspector-name node-color-cardlist">CardList</span>
+            <span className="inspector-tag">receives from App</span>
+          </div>
+          <div className="inspector-props">
+            <div className="prop-row">
+              <span className="prop-key">items</span>
+              <span className="prop-type">Array({items.length})</span>
+              <span className="prop-value">[{'{'}...{'}'}, {'{'}...{'}'}, {'{'}...{'}'}, {'{'}...{'}'}]</span>
+            </div>
+          </div>
+          <div className="inspector-note">Maps over items and renders one {'<Card />'} per item</div>
+        </div>
+      )
+    }
+
+    if (highlighted === 'footer') {
+      return (
+        <div className="inspector-content">
+          <div className="inspector-header">
+            <span className="inspector-name node-color-footer">Footer</span>
+            <span className="inspector-tag">no props</span>
+          </div>
+          <div className="inspector-note">Static component &mdash; no data from parent. Just renders itself.</div>
+        </div>
+      )
+    }
+
+    // Card
+    const cardId = parseInt(highlighted.replace('card-', ''))
+    const item = items.find(i => i.id === cardId)
+    if (!item) return null
+
+    return (
+      <div className="inspector-content">
+        <div className="inspector-header">
+          <span className="inspector-name node-color-card">Card</span>
+          <span className="inspector-tag">receives from CardList</span>
+        </div>
+        <div className="inspector-props">
+          <div className="prop-row">
+            <span className="prop-key">item.title</span>
+            <span className="prop-type">string</span>
+            <input
+              className="prop-input"
+              value={item.title}
+              onChange={(e) => onUpdateItem(cardId, 'title', e.target.value)}
+            />
+          </div>
+          <div className="prop-row">
+            <span className="prop-key">item.body</span>
+            <span className="prop-type">string</span>
+            <input
+              className="prop-input"
+              value={item.body}
+              onChange={(e) => onUpdateItem(cardId, 'body', e.target.value)}
+            />
+          </div>
+          <div className="prop-row">
+            <span className="prop-key">item.price</span>
+            <span className="prop-type">number</span>
+            <input
+              className="prop-input prop-input-short"
+              type="number"
+              value={item.price}
+              onChange={(e) => onUpdateItem(cardId, 'price', e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="inspector-note">Edit any prop &mdash; the bakery card updates in real time</div>
+      </div>
+    )
   }
-  items.forEach(item => {
-    propsInfo['card-' + item.id] = 'props: { item: { title: "' + item.title + '", body: "...", price: ' + item.price + ' } }'
-  })
 
   return (
     <div className="tree-panel">
@@ -107,17 +231,7 @@ function TreePanel({ items, highlighted, onHighlight }) {
 
       {/* Props Inspector */}
       <div className="props-inspector">
-        {highlighted ? (
-          <>
-            <span className={'inspector-name node-color-' + (highlighted.startsWith('card') ? 'card' : highlighted)}>
-              {highlighted.charAt(0).toUpperCase() + highlighted.slice(1).replace(/-\d+/, '')}
-            </span>
-            <span className="inspector-sep"> &mdash; </span>
-            <span className="inspector-detail">{propsInfo[highlighted] || ''}</span>
-          </>
-        ) : (
-          <span className="inspector-hint">&larr; Click a component to inspect its props</span>
-        )}
+        {renderInspector()}
       </div>
     </div>
   )
