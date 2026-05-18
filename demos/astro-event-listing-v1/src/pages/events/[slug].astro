@@ -1,0 +1,192 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const d = new Date(entry.data.date);
+const fullDate = d.toLocaleString('en-US', {
+  weekday: 'short',
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).toUpperCase();
+
+const doorsTime = entry.data.doors.split(' ').slice(1).join(' ');
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.excerpt}>
+  <header class="detail-hero">
+    <div class="detail-hero-img" style={`background-image:url('${entry.data.image}')`}></div>
+    <div class="detail-hero-overlay"></div>
+    <div class="detail-hero-content">
+      <a href={`${base}shows`} class="back-link">← All Shows</a>
+      <div class="detail-eyebrow">{entry.data.doors} · {entry.data.venue}</div>
+      <h1 class="detail-title">{entry.data.title}</h1>
+    </div>
+  </header>
+
+  <section class="detail-section">
+    <div class="detail-grid">
+      <article class="detail-body prose">
+        <p class="lede">{entry.data.excerpt}</p>
+        <Content />
+        {entry.data.openers && entry.data.openers.length > 0 && (
+          <p class="muted"><strong>Openers:</strong> {entry.data.openers.join(' · ')}</p>
+        )}
+      </article>
+
+      <aside class="detail-side">
+        <div class="meta-line">
+          <span class="meta-label">Date</span>
+          <span class="meta-value mono">{fullDate} · {doorsTime}</span>
+        </div>
+        <div class="meta-line">
+          <span class="meta-label">Venue</span>
+          <span class="meta-value">
+            {entry.data.venue}
+            {entry.data.venueCapacity && <span class="meta-sub"> · {entry.data.venueCapacity} cap</span>}
+          </span>
+        </div>
+        <div class="meta-line">
+          <span class="meta-label">Tickets</span>
+          <span class="meta-value mono">
+            {entry.data.price} advance{entry.data.priceAtDoor && ` · ${entry.data.priceAtDoor} door`}
+          </span>
+        </div>
+        <div class="meta-line">
+          <span class="meta-label">Genre</span>
+          <span class="pill" style="align-self:flex-start;margin-top:0.25rem">{entry.data.genre}</span>
+        </div>
+        {entry.data.ageRestriction && (
+          <div class="meta-line">
+            <span class="meta-label">Ages</span>
+            <span class="meta-value">{entry.data.ageRestriction}</span>
+          </div>
+        )}
+        <a class="btn btn-primary" href="#" style="margin-top:0.5rem">Get Tickets →</a>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .detail-hero {
+    position: relative;
+    min-height: 56vh;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+  .detail-hero-img {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    filter: saturate(0.9);
+  }
+  .detail-hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(14,14,18,0.3) 0%, rgba(14,14,18,0.55) 60%, rgba(14,14,18,0.98) 100%);
+  }
+  .detail-hero-content {
+    position: relative; z-index: 2;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 var(--gutter) 3rem;
+    width: 100%;
+  }
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--accent); }
+  .detail-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .detail-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 8vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    max-width: 900px;
+  }
+  .detail-section {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 4rem var(--gutter) 6rem;
+  }
+  .detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3rem;
+  }
+  @media (max-width: 768px) {
+    .detail-grid { grid-template-columns: 1fr; gap: 2rem; }
+  }
+  .detail-body .lede {
+    font-size: 1.25rem;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  .detail-body :global(p) { margin-bottom: 1.25rem; line-height: 1.7; }
+  .detail-body :global(strong) { color: var(--text); font-weight: 600; }
+  .detail-side {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    align-self: start;
+    position: sticky;
+    top: 5rem;
+  }
+  .meta-line {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-line:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .meta-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .meta-value {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .meta-value.mono { font-family: var(--font-mono); }
+  .meta-sub { color: var(--muted); font-weight: 400; }
+</style>
