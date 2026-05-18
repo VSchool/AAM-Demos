@@ -1,0 +1,131 @@
+"use client";
+
+import { useMemo, useState } from "react";
+import type { Task, TaskStatus } from "@/lib/tasks";
+import { STATUS_LABEL } from "@/lib/tasks";
+import TaskCard from "./TaskCard";
+
+type StatusFilter = TaskStatus | "all";
+type SortKey = "priority" | "due" | "updated";
+
+const FILTERS: { key: StatusFilter; label: string; dot: string }[] = [
+  { key: "all", label: "All", dot: "rgba(255,253,245,0.45)" },
+  { key: "in_progress", label: "In progress", dot: "#FFE066" },
+  { key: "blocked", label: "Blocked", dot: "#FF7BF5" },
+  { key: "done", label: "Done", dot: "#00FFB2" },
+  { key: "todo", label: "Todo", dot: "rgba(255,253,245,0.45)" },
+  { key: "backlog", label: "Backlog", dot: "rgba(255,253,245,0.30)" },
+  { key: "canceled", label: "Canceled", dot: "rgba(255,253,245,0.20)" },
+];
+
+const PRIORITY_ORDER: Record<Task["priority"], number> = {
+  P0: 0, P1: 1, P2: 2, P3: 3,
+};
+
+const DUE_ORDER: Record<string, number> = {
+  overdue: -1,
+  today: 0,
+};
+
+function dueWeight(due: string): number {
+  if (DUE_ORDER[due] !== undefined) return DUE_ORDER[due];
+  if (due === "—") return 999;
+  const m = /^([A-Z][a-z]{2}) (\d+)/.exec(due);
+  if (!m) return 500;
+  return 1 + parseInt(m[2], 10);
+}
+
+export default function TaskFilter({ tasks }: { tasks: Task[] }) {
+  const [status, setStatus] = useState<StatusFilter>("all");
+  const [sort, setSort] = useState<SortKey>("priority");
+
+  const visible = useMemo(() => {
+    const filtered =
+      status === "all" ? tasks : tasks.filter((t) => t.status === status);
+    const sorted = [...filtered].sort((a, b) => {
+      if (sort === "priority")
+        return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
+      if (sort === "due") return dueWeight(a.due) - dueWeight(b.due);
+      return 0;
+    });
+    return sorted;
+  }, [tasks, status, sort]);
+
+  const counts = useMemo(() => {
+    const c: Record<string, number> = { all: tasks.length };
+    for (const t of tasks) c[t.status] = (c[t.status] || 0) + 1;
+    return c;
+  }, [tasks]);
+
+  return (
+    <div className="cn-filter">
+      <div className="cn-filter-bar">
+        <div className="cn-filter-group" role="tablist" aria-label="filter by status">
+          {FILTERS.map((f) => {
+            const active = status === f.key;
+            const count = counts[f.key] ?? 0;
+            return (
+              <button
+                key={f.key}
+                role="tab"
+                aria-selected={active}
+                onClick={() => setStatus(f.key)}
+                className={`cn-filter-chip${active ? " cn-filter-chip-active" : ""}`}
+              >
+                <span
+                  className="cn-filter-dot"
+                  style={{ background: f.dot }}
+                  aria-hidden="true"
+                />
+                {f.label}
+                <span className="cn-filter-count">{count}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="cn-filter-sort">
+          <label htmlFor="cn-sort" className="cn-filter-sort-label">Sort</label>
+          <select
+            id="cn-sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortKey)}
+            className="cn-filter-sort-select"
+          >
+            <option value="priority">Priority</option>
+            <option value="due">Due date</option>
+            <option value="updated">Recently updated</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="cn-filter-status" aria-live="polite">
+        Showing <strong>{visible.length}</strong> of {tasks.length} ·{" "}
+        {status === "all" ? "all statuses" : STATUS_LABEL[status]} · sorted by {sort}
+      </div>
+
+      {visible.length === 0 ? (
+        <div className="cn-empty">
+          <div className="cn-empty-glyph" aria-hidden="true">&empty;</div>
+          <h3>No tasks match this filter.</h3>
+          <p>
+            There are no tasks with status &quot;{STATUS_LABEL[status as TaskStatus]}&quot;
+            right now. Try a different filter, or clear it to see everything.
+          </p>
+          <button
+            className="cn-flag cn-flag-doing"
+            onClick={() => setStatus("all")}
+            style={{ marginTop: 8, cursor: "pointer", border: 0 }}
+          >
+            Clear filter
+          </button>
+        </div>
+      ) : (
+        <div className="cn-task-list">
+          {visible.map((task) => (
+            <TaskCard key={task.id} task={task} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
