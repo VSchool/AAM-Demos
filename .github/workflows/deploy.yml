@@ -74,6 +74,11 @@ jobs:
         working-directory: demos/react-bakery-interactive
         run: npm ci && npm run build
 
+      # Build React Bakery Conditional (W5D1S3)
+      - name: Build React Bakery Conditional
+        working-directory: demos/react-bakery-conditional
+        run: npm ci && npm run build
+
       # Build React Bakery Four States (W5D1S3)
       - name: Build React Bakery Four States
         working-directory: demos/react-bakery-four-states
@@ -149,6 +154,7 @@ jobs:
           # W5D1 React bakery progression + read-explain
           cp -r demos/react-bakery-static/dist _site/react-bakery-static
           cp -r demos/react-bakery-interactive/dist _site/react-bakery-interactive
+          cp -r demos/react-bakery-conditional/dist _site/react-bakery-conditional
           cp -r demos/react-bakery-four-states/dist _site/react-bakery-four-states
           cp -r demos/react-read-explain/dist _site/react-read-explain
           cp -r demos/react-component-tree/dist _site/react-component-tree
