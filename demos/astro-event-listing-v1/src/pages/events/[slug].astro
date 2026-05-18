@@ -38,6 +38,11 @@ const base = import.meta.env.BASE_URL;
   </header>
 
   <section class="detail-section">
+    <div class="feature-highlight" data-new-label="NEW in v1 — Dynamic [slug] route">
+      <p style="font-family:var(--font-body);font-size:0.95rem;color:var(--text);line-height:1.55;margin:0">
+        This page is generated at build time by <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--secondary);background:rgba(123,212,245,0.08);padding:0.05rem 0.35rem;border-radius:2px">events/[slug].astro</code> via <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--secondary);background:rgba(123,212,245,0.08);padding:0.05rem 0.35rem;border-radius:2px">getStaticPaths()</code>. The metadata sidebar pulls from the markdown <strong style="color:var(--accent)">frontmatter</strong>; the prose body renders from the markdown content via <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--secondary);background:rgba(123,212,245,0.08);padding:0.05rem 0.35rem;border-radius:2px">render(entry)</code>.
+      </p>
+    </div>
     <div class="detail-grid">
       <article class="detail-body prose">
         <p class="lede">{entry.data.excerpt}</p>

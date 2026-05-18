@@ -77,9 +77,12 @@ const base = import.meta.env.BASE_URL;
           </div>
         )}
         <a class="btn btn-primary" href="#" style="margin-top:0.5rem">Get Tickets →</a>
-        <div class="rsvp-block">
+        <div class="feature-highlight" data-new-label="NEW in v2 — React Island" style="padding:1.5rem 1rem 1rem;margin-top:1.25rem">
           <div class="meta-label" style="margin-bottom:0.5rem">Track this show</div>
           <RSVPButton client:load eventId={entry.id} eventTitle={entry.data.title} />
+          <div class="feature-highlight-note">
+            React component mounted with <code>client:load</code>. Only this island ships JS; the rest of the page is static HTML. Toggle Going/Maybe — your choice persists in <code>localStorage</code>.
+          </div>
         </div>
       </aside>
     </div>

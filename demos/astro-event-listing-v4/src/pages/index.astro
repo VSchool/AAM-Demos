@@ -9,6 +9,22 @@ const allEvents = (await getCollection('events')).sort(
   (a, b) => new Date(a.data.date).valueOf() - new Date(b.data.date).valueOf()
 );
 const featured = allEvents.slice(0, 3);
+
+// Inspector previews — what the head emits for the homepage + a sample event
+const homeMetaPreview = `<title>Local concerts, curated weekly | After Hours</title>
+<meta name="description" content="After Hours — a curated weekly listing of live shows in rooms under 1,000 cap. Indie rock, electronic, jazz, hip-hop, folk.">
+<link rel="canonical" href="https://vschool.github.io/AAM-Demos/astro-event-listing-v4/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="After Hours">
+<meta property="og:title" content="Local concerts, curated weekly | After Hours">
+<meta property="og:image" content="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1200&q=80">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="sitemap" href="/AAM-Demos/astro-event-listing-v4/sitemap-index.xml">`;
+
+const eventMetaPreview = `<title>Velvet Sky Tour · The Mercury | After Hours</title>
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1600&q=80">
+<link rel="canonical" href="https://vschool.github.io/AAM-Demos/astro-event-listing-v4/events/velvet-sky-tour/">`;
 ---
 
 <BaseLayout
@@ -49,6 +65,36 @@ const featured = allEvents.slice(0, 3);
           href={`${base}events/${event.id}`}
         />
       ))}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">v4 · Behind the meta</div>
+      <h2 class="section-title">What v4 actually added</h2>
+      <p class="section-desc">v4 looks identical to v3 — same hero, same cards, same islands. What changed lives in <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--secondary);background:rgba(123,212,245,0.08);padding:0.05rem 0.35rem;border-radius:2px">&lt;head&gt;</code>, in the sitemap, and in robots.txt. Here it is, surfaced.</p>
+    </div>
+
+    <div class="feature-highlight" data-new-label="NEW in v4 — Head meta (per-page)">
+      <p style="font-family:var(--font-body);font-size:0.95rem;color:var(--text);line-height:1.55;margin:0 0 0.5rem">
+        Every page now emits unique title, description, canonical, full Open Graph, and Twitter card meta. The homepage's head includes:
+      </p>
+      <div class="meta-inspector">
+        <pre>{homeMetaPreview}</pre>
+        <p style="margin-top:1rem;margin-bottom:0">
+          On event detail pages, the meta switches to <code>og:type="article"</code> and uses the event's poster as the <code>og:image</code> — so social shares show the show's image, not the site default. For example, <code>/events/velvet-sky-tour/</code> emits:
+        </p>
+        <pre>{eventMetaPreview}</pre>
+        <div class="inspector-links">
+          <a href={`${base}sitemap-index.xml`} target="_blank" rel="noopener">View sitemap-index.xml →</a>
+          <a href={`${base}sitemap-0.xml`} target="_blank" rel="noopener">View sitemap-0.xml →</a>
+          <a href={`${base}robots.txt`} target="_blank" rel="noopener">View robots.txt →</a>
+          <a href="javascript:void(0)" onclick="alert('Right-click → View Page Source — or DevTools → Elements → <head>'); return false;">How to verify →</a>
+        </div>
+      </div>
+      <div class="feature-highlight-note">
+        <strong>Try it:</strong> open any event detail page in a new tab, right-click → <em>View Page Source</em>, and grep for <code>og:image</code>. The image will be the show's poster, not the site default. That's per-page Open Graph.
+      </div>
     </div>
   </section>
 </BaseLayout>

@@ -30,6 +30,11 @@ const events = collection.map((event) => ({
       <p class="section-desc">{events.length} upcoming shows in rooms under 1,000 cap. Filter by genre to find your kind of night.</p>
     </div>
 
-    <GenreFilter client:load events={events} />
+    <div class="feature-highlight" data-new-label="NEW in v3 — Genre Filter Island">
+      <GenreFilter client:load events={events} />
+      <div class="feature-highlight-note">
+        Second React island in the demo. <code>GenreFilter.tsx</code> renders the pill tabs and the card grid client-side. <strong>Try it:</strong> click "Jazz" to see only Maya Reid Quartet, or "Indie Rock" for two shows. The pill counts update with the active filter.
+      </div>
+    </div>
   </section>
 </BaseLayout>

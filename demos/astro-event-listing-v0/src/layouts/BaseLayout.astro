@@ -9,6 +9,10 @@ interface Props {
 }
 
 const { title, description = 'After Hours — local concerts, DJ nights, and album release shows. Curated weekly.' } = Astro.props;
+
+const path = Astro.url.pathname.slice(import.meta.env.BASE_URL.length);
+const nextUrl = '/AAM-Demos/astro-event-listing-v1/' + path;
+const showsLink = `${import.meta.env.BASE_URL}shows`;
 ---
 
 <!doctype html>
@@ -24,6 +28,19 @@ const { title, description = 'After Hours — local concerts, DJ nights, and alb
   </head>
   <body>
     <Nav />
+    <div class="version-banner">
+      <div class="version-banner-inner">
+        <span class="version-pill">v0 of 5 · Scaffold</span>
+        <span class="version-changes">
+          <strong>This version:</strong> file-based routing, shared <code>BaseLayout</code>, three pages.
+          The <a href={showsLink} style="color:var(--accent);text-decoration:underline">/shows</a> grid is hardcoded placeholders — v1 wires the data layer.
+        </span>
+        <div class="version-nav-group">
+          <span class="version-nav is-disabled" aria-hidden="true">← prev</span>
+          <a class="version-nav" href={nextUrl}>v1 →</a>
+        </div>
+      </div>
+    </div>
     <main><slot /></main>
     <Footer />
   </body>

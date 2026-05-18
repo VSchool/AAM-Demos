@@ -10,11 +10,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p class="section-desc">A weekly rotation of local shows in rooms under 1,000 cap. Tap a card for full details — door times, ticket tiers, who's opening.</p>
     </div>
 
-    <div class="scaffold-notice">
-      <strong>v0 — skeleton state.</strong> The events index page exists and the card grid layout is wired up. Events are not loaded from a content collection yet — that arrives in v1. The placeholders below mark where event cards will render once the collection lands.
+    <div class="feature-highlight" data-new-label="v0 — Scaffold layout only">
+      <p style="font-family:var(--font-body);font-size:0.95rem;color:var(--text);line-height:1.55;margin:0">
+        The events index page exists and the <code style="font-family:var(--font-mono);font-size:0.85em;color:var(--secondary);background:rgba(123,212,245,0.08);padding:0.05rem 0.35rem;border-radius:2px">card-grid</code> layout is wired up — but events are <strong style="color:var(--accent)">not</strong> loaded from a content collection yet. The three placeholders below are hardcoded markup, marking where real event cards will render once v1 lands.
+      </p>
+      <div class="feature-highlight-note">
+        <strong>Next up (v1):</strong> swap these placeholders for <code>getCollection('events')</code> reading from <code>src/content/events/*.md</code>, plus dynamic <code>[slug].astro</code> detail pages.
+      </div>
     </div>
 
-    <div class="card-grid">
+    <div class="card-grid" style="margin-top:1.5rem">
       <article class="event-card" aria-disabled="true" style="cursor:default">
         <div class="event-card-img" style="background:linear-gradient(135deg,#22222D,#181821);display:flex;align-items:center;justify-content:center">
           <span style="font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted)">Awaiting collection</span>

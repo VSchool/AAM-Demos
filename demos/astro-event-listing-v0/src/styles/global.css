@@ -344,3 +344,180 @@ img { max-width: 100%; display: block; }
   .brand { font-size: 1.25rem; }
   .card-grid { grid-template-columns: 1fr; }
 }
+
+/* ============ Version progression nav (NEW in vN banner) ============ */
+.version-banner {
+  background: linear-gradient(90deg, rgba(255,92,46,0.18), rgba(255,92,46,0.06));
+  border-bottom: 1px solid rgba(255,92,46,0.3);
+  border-top: 1px solid rgba(255,92,46,0.15);
+  padding: 0.85rem var(--gutter);
+}
+.version-banner-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.version-pill {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.7rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.version-changes {
+  flex: 1;
+  min-width: 220px;
+  color: var(--text);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.version-changes strong { color: var(--accent); font-weight: 600; }
+.version-changes code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--secondary);
+  background: rgba(123,212,245,0.08);
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+}
+.version-nav-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+.version-nav {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.version-nav:hover { border-color: var(--accent); color: var(--accent); }
+.version-nav.is-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .version-banner-inner { gap: 0.6rem; }
+  .version-changes { width: 100%; order: 3; font-size: 0.8rem; }
+  .version-nav { font-size: 0.65rem; padding: 0.3rem 0.6rem; }
+}
+
+/* ============ Feature highlight (NEW in vN annotation around components) ============ */
+.feature-highlight {
+  position: relative;
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius);
+  padding: 1.75rem 1.25rem 1.25rem;
+  margin-top: 1.5rem;
+  background: rgba(255,92,46,0.025);
+}
+.feature-highlight::before {
+  content: attr(data-new-label);
+  position: absolute;
+  top: -11px;
+  left: 16px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.7rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.feature-highlight-note {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px dashed rgba(255,92,46,0.25);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.feature-highlight-note code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--secondary);
+  background: rgba(123,212,245,0.08);
+  padding: 0.05rem 0.35rem;
+  border-radius: 2px;
+}
+.feature-highlight-note strong { color: var(--accent); font-weight: 500; }
+
+/* ============ Meta inspector (v4 — exposes invisible SEO meta) ============ */
+.meta-inspector {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-top: 1rem;
+}
+.meta-inspector h3 {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+.meta-inspector p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.meta-inspector pre {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  color: var(--text);
+  font-size: 0.7rem;
+  line-height: 1.6;
+  margin: 0.75rem 0;
+  white-space: pre;
+}
+.meta-inspector .t { color: var(--secondary); }
+.meta-inspector .a { color: var(--accent); }
+.meta-inspector .s { color: var(--success); }
+.inspector-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+.inspector-links a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.15s;
+}
+.inspector-links a:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

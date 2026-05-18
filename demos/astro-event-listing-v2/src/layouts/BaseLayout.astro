@@ -9,6 +9,13 @@ interface Props {
 }
 
 const { title, description = 'After Hours — local concerts, DJ nights, and album release shows. Curated weekly.' } = Astro.props;
+
+const path = Astro.url.pathname.slice(import.meta.env.BASE_URL.length);
+const prevUrl = '/AAM-Demos/astro-event-listing-v1/' + path;
+const nextUrl = '/AAM-Demos/astro-event-listing-v2/'; // resolved below
+const nextBase = '/AAM-Demos/astro-event-listing-v3/';
+const showsLink = `${import.meta.env.BASE_URL}shows`;
+const sampleEventLink = `${import.meta.env.BASE_URL}events/velvet-sky-tour`;
 ---
 
 <!doctype html>
@@ -24,6 +31,18 @@ const { title, description = 'After Hours — local concerts, DJ nights, and alb
   </head>
   <body>
     <Nav />
+    <div class="version-banner">
+      <div class="version-banner-inner">
+        <span class="version-pill">v2 of 5 · RSVP Island</span>
+        <span class="version-changes">
+          <strong>New here:</strong> a React island on event detail. Open <a href={sampleEventLink} style="color:var(--accent);text-decoration:underline">any show</a> → scroll to the right sidebar → click <strong>Going</strong> or <strong>Maybe</strong>. State persists in <code>localStorage</code>. Rest of the page stays static.
+        </span>
+        <div class="version-nav-group">
+          <a class="version-nav" href={prevUrl}>← v1</a>
+          <a class="version-nav" href={nextBase + path}>v3 →</a>
+        </div>
+      </div>
+    </div>
     <main><slot /></main>
     <Footer />
   </body>

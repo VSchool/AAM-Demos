@@ -17,19 +17,24 @@ const events = (await getCollection('events')).sort(
       <p class="section-desc">{events.length} upcoming shows in rooms under 1,000 cap. Tap any card for full details — door times, ticket tiers, who's opening.</p>
     </div>
 
-    <div class="card-grid">
-      {events.map((event) => (
-        <EventCard
-          title={event.data.title}
-          date={event.data.date}
-          doors={event.data.doors}
-          venue={event.data.venue}
-          genre={event.data.genre}
-          price={event.data.price}
-          image={event.data.image}
-          href={`${base}events/${event.id}`}
-        />
-      ))}
+    <div class="feature-highlight" data-new-label="NEW in v1 — Collection-driven grid">
+      <div class="card-grid">
+        {events.map((event) => (
+          <EventCard
+            title={event.data.title}
+            date={event.data.date}
+            doors={event.data.doors}
+            venue={event.data.venue}
+            genre={event.data.genre}
+            price={event.data.price}
+            image={event.data.image}
+            href={`${base}events/${event.id}`}
+          />
+        ))}
+      </div>
+      <div class="feature-highlight-note">
+        Each card comes from <code>getCollection('events')</code>, sorted by date. The 6 events live as markdown files at <code>src/content/events/*.md</code>. <strong>Click any card</strong> to hit the dynamic <code>events/[slug].astro</code> detail route.
+      </div>
     </div>
   </section>
 </BaseLayout>
