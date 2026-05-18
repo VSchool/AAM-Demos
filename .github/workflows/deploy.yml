@@ -153,6 +153,10 @@ jobs:
         working-directory: demos/nextjs-task-board-v1
         run: npm ci && npm run build
 
+      - name: Build Next.js Task Board v2
+        working-directory: demos/nextjs-task-board-v2
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -199,6 +203,7 @@ jobs:
           # W5D3 progressive nextjs-task-board series (Cadence UI kit)
           cp -r demos/nextjs-task-board-v0/out _site/nextjs-task-board-v0
           cp -r demos/nextjs-task-board-v1/out _site/nextjs-task-board-v1
+          cp -r demos/nextjs-task-board-v2/out _site/nextjs-task-board-v2
 
       - uses: actions/upload-pages-artifact@v3
 
