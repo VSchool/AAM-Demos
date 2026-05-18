@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://vschool.github.io/AAM-Demos/astro-event-listing-v4/sitemap-index.xml

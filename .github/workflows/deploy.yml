@@ -132,6 +132,18 @@ jobs:
         working-directory: demos/astro-event-listing-v1
         run: npm ci && npm run build
 
+      - name: Build Astro Event Listing v2
+        working-directory: demos/astro-event-listing-v2
+        run: npm ci && npm run build
+
+      - name: Build Astro Event Listing v3
+        working-directory: demos/astro-event-listing-v3
+        run: npm ci && npm run build
+
+      - name: Build Astro Event Listing v4
+        working-directory: demos/astro-event-listing-v4
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -172,6 +184,9 @@ jobs:
           # W5D2 progressive event-listing series (Astro lane)
           cp -r demos/astro-event-listing-v0/dist _site/astro-event-listing-v0
           cp -r demos/astro-event-listing-v1/dist _site/astro-event-listing-v1
+          cp -r demos/astro-event-listing-v2/dist _site/astro-event-listing-v2
+          cp -r demos/astro-event-listing-v3/dist _site/astro-event-listing-v3
+          cp -r demos/astro-event-listing-v4/dist _site/astro-event-listing-v4
 
       - uses: actions/upload-pages-artifact@v3
 

@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import GenreFilter from '../components/GenreFilter.tsx';
+
+const base = import.meta.env.BASE_URL;
+
+const collection = (await getCollection('events')).sort(
+  (a, b) => new Date(a.data.date).valueOf() - new Date(b.data.date).valueOf()
+);
+
+const events = collection.map((event) => ({
+  id: event.id,
+  title: event.data.title,
+  date: event.data.date,
+  doors: event.data.doors,
+  venue: event.data.venue,
+  genre: event.data.genre,
+  price: event.data.price,
+  image: event.data.image,
+  href: `${base}events/${event.id}`,
+}));
+---
+
+<BaseLayout title="Shows" description="Every upcoming show — local concerts, DJ nights, jazz sessions, album releases. Curated weekly.">
+  <section class="section">
+    <div class="section-header">
+      <div class="section-eyebrow">Shows</div>
+      <h1 class="section-title">This Week & Beyond</h1>
+      <p class="section-desc">{events.length} upcoming shows in rooms under 1,000 cap. Filter by genre to find your kind of night.</p>
+    </div>
+
+    <GenreFilter client:load events={events} />
+  </section>
+</BaseLayout>
