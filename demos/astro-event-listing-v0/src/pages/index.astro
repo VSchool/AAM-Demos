@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Local concerts, curated weekly">
+  <header class="hero">
+    <div class="hero-img" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1800&q=80')"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Local · Independent · Live</div>
+      <h1 class="hero-title">Shows that<br />actually matter</h1>
+      <p class="hero-sub">Local concerts, DJ nights, jazz sessions, and album release shows — curated weekly from rooms that hold under a thousand people.</p>
+      <div style="margin-top:2rem;display:flex;gap:0.75rem;flex-wrap:wrap">
+        <a class="btn btn-primary" href={`${base}shows`}>See This Week's Shows</a>
+        <a class="btn btn-ghost" href={`${base}about`}>What is this?</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="section-narrow">
+    <div class="section-eyebrow">Now</div>
+    <h2 class="section-title">Built in stages.</h2>
+    <div class="prose">
+      <p>This is <strong>v0</strong> — the scaffold. The site has its homepage, its shows listing route, and an about page. File-based routing is working.</p>
+      <p class="muted">What it does not have yet: a content collection backing the shows page, dynamic event detail pages, interactive islands, or SEO basics. Those land in v1 through v4. Each progressive version of the demo is deployed at its own URL so you can see exactly what each step adds.</p>
+    </div>
+  </section>
+</BaseLayout>

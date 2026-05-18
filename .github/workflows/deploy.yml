@@ -124,6 +124,10 @@ jobs:
         working-directory: demos/astro-lighthouse
         run: npm ci && npm run build
 
+      - name: Build Astro Event Listing v0
+        working-directory: demos/astro-event-listing-v0
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -161,6 +165,8 @@ jobs:
           # W5D2S3 Lighthouse comparison pair
           cp -r demos/react-spa-lighthouse/dist _site/react-spa-lighthouse
           cp -r demos/astro-lighthouse/dist _site/astro-lighthouse
+          # W5D2 progressive event-listing series (Astro lane)
+          cp -r demos/astro-event-listing-v0/dist _site/astro-event-listing-v0
 
       - uses: actions/upload-pages-artifact@v3
 
