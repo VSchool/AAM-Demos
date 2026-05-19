@@ -1,0 +1,49 @@
+---
+// Static hero with a tiny Astro <script> that toggles the highlight mode.
+// Note: this toggle is NOT an island — it's a plain DOM event listener.
+// You don't need React for things this small. The lesson is that React
+// is the exception you opt into, not the default.
+---
+
+<section class="hero">
+  <div class="container">
+    <p class="hero__eyebrow">Est. 2018 · Open Wed&ndash;Sun</p>
+    <h1 class="hero__title">Maya&rsquo;s Bakery</h1>
+    <p class="hero__tagline">Sourdough, pastry, and one good cup of coffee.</p>
+    <div class="hero__divider"></div>
+
+    <div class="hero__cta-row">
+      <button
+        id="island-highlight-toggle"
+        class="highlight-toggle"
+        type="button"
+        aria-pressed="false"
+        aria-label="Highlight React islands on this page"
+      >
+        <span class="highlight-toggle__dot" aria-hidden="true"></span>
+        <span class="highlight-toggle__label">Highlight islands</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  // Plain DOM event listener — no React framework, no hooks, no hydration.
+  // The button toggles a data attribute on <html>; CSS does the rest.
+  (function () {
+    const btn = document.getElementById('island-highlight-toggle');
+    if (!btn) return;
+    const root = document.documentElement;
+    const label = btn.querySelector('.highlight-toggle__label');
+
+    btn.addEventListener('click', () => {
+      const isOn = root.getAttribute('data-show-islands') === 'true';
+      const next = isOn ? 'false' : 'true';
+      root.setAttribute('data-show-islands', next);
+      btn.setAttribute('aria-pressed', next);
+      if (label) {
+        label.textContent = next === 'true' ? 'Hide islands' : 'Highlight islands';
+      }
+    });
+  })();
+</script>

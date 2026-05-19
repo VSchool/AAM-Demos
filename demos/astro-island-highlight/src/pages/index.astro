@@ -1,0 +1,106 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import MenuCard from '../components/MenuCard.astro';
+import Footer from '../components/Footer.astro';
+import MenuSearch from '../components/MenuSearch.tsx';
+import ReserveTable from '../components/ReserveTable.tsx';
+import { menu } from '../data/menu';
+---
+
+<BaseLayout>
+  <Header />
+  <Hero />
+
+  <!--
+    Menu section — mostly static.
+    Static: the section heading, the lede paragraph, every menu card below.
+    Island: only the <MenuSearch /> input. It filters the static cards
+    by toggling a CSS class on each one.
+  -->
+  <section id="menu" class="section static-region">
+    <div class="container">
+      <p class="section__eyebrow">The menu</p>
+      <h2 class="section__title">Today&rsquo;s bread</h2>
+      <p class="section__lede">
+        Everything below was rendered as plain HTML at build time. The search
+        input above the grid is the only React on this section &mdash; type into
+        it and watch the static cards filter in place.
+      </p>
+
+      <div data-island="React" data-island-label="MenuSearch · ~12 KB JS">
+        <MenuSearch client:load />
+      </div>
+
+      <ul class="menu-grid">
+        {menu.map((item) => <MenuCard item={item} />)}
+      </ul>
+
+      <div id="menu-empty" class="menu-empty" style="display: none;">
+        <p class="menu-empty__title">No matches</p>
+        <p>Nothing on the menu fits that search. Try a different word.</p>
+      </div>
+    </div>
+  </section>
+
+  <!--
+    About section — fully static. The heading, the body copy, the sign card,
+    all rendered at build time. No JavaScript ships for any of this.
+  -->
+  <section id="about" class="section about static-region">
+    <div class="container about__grid">
+      <div class="about__body">
+        <p class="section__eyebrow">The story</p>
+        <h2 class="section__title">A bakery, a corner, and a starter named Roy.</h2>
+        <p>
+          Maya started milling flour in a converted garage in 2018 with a
+          stubborn rye starter she named Roy. Six years later the storefront
+          opened on the corner of Fifth and Cypress, three doors down from
+          where she used to drop off loaves to neighbors at sunrise.
+        </p>
+        <p>
+          The bread is naturally leavened with the same culture Maya kept alive
+          through three apartments, one cross-country move, and a power outage
+          that lasted four days. Pastry is laminated in-house every morning
+          from European butter and unbleached flour. Nothing here is mass-made.
+        </p>
+        <p>
+          Bread comes out at 7 AM. When the rack is empty, it&rsquo;s empty.
+          Come early.
+        </p>
+      </div>
+
+      <aside class="about__sign">
+        <p class="about__sign-est">Established 2018</p>
+        <p class="about__sign-name">Maya&rsquo;s</p>
+        <div class="about__sign-rule"></div>
+        <p class="about__sign-meta">5th &amp; Cypress · Wed&ndash;Sun</p>
+      </aside>
+    </div>
+  </section>
+
+  <!--
+    Reservation section — static heading + intro, with one island for the
+    actual form. Form state, validation, the success view after submit —
+    all React. Hide the highlight to see how the form fits into the
+    surrounding static layout; toggle it on to see where the React boundary is.
+  -->
+  <section id="reserve" class="section static-region">
+    <div class="container">
+      <p class="section__eyebrow">Hold a spot</p>
+      <h2 class="section__title">Reserve a table</h2>
+      <p class="section__lede">
+        Saturdays book out by noon, especially around 9 AM and the late
+        afternoon pastry window. Reserve a spot below and we&rsquo;ll have it
+        held with your name on it.
+      </p>
+
+      <div data-island="React" data-island-label="ReserveTable · ~18 KB JS">
+        <ReserveTable client:load />
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

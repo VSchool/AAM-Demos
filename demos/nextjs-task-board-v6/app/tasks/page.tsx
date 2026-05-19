@@ -2,6 +2,7 @@
 // The TaskBoard client component reads tasks from the in-memory store
 // (initialized at the root layout from getTasks()).
 
+import DemoNote from "@/components/DemoNote";
 import Progression from "@/components/Progression";
 import TaskBoard from "@/components/TaskBoard";
 
@@ -26,29 +27,29 @@ export default function TasksPage() {
 
       <Progression current={6} />
 
-      <section className="cn-banner cn-banner-pink">
-        <div className="cn-banner-meta">
-          this UI demonstrates the patterns only · W6 makes them real
-        </div>
-        <p>
-          The &quot;+ New task&quot; form, the edit form on every detail page, the
-          delete-with-confirmation flow — they all run in your browser, against a
-          client-side store. There is no API route, no database, no server-side write.
-          That&apos;s next week&apos;s scope. v5&apos;s job is to make the patterns
-          (forms, optimistic UI, confirm flows) feel right before any persistence is
-          plugged in.
-        </p>
-      </section>
-
       <section className="cn-section">
         <div className="cn-section-tag">try it · all changes are session-only</div>
         <h2 className="cn-section-h">Create, filter, click into detail to edit</h2>
-        <TaskBoard />
+        <TaskBoard
+          note={
+            <DemoNote title="Demo note" size="small">
+              <div className="cn-demo-note-meta">
+                this UI demonstrates the patterns only · W6 makes them real
+              </div>
+              <p>
+                The &quot;+ New task&quot; form, the edit form on every detail page,
+                the delete-with-confirmation flow — they all run in your browser,
+                against a client-side store. There is no API route, no database, no
+                server-side write. That&apos;s next week&apos;s scope. v5&apos;s job
+                is to make the patterns (forms, optimistic UI, confirm flows) feel
+                right before any persistence is plugged in.
+              </p>
+            </DemoNote>
+          }
+        />
       </section>
 
-      <section className="cn-section">
-        <div className="cn-section-tag">how the store works</div>
-        <h2 className="cn-section-h">One Context provider, three actions</h2>
+      <DemoNote title="How the store works — one Context provider, three actions">
         <pre className="cn-code">
           <code>{`// lib/task-store.tsx — "use client"
 export function TaskStoreProvider({ initial, children }) {
@@ -63,13 +64,13 @@ export function TaskStoreProvider({ initial, children }) {
   return <Ctx.Provider value={{ tasks, createTask, updateTask, deleteTask }} />;
 }`}</code>
         </pre>
-        <p className="cn-aside">
+        <p className="cn-demo-note-aside">
           The provider lives at the root layout, so <code>/tasks</code> and{" "}
           <code>/tasks/[id]</code> share the same store. When W6 lands, every method
-          gets replaced by a <code>fetch(&apos;/api/tasks&apos;, ...)</code> call; the
-          component shapes don&apos;t change.
+          gets replaced by a <code>fetch(&apos;/api/tasks&apos;, ...)</code> call;
+          the component shapes don&apos;t change.
         </p>
-      </section>
+      </DemoNote>
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import PaletteToggle from "@/components/PaletteToggle";
 import { TaskStoreProvider } from "@/lib/task-store";
 import { getTasks } from "@/lib/tasks";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
           <Nav />
           {children}
           <Footer />
+          <PaletteToggle />
         </TaskStoreProvider>
       </body>
     </html>

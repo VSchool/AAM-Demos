@@ -18,6 +18,11 @@ interface TaskStore {
   createTask: (t: NewTaskInput) => Task;
   updateTask: (id: string, patch: Partial<Task>) => void;
   deleteTask: (id: string) => void;
+  reorderTask: (
+    id: string,
+    targetStatus: Task["status"],
+    beforeId: string | null,
+  ) => void;
   getTask: (id: string) => Task | undefined;
   resetToInitial: () => void;
   hydrated: boolean;
@@ -105,6 +110,37 @@ export function TaskStoreProvider({
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const reorderTask = useCallback(
+    (id: string, targetStatus: Task["status"], beforeId: string | null) => {
+      setTasks((prev) => {
+        const movingIdx = prev.findIndex((t) => t.id === id);
+        if (movingIdx === -1) return prev;
+        const moving = prev[movingIdx];
+        const movingUpdated: Task =
+          moving.status !== targetStatus
+            ? { ...moving, status: targetStatus, updated: "just now" }
+            : moving;
+        const withoutMoving = prev.filter((_, i) => i !== movingIdx);
+        if (beforeId === null) {
+          let lastIdx = -1;
+          withoutMoving.forEach((t, idx) => {
+            if (t.status === targetStatus) lastIdx = idx;
+          });
+          const insertAt = lastIdx + 1;
+          const result = [...withoutMoving];
+          result.splice(insertAt, 0, movingUpdated);
+          return result;
+        }
+        const beforeIdx = withoutMoving.findIndex((t) => t.id === beforeId);
+        if (beforeIdx === -1) return prev;
+        const result = [...withoutMoving];
+        result.splice(beforeIdx, 0, movingUpdated);
+        return result;
+      });
+    },
+    [],
+  );
+
   const getTask = useCallback(
     (id: string) => tasks.find((t) => t.id === id),
     [tasks],
@@ -123,11 +159,21 @@ export function TaskStoreProvider({
       createTask,
       updateTask,
       deleteTask,
+      reorderTask,
       getTask,
       resetToInitial,
       hydrated,
     }),
-    [tasks, createTask, updateTask, deleteTask, getTask, resetToInitial, hydrated],
+    [
+      tasks,
+      createTask,
+      updateTask,
+      deleteTask,
+      reorderTask,
+      getTask,
+      resetToInitial,
+      hydrated,
+    ],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

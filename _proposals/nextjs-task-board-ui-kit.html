@@ -1,0 +1,1664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cadence — three UI-kit directions side-by-side (nextjs-task-board, W5D3)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Space+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: #111;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img, svg { display: block; max-width: 100%; }
+
+  /* ============ NAV ============ */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .topnav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 56px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .topnav .brand { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .topnav .brand small { color: rgba(0,0,0,0.5); font-weight: 400; margin-left: 8px; }
+  .topnav .jumps { display: flex; gap: 4px; }
+  .topnav .jumps a {
+    font-size: 12px;
+    text-decoration: none;
+    color: rgba(0,0,0,0.6);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background 100ms, color 100ms;
+  }
+  .topnav .jumps a:hover { background: rgba(0,0,0,0.04); color: #111; }
+
+  /* ============ INTRO ============ */
+  .intro {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 32px 56px;
+  }
+  .intro .eyebrow {
+    font-size: 11px;
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 16px;
+  }
+  .intro h1 {
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin: 0 0 12px;
+    font-weight: 600;
+    max-width: 24ch;
+  }
+  .intro p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(0,0,0,0.6);
+    max-width: 64ch;
+    margin: 0;
+  }
+  .intro .note {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: #FFFBEB;
+    border: 1px solid #FCD34D;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #713F12;
+    max-width: 64ch;
+  }
+  .intro .note strong { color: #1F2937; }
+
+  /* ============================================================== */
+  /*                  DIRECTION A — BUILD LOG                       */
+  /* ============================================================== */
+  .ka {
+    background: #08090A;
+    color: #F7F8F8;
+    font-family: "Inter", sans-serif;
+    font-feature-settings: "cv11" 1;
+    padding: 80px 0 96px;
+    border-top: 1px solid #1A1B1E;
+  }
+  .ka-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .ka-head { margin-bottom: 48px; }
+  .ka-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #F79CE0;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ka-eyebrow::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #F79CE0;
+    box-shadow: 0 0 10px #F79CE0;
+  }
+  .ka-head h2 {
+    font-size: 56px;
+    font-weight: 510; /* Linear's variable-weight signature */
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    margin: 0 0 14px;
+    color: #F7F8F8;
+  }
+  .ka-head .concept {
+    font-size: 17px;
+    line-height: 1.55;
+    color: #8A8F98;
+    max-width: 62ch;
+    margin: 0;
+  }
+  .ka-head .concept em { font-style: normal; color: #F7F8F8; }
+
+  .ka-section { margin-bottom: 48px; }
+  .ka-section-tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #62666D;
+    margin-bottom: 12px;
+  }
+  .ka-section h3 {
+    font-family: "Inter", sans-serif;
+    font-size: 18px;
+    font-weight: 590; /* variable-weight signature */
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+    color: #F7F8F8;
+  }
+
+  /* palette */
+  .ka-palette {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 800px) { .ka-palette { grid-template-columns: repeat(4, 1fr); } }
+  .ka-swatch {
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .ka-swatch-color { height: 56px; }
+  .ka-swatch-meta { padding: 8px 10px; font-family: "JetBrains Mono", monospace; font-size: 10px; color: #8A8F98; }
+  .ka-swatch-meta div:first-child { color: #F7F8F8; }
+
+  /* status indicators — NO PILLS, just colored icon + slate text */
+  .ka-status-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    padding: 24px;
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+  }
+  .ka-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 590; /* Linear's actual weight */
+    color: #62666D;
+  }
+  .ka-status-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  /* type specimen */
+  .ka-type {
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .ka-type-row {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: baseline;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .ka-type-row:last-child { border-bottom: none; }
+  .ka-type-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #62666D;
+  }
+  .ka-type-size {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: #62666D;
+  }
+  .ka-t1 { font-size: 48px; font-weight: 510; letter-spacing: -0.025em; line-height: 1.05; }
+  .ka-t2 { font-size: 22px; font-weight: 590; letter-spacing: -0.015em; }
+  .ka-t3 { font-size: 14px; font-weight: 400; line-height: 1.55; color: #D0D6E0; }
+  .ka-t4 { font-size: 12px; font-weight: 590; color: #62666D; }
+  .ka-mono { font-family: "JetBrains Mono", monospace; font-size: 13px; color: #8A8F98; }
+
+  /* activity timeline — the spine */
+  .ka-timeline {
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ka-timeline-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .ka-timeline-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #62666D;
+  }
+  .ka-timeline-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #8A8F98;
+    font-weight: 510;
+  }
+  .ka-row {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 80ms;
+  }
+  .ka-row:hover { background: rgba(255,255,255,0.02); }
+  .ka-row:last-child { border-bottom: none; }
+  .ka-row-avatar {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    font-size: 9px;
+    font-weight: 600;
+    color: #08090A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ka-row-id {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #62666D;
+    min-width: 64px;
+  }
+  .ka-row-body {
+    font-size: 13px;
+    color: #D0D6E0;
+    line-height: 1.5;
+  }
+  .ka-row-body strong { color: #F7F8F8; font-weight: 590; }
+  .ka-row-body .ka-inline-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #8A8F98;
+    font-weight: 590;
+  }
+  .ka-row-time {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #62666D;
+    white-space: nowrap;
+  }
+
+  /* right-rail sidebar */
+  .ka-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+  }
+  @media (max-width: 900px) { .ka-detail-grid { grid-template-columns: 1fr; } }
+  .ka-detail-main {
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .ka-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: #62666D;
+  }
+  .ka-detail-main h4 {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    font-weight: 510;
+    letter-spacing: -0.015em;
+    margin: 0 0 12px;
+    color: #F7F8F8;
+    line-height: 1.3;
+  }
+  .ka-detail-main p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: #D0D6E0;
+    margin: 0 0 14px;
+  }
+  .ka-sidebar {
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 24px;
+    height: fit-content;
+  }
+  .ka-sidebar-row {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .ka-sidebar-row:last-child { border-bottom: none; }
+  .ka-sidebar-label {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 510;
+    color: #62666D;
+  }
+  .ka-sidebar-value {
+    font-size: 12.5px;
+    font-weight: 510;
+    color: #F7F8F8;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ka-label-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: #8A8F98;
+  }
+  .ka-label-chip::before {
+    content: "";
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  /* page mock for direction A */
+  .ka-mock {
+    background: #08090A;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 28px;
+    margin-top: 16px;
+  }
+  .ka-mock-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    gap: 20px;
+  }
+  @media (max-width: 1000px) { .ka-mock-grid { grid-template-columns: 1fr; } }
+  .ka-mock-side {
+    border-right: 1px solid rgba(255,255,255,0.05);
+    padding-right: 20px;
+  }
+  .ka-mock-nav {
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 510;
+  }
+  .ka-mock-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: #8A8F98;
+    margin-bottom: 2px;
+  }
+  .ka-mock-nav-item.active { background: rgba(247, 156, 224, 0.08); color: #F7F8F8; }
+  .ka-mock-nav-count {
+    margin-left: auto;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: #62666D;
+  }
+  .ka-mock-nav-section {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #62666D;
+    margin: 18px 8px 8px;
+  }
+  .ka-mock-side-rule { border-top: 1px solid rgba(255,255,255,0.05); margin: 14px 0; }
+
+  /* ============================================================== */
+  /*                  DIRECTION B — BROADSHEET                      */
+  /* ============================================================== */
+  .kb {
+    background: #F9F6F1;
+    color: #0E0F11;
+    font-family: "Inter", sans-serif;
+    padding: 80px 0 96px;
+  }
+  .kb-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .kb-head { margin-bottom: 48px; border-bottom: 1px solid rgba(14,15,17,0.12); padding-bottom: 32px; }
+  .kb-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #17B267;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kb-eyebrow::before {
+    content: "";
+    width: 6px; height: 6px;
+    background: #17B267;
+  }
+  .kb-head h2 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144;
+    font-size: 72px;
+    font-weight: 400; /* Plain's regular-weight display signature */
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    margin: 0 0 14px;
+    color: #0E0F11;
+  }
+  .kb-head .concept {
+    font-size: 18px;
+    line-height: 1.5;
+    color: rgba(14,15,17,0.65);
+    max-width: 62ch;
+    margin: 0;
+  }
+  .kb-head .concept em {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-weight: 400;
+    color: #0E0F11;
+  }
+
+  .kb-section { margin-bottom: 48px; }
+  .kb-section-tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(14,15,17,0.45);
+    margin-bottom: 8px;
+  }
+  .kb-section h3 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 36;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    margin: 0 0 24px;
+    color: #0E0F11;
+  }
+  .kb-rule {
+    border-top: 1px solid rgba(14,15,17,0.12);
+    margin-bottom: 12px;
+  }
+  .kb-rule-thick {
+    border-top: 3px solid #0E0F11;
+    margin-bottom: 6px;
+  }
+  .kb-masthead {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #0E0F11;
+    padding: 6px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .kb-masthead-rule {
+    border-top: 1px solid #0E0F11;
+    margin-top: 6px;
+  }
+
+  /* palette */
+  .kb-palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 700px) { .kb-palette { grid-template-columns: repeat(3, 1fr); } }
+  .kb-swatch {
+    border: 1px solid rgba(14,15,17,0.12);
+  }
+  .kb-swatch-color { height: 64px; border-bottom: 1px solid rgba(14,15,17,0.12); }
+  .kb-swatch-meta { padding: 10px 12px; font-family: "JetBrains Mono", monospace; font-size: 10px; color: rgba(14,15,17,0.55); }
+  .kb-swatch-meta div:first-child {
+    color: #0E0F11;
+    font-family: "Fraunces", serif;
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  /* type specimen — serif display + sans body */
+  .kb-type {
+    border-top: 1px solid #0E0F11;
+    border-bottom: 1px solid rgba(14,15,17,0.12);
+    padding: 20px 0;
+  }
+  .kb-type-row {
+    display: grid;
+    grid-template-columns: 140px 1fr auto;
+    align-items: baseline;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(14,15,17,0.10);
+  }
+  .kb-type-row:last-child { border-bottom: none; }
+  .kb-type-label {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(14,15,17,0.5);
+  }
+  .kb-type-size {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    color: rgba(14,15,17,0.5);
+  }
+  .kb-t1 { font-family: "Fraunces", serif; font-variation-settings: "opsz" 144; font-size: 56px; font-weight: 400; letter-spacing: -0.025em; line-height: 1.0; }
+  .kb-t2 { font-family: "Fraunces", serif; font-variation-settings: "opsz" 72; font-size: 28px; font-weight: 400; letter-spacing: -0.02em; }
+  .kb-t3 { font-family: "Fraunces", serif; font-variation-settings: "opsz" 36; font-size: 20px; font-style: italic; font-weight: 400; }
+  .kb-t4 { font-size: 14.5px; line-height: 1.6; }
+  .kb-t5 { font-family: "JetBrains Mono", monospace; font-size: 12px; color: rgba(14,15,17,0.55); font-variant-numeric: oldstyle-nums; }
+
+  /* status flags — bracketed text */
+  .kb-flag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: lowercase;
+    letter-spacing: 0.04em;
+    color: rgba(14,15,17,0.7);
+    white-space: nowrap;
+  }
+  .kb-flag::before { content: "[ "; color: rgba(14,15,17,0.4); }
+  .kb-flag::after { content: " ]"; color: rgba(14,15,17,0.4); }
+  .kb-flag-open { color: #0E0F11; }
+  .kb-flag-doing { color: #1E3A8A; }
+  .kb-flag-blocked { color: #B45309; }
+  .kb-flag-done { color: #17B267; }
+  .kb-flag-canceled { color: rgba(14,15,17,0.35); text-decoration: line-through; }
+
+  .kb-flag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(14,15,17,0.10);
+    border-bottom: 1px solid rgba(14,15,17,0.10);
+  }
+
+  /* folio table */
+  .kb-folio {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .kb-folio th {
+    text-align: left;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(14,15,17,0.5);
+    font-weight: 500;
+    padding: 8px 0;
+    border-top: 1px solid #0E0F11;
+    border-bottom: 1px solid rgba(14,15,17,0.30);
+  }
+  .kb-folio td {
+    padding: 16px 16px 16px 0;
+    border-bottom: 1px solid rgba(14,15,17,0.12);
+    vertical-align: top;
+  }
+  .kb-folio td:last-child, .kb-folio th:last-child { padding-right: 0; }
+  .kb-folio .col-headline { width: auto; }
+  .kb-folio .col-dateline { width: 200px; }
+  .kb-folio .col-status { width: 130px; }
+  .kb-headline {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 36;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: #0E0F11;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .kb-subhed {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(14,15,17,0.6);
+    margin: 0;
+  }
+  .kb-dateline {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    font-variant-numeric: oldstyle-nums;
+    color: rgba(14,15,17,0.6);
+    line-height: 1.5;
+  }
+  .kb-dateline strong { color: #0E0F11; font-weight: 500; }
+  .kb-dateline-id {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(14,15,17,0.45);
+    margin-bottom: 2px;
+  }
+
+  /* page mock B — front page */
+  .kb-mock {
+    background: #FFFEFC;
+    border: 1px solid rgba(14,15,17,0.20);
+    padding: 36px 40px 44px;
+    margin-top: 16px;
+  }
+  @media (max-width: 700px) { .kb-mock { padding: 24px 20px; } }
+  .kb-mock-masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 3px double #0E0F11;
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+  }
+  .kb-mock-title {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144;
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .kb-mock-title-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(14,15,17,0.55);
+  }
+  .kb-mock-strap {
+    font-family: "Fraunces", serif;
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(14,15,17,0.65);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(14,15,17,0.18);
+    margin-bottom: 28px;
+  }
+  .kb-mock-cols {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 36px;
+  }
+  @media (max-width: 800px) { .kb-mock-cols { grid-template-columns: 1fr; } }
+  .kb-mock-lede h4 {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144;
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
+    margin: 0 0 8px;
+  }
+  .kb-mock-lede p {
+    font-size: 14.5px;
+    line-height: 1.62;
+    color: rgba(14,15,17,0.78);
+    margin: 0 0 12px;
+  }
+  .kb-mock-lede p strong { color: #0E0F11; font-weight: 600; }
+  .kb-mock-byline {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(14,15,17,0.5);
+    margin: 0 0 12px;
+  }
+  .kb-mock-aside {
+    border-left: 1px solid rgba(14,15,17,0.18);
+    padding-left: 24px;
+  }
+  .kb-mock-aside .kb-section-h {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #0E0F11;
+    border-bottom: 1px solid #0E0F11;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .kb-aside-row {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(14,15,17,0.10);
+  }
+  .kb-aside-row:last-child { border-bottom: none; }
+  .kb-aside-row .kb-aside-title {
+    font-family: "Fraunces", serif;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.3;
+    margin: 0 0 4px;
+  }
+  .kb-aside-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    color: rgba(14,15,17,0.55);
+    font-variant-numeric: oldstyle-nums;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  /* ============================================================== */
+  /*                  DIRECTION C — INVERTED STUDIO                 */
+  /* ============================================================== */
+  .kc {
+    background: #6B50FF;
+    color: #FFFDF5;
+    font-family: "Space Grotesk", sans-serif;
+    padding: 80px 0 96px;
+    border-top: 6px solid #FFFDF5;
+  }
+  .kc-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .kc-head { margin-bottom: 48px; }
+  .kc-eyebrow {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #00FFB2;
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .kc-eyebrow::before {
+    content: "▸";
+    color: #00FFB2;
+    font-size: 14px;
+  }
+  .kc-head h2 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 64px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.0;
+    margin: 0 0 14px;
+    color: #FFFDF5;
+  }
+  .kc-head .concept {
+    font-size: 17px;
+    line-height: 1.5;
+    color: rgba(255,253,245,0.75);
+    max-width: 64ch;
+    margin: 0;
+  }
+  .kc-head .concept strong { color: #FF7BF5; font-weight: 600; }
+
+  .kc-section { margin-bottom: 48px; }
+  .kc-section-tag {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #00FFB2;
+    margin-bottom: 12px;
+  }
+  .kc-section h3 {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+    color: #FFFDF5;
+  }
+
+  /* palette */
+  .kc-palette {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 700px) { .kc-palette { grid-template-columns: repeat(3, 1fr); } }
+  .kc-swatch {
+    background: #FFFDF5;
+    color: #0A0A0A;
+    border: 0;
+  }
+  .kc-swatch-color { height: 60px; border-bottom: 1px solid rgba(0,0,0,0.10); }
+  .kc-swatch-meta { padding: 8px 10px; font-family: "Geist Mono", monospace; font-size: 10px; color: rgba(0,0,0,0.55); }
+  .kc-swatch-meta div:first-child {
+    color: #0A0A0A;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 2px;
+  }
+
+  /* chevron status flags */
+  .kc-flag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 6px 12px 6px 8px;
+    background: #FFFDF5;
+    color: #0A0A0A;
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+  }
+  .kc-flag-open { background: #FFFDF5; color: #0A0A0A; }
+  .kc-flag-doing { background: #FFE066; color: #0A0A0A; }
+  .kc-flag-blocked { background: #FF7BF5; color: #0A0A0A; }
+  .kc-flag-done { background: #00FFB2; color: #0A0A0A; }
+  .kc-flag-canceled { background: rgba(255,253,245,0.20); color: rgba(255,253,245,0.60); }
+
+  .kc-flag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 24px;
+    background: rgba(255,253,245,0.06);
+    border: 1px solid rgba(255,253,245,0.18);
+  }
+
+  /* type specimen */
+  .kc-type {
+    background: #FFFDF5;
+    color: #0A0A0A;
+    padding: 32px;
+    border: 1px solid #FFFDF5;
+  }
+  .kc-type-row {
+    display: grid;
+    grid-template-columns: 130px 1fr auto;
+    align-items: baseline;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.10);
+  }
+  .kc-type-row:last-child { border-bottom: none; }
+  .kc-type-label {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(0,0,0,0.50);
+  }
+  .kc-type-size {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    color: rgba(0,0,0,0.50);
+  }
+  .kc-t1 { font-family: "Space Grotesk", sans-serif; font-size: 48px; font-weight: 700; letter-spacing: -0.03em; line-height: 1.0; }
+  .kc-t2 { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 600; letter-spacing: -0.015em; }
+  .kc-t3 { font-family: "Space Grotesk", sans-serif; font-size: 14.5px; font-weight: 400; line-height: 1.55; }
+  .kc-t4 { font-family: "Geist Mono", monospace; font-size: 12px; color: rgba(0,0,0,0.65); }
+
+  /* bento grid */
+  .kc-bento {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 100px;
+    gap: 12px;
+  }
+  @media (max-width: 800px) {
+    .kc-bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 110px; }
+  }
+  .kc-tile {
+    background: #FFFDF5;
+    color: #0A0A0A;
+    padding: 18px 20px;
+    border: 1px solid rgba(255,253,245,0.40);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+  }
+  .kc-tile-violet { background: #5A3FE0; color: #FFFDF5; }
+  .kc-tile-green { background: #00FFB2; color: #0A0A0A; }
+  .kc-tile-pink { background: #FF7BF5; color: #0A0A0A; }
+  .kc-tile-yellow { background: #FFE066; color: #0A0A0A; }
+  .kc-tile-dark { background: #0A0A0A; color: #FFFDF5; }
+  .kc-tile-meta {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.7;
+  }
+  .kc-tile-num {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .kc-tile-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .kc-tile-sub {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+  .kc-tile.span-3 { grid-column: span 3; }
+  .kc-tile.span-4 { grid-column: span 4; }
+  .kc-tile.span-5 { grid-column: span 5; }
+  .kc-tile.span-6 { grid-column: span 6; }
+  .kc-tile.span-8 { grid-column: span 8; }
+  .kc-tile.span-12 { grid-column: span 12; }
+  .kc-tile.row-2 { grid-row: span 2; }
+  @media (max-width: 800px) {
+    .kc-tile.span-3, .kc-tile.span-4, .kc-tile.span-5, .kc-tile.span-6, .kc-tile.span-8 { grid-column: span 4; }
+    .kc-tile.span-12 { grid-column: span 4; }
+  }
+
+  /* page mock C — bento dashboard */
+  .kc-mock {
+    background: #5A3FE0;
+    padding: 28px;
+    border: 1px solid #FFFDF5;
+    margin-top: 16px;
+  }
+  .kc-mock-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,253,245,0.30);
+  }
+  .kc-mock-brand {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .kc-mock-nav {
+    display: flex;
+    gap: 14px;
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .kc-mock-nav a { color: rgba(255,253,245,0.60); text-decoration: none; }
+  .kc-mock-nav a.active { color: #00FFB2; }
+
+  /* ============ FOOTER ============ */
+  .foot {
+    background: #fff;
+    color: #111;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 56px 0 80px;
+  }
+  .foot-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .foot h2 {
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  .foot p {
+    color: rgba(0,0,0,0.65);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0 0 24px;
+    max-width: 60ch;
+  }
+  .foot-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+  .foot-table th, .foot-table td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(0,0,0,0.10);
+    vertical-align: top;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .foot-table th {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(0,0,0,0.55);
+    font-weight: 500;
+    width: 110px;
+  }
+  .foot-table td strong { font-weight: 600; }
+
+  /* small utilities */
+  .row { display: flex; align-items: center; gap: 12px; }
+  .stack-2 { display: flex; flex-direction: column; gap: 8px; }
+  .stack-3 { display: flex; flex-direction: column; gap: 12px; }
+</style>
+</head>
+<body>
+
+<!-- =================== NAV =================== -->
+<header class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">Cadence — UI kit study <small>nextjs-task-board · W5D3</small></div>
+    <nav class="jumps">
+      <a href="#dir-a">A · Build Log</a>
+      <a href="#dir-b">B · Broadsheet</a>
+      <a href="#dir-c">C · Inverted Studio</a>
+    </nav>
+  </div>
+</header>
+
+<!-- =================== INTRO =================== -->
+<div class="intro">
+  <div class="eyebrow">Three directions · grounded in actual references</div>
+  <h1>Three UI-kit directions for the same task board.</h1>
+  <p>Each direction below is a faithful mini-product — its own typography, surface, structural moves. No shared chrome. Palettes pulled from live inspection of real sites (Linear, Plain, Attio, Charm.sh) rather than tropes. Pick the direction that fits W5D3's voice; the kit then carries across v0 → v6.</p>
+  <div class="note"><strong>How to read this:</strong> compare the same artifact (a status indicator, a task list row, a page composition) across the three sections. The cool/violet color in section A vs. C is incidental; the real difference is whether status is a colored dot beside slate text (A), a bracketed text flag (B), or a chevron-shape banner (C).</div>
+</div>
+
+<!-- ============================================================== -->
+<!--                  DIRECTION A — BUILD LOG                       -->
+<!-- ============================================================== -->
+<section class="ka" id="dir-a">
+  <div class="ka-wrap">
+    <div class="ka-head">
+      <div class="ka-eyebrow">Direction A · Build Log</div>
+      <h2>The team's narrative spine, not a kanban.</h2>
+      <p class="concept">The primary surface is an <em>activity timeline</em>. Tasks live in the right-rail. Status is a colored shape + slate text, never a pill. Inter Variable at weights 510/590 (the variable-axis signature). Berkeley-Mono-feel monospace for IDs. Pulled directly from Linear's actual rendered structure — sherbet palette, no rounded pill backgrounds, narrow weight differentials.</p>
+    </div>
+
+    <div class="ka-section">
+      <div class="ka-section-tag">01 · Palette (Linear's actual sherbet, on warm near-black)</div>
+      <div class="ka-palette">
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#08090A"></div><div class="ka-swatch-meta"><div>bg</div><div>#08090A</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#0F1011"></div><div class="ka-swatch-meta"><div>surface</div><div>#0F1011</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#F7F8F8"></div><div class="ka-swatch-meta"><div>text</div><div>#F7F8F8</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#62666D"></div><div class="ka-swatch-meta"><div>muted</div><div>#62666D</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#F79CE0"></div><div class="ka-swatch-meta"><div>pink</div><div>#F79CE0</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#F7BF8B"></div><div class="ka-swatch-meta"><div>peach</div><div>#F7BF8B</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#8FA6FF"></div><div class="ka-swatch-meta"><div>periwinkle</div><div>#8FA6FF</div></div></div>
+        <div class="ka-swatch"><div class="ka-swatch-color" style="background:#83DCDC"></div><div class="ka-swatch-meta"><div>cyan</div><div>#83DCDC</div></div></div>
+      </div>
+    </div>
+
+    <div class="ka-section">
+      <div class="ka-section-tag">02 · Status — colored SVG + slate text, NO PILL</div>
+      <div class="ka-status-strip">
+        <span class="ka-status">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#62666D" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+          Backlog
+        </span>
+        <span class="ka-status">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#8A8F98" stroke-width="1.5"/></svg>
+          Todo
+        </span>
+        <span class="ka-status">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#F7BF8B" stroke-width="1.5"/><path d="M 7 7 L 7 1 A 6 6 0 0 1 13 7 Z" fill="#F7BF8B"/></svg>
+          In progress
+        </span>
+        <span class="ka-status">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#F79CE0"/><path d="M4 4 L10 10 M10 4 L4 10" stroke="#08090A" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Blocked
+        </span>
+        <span class="ka-status">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#83DCDC"/><path d="M4 7 L6.5 9.5 L10 5" stroke="#08090A" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Done
+        </span>
+        <span class="ka-status" style="opacity:0.5; text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.2)">
+          <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#62666D" stroke-width="1.5"/><line x1="3.5" y1="3.5" x2="10.5" y2="10.5" stroke="#62666D" stroke-width="1.5"/></svg>
+          Canceled
+        </span>
+      </div>
+    </div>
+
+    <div class="ka-section">
+      <div class="ka-section-tag">03 · Typography — Inter Variable at weight axes 510 / 590</div>
+      <div class="ka-type">
+        <div class="ka-type-row">
+          <div class="ka-type-label">Display · h1</div>
+          <div class="ka-t1">The team's build log — week 5, day 3</div>
+          <div class="ka-type-size">48 / 510 / -2.5%</div>
+        </div>
+        <div class="ka-type-row">
+          <div class="ka-type-label">h3 · sidebar</div>
+          <div class="ka-t2">Server-rendered task list</div>
+          <div class="ka-type-size">22 / 590 / -1.5%</div>
+        </div>
+        <div class="ka-type-row">
+          <div class="ka-type-label">Body</div>
+          <div class="ka-t3">Direct AI to convert the /tasks page to an async server component. The data comes from lib/tasks.ts at request time — no useEffect, no loading flicker, no spinner state machine.</div>
+          <div class="ka-type-size">14 / 400</div>
+        </div>
+        <div class="ka-type-row">
+          <div class="ka-type-label">Small label</div>
+          <div class="ka-t4">DUE TODAY · OWNED BY MP</div>
+          <div class="ka-type-size">12 / 590</div>
+        </div>
+        <div class="ka-type-row">
+          <div class="ka-type-label">Mono · IDs</div>
+          <div class="ka-mono">CDN-042 · v3 · 2026-05-20T14:32</div>
+          <div class="ka-type-size">13 / 400</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ka-section">
+      <div class="ka-section-tag">04 · Activity timeline — the primary surface</div>
+      <div class="ka-timeline">
+        <div class="ka-timeline-head">
+          <div class="ka-timeline-title">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2.5" fill="#F79CE0"/><circle cx="7" cy="7" r="6" stroke="#F79CE0" stroke-width="1" opacity="0.3"/></svg>
+            Today · 18 May 2026
+          </div>
+          <div class="ka-timeline-filter">All authors · all activity ▾</div>
+        </div>
+        <div class="ka-row">
+          <div class="ka-row-avatar" style="background: linear-gradient(135deg, #F7BF8B, #F79CE0)">MP</div>
+          <div class="ka-row-id">CDN-042</div>
+          <div class="ka-row-body">
+            <strong>Marcus</strong> moved
+            <span class="ka-inline-status"><svg width="10" height="10" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#F7BF8B" stroke-width="1.5"/><path d="M 7 7 L 7 1 A 6 6 0 0 1 13 7 Z" fill="#F7BF8B"/></svg>In progress</span>
+            — <em style="font-style: normal; color: #F7F8F8;">Wire client-side filter to server-rendered task list</em>
+          </div>
+          <div class="ka-row-time">2 min ago</div>
+        </div>
+        <div class="ka-row">
+          <div class="ka-row-avatar" style="background: linear-gradient(135deg, #83DCDC, #8FA6FF)">EK</div>
+          <div class="ka-row-id">CDN-041</div>
+          <div class="ka-row-body">
+            <strong>Emily</strong> added label <span class="ka-label-chip" style="color: #8FA6FF">routing</span> to <em style="font-style: normal; color: #F7F8F8;">Add generateStaticParams to dynamic detail route</em>
+          </div>
+          <div class="ka-row-time">14 min ago</div>
+        </div>
+        <div class="ka-row">
+          <div class="ka-row-avatar" style="background: linear-gradient(135deg, #F79CE0, #8FA6FF)">ZR</div>
+          <div class="ka-row-id">CDN-039</div>
+          <div class="ka-row-body">
+            <strong>Zaro</strong> marked
+            <span class="ka-inline-status"><svg width="10" height="10" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#F79CE0"/><path d="M4 4 L10 10 M10 4 L4 10" stroke="#08090A" stroke-width="1.5"/></svg>Blocked</span>
+            — <em style="font-style: normal; color: #F7F8F8;">Convert /tasks page to async server component</em>
+          </div>
+          <div class="ka-row-time">1 hr ago</div>
+        </div>
+        <div class="ka-row">
+          <div class="ka-row-avatar" style="background: linear-gradient(135deg, #FFDF9F, #F7BF8B)">AI</div>
+          <div class="ka-row-id">CDN-038</div>
+          <div class="ka-row-body">
+            <strong>Agent</strong> drafted <em style="font-style: normal; color: #F7F8F8;">layout.tsx</em> with global nav + footer · <span style="color:#62666D">awaiting review</span>
+          </div>
+          <div class="ka-row-time">2 hr ago</div>
+        </div>
+        <div class="ka-row">
+          <div class="ka-row-avatar" style="background: linear-gradient(135deg, #F7BF8B, #F79CE0)">MP</div>
+          <div class="ka-row-id">CDN-035</div>
+          <div class="ka-row-body">
+            <strong>Marcus</strong> marked
+            <span class="ka-inline-status"><svg width="10" height="10" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="#83DCDC"/><path d="M4 7 L6.5 9.5 L10 5" stroke="#08090A" stroke-width="1.5" fill="none"/></svg>Done</span>
+            — <em style="font-style: normal; color: #F7F8F8;">Audit AI-generated JSX for raw HTML injection</em>
+          </div>
+          <div class="ka-row-time">yesterday</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ka-section">
+      <div class="ka-section-tag">05 · Issue detail + right-rail sidebar (Linear's actual 320 px shape)</div>
+      <div class="ka-detail-grid">
+        <div class="ka-detail-main">
+          <div class="ka-detail-header">
+            CDN-042
+            <span style="color:#3E4148">·</span>
+            <span class="ka-status">
+              <svg class="ka-status-icon" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#F7BF8B" stroke-width="1.5"/><path d="M 7 7 L 7 1 A 6 6 0 0 1 13 7 Z" fill="#F7BF8B"/></svg>
+              In progress
+            </span>
+          </div>
+          <h4>Wire client-side filter to server-rendered task list</h4>
+          <p>Confirm the filter state lives in the client wrapper, not the server parent. The server component should still own the data read from <span class="ka-mono">lib/tasks.ts</span>; the client component receives the array as a prop and slices it locally.</p>
+          <p style="color:#8A8F98">If the filter were a server component, every change would trigger a full server roundtrip. The whole point of <span class="ka-mono">"use client"</span> in v3 is to keep interactivity in the browser without server traffic.</p>
+        </div>
+        <aside class="ka-sidebar">
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Status</div><div class="ka-sidebar-value"><svg width="12" height="12" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="#F7BF8B" stroke-width="1.5"/><path d="M 7 7 L 7 1 A 6 6 0 0 1 13 7 Z" fill="#F7BF8B"/></svg>In progress</div></div>
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Priority</div><div class="ka-sidebar-value"><span style="width:8px; height:8px; border-radius:50%; background:#F79CE0; box-shadow: 0 0 8px #F79CE0;"></span>Urgent · P0</div></div>
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Assignee</div><div class="ka-sidebar-value"><span style="width:18px; height:18px; border-radius:50%; background: linear-gradient(135deg, #F7BF8B, #F79CE0); color: #08090A; font-size:9px; font-weight:600; display:inline-flex; align-items:center; justify-content:center">MP</span>Marcus Peterson</div></div>
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Labels</div><div class="ka-sidebar-value" style="flex-wrap: wrap; gap: 6px"><span class="ka-label-chip" style="color: #83DCDC">server-component</span><span class="ka-label-chip" style="color: #8FA6FF">routing</span></div></div>
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Cycle</div><div class="ka-sidebar-value" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #8A8F98">W5 · Day 3</div></div>
+          <div class="ka-sidebar-row"><div class="ka-sidebar-label">Demo state</div><div class="ka-sidebar-value" style="font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: #F7F8F8">v3 · client filter</div></div>
+        </aside>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                  DIRECTION B — BROADSHEET                      -->
+<!-- ============================================================== -->
+<section class="kb" id="dir-b">
+  <div class="kb-wrap">
+    <div class="kb-head">
+      <div class="kb-eyebrow">Direction B · Broadsheet</div>
+      <h2>The team's daily front&nbsp;page.</h2>
+      <p class="concept">A task board reimagined as a <em>printed broadsheet</em>: ink on warm paper, Fraunces serif at regular weight (Plain's calm-display move borrowed wholesale), hairline horizontal rules, bracketed text flags instead of pills, oldstyle-figure datelines. Zero rounded corners. Department mastheads with rule-above. Reads like a quiet daily paper, not a SaaS dashboard.</p>
+    </div>
+
+    <div class="kb-section">
+      <div class="kb-masthead"><span>The Bulletin · UI palette</span><span>folio 01</span></div>
+      <div class="kb-masthead-rule"></div>
+      <div style="height: 16px"></div>
+      <div class="kb-palette">
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#F9F6F1"></div><div class="kb-swatch-meta"><div>paper</div><div>#F9F6F1</div></div></div>
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#FFFEFC"></div><div class="kb-swatch-meta"><div>page</div><div>#FFFEFC</div></div></div>
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#0E0F11"></div><div class="kb-swatch-meta"><div>ink</div><div>#0E0F11</div></div></div>
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#17B267"></div><div class="kb-swatch-meta"><div>mint</div><div>#17B267</div></div></div>
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#1E3A8A"></div><div class="kb-swatch-meta"><div>ink-blue</div><div>#1E3A8A</div></div></div>
+        <div class="kb-swatch"><div class="kb-swatch-color" style="background:#B45309"></div><div class="kb-swatch-meta"><div>amber</div><div>#B45309</div></div></div>
+      </div>
+    </div>
+
+    <div class="kb-section">
+      <div class="kb-masthead"><span>Status flags · bracketed, not pilled</span><span>folio 02</span></div>
+      <div class="kb-masthead-rule"></div>
+      <div class="kb-flag-row">
+        <span class="kb-flag kb-flag-open">open</span>
+        <span class="kb-flag">todo</span>
+        <span class="kb-flag kb-flag-doing">in progress</span>
+        <span class="kb-flag kb-flag-blocked">blocked</span>
+        <span class="kb-flag kb-flag-done">done</span>
+        <span class="kb-flag kb-flag-canceled">canceled</span>
+      </div>
+    </div>
+
+    <div class="kb-section">
+      <div class="kb-masthead"><span>Typography · Fraunces 144 opsz + Inter body + mono IDs</span><span>folio 03</span></div>
+      <div class="kb-masthead-rule"></div>
+      <div class="kb-type">
+        <div class="kb-type-row">
+          <div class="kb-type-label">Headline · display</div>
+          <div class="kb-t1">Server components arrive on Day&nbsp;3</div>
+          <div class="kb-type-size">56 / 400 / -2.5%</div>
+        </div>
+        <div class="kb-type-row">
+          <div class="kb-type-label">Deck · subhed</div>
+          <div class="kb-t2">A quieter pattern than useEffect</div>
+          <div class="kb-type-size">28 / 400 / -2%</div>
+        </div>
+        <div class="kb-type-row">
+          <div class="kb-type-label">Italic display</div>
+          <div class="kb-t3">From our correspondent in the build log</div>
+          <div class="kb-type-size">20 / 400 italic</div>
+        </div>
+        <div class="kb-type-row">
+          <div class="kb-type-label">Body</div>
+          <div class="kb-t4">Direct AI to convert the /tasks page to an async server component. The data comes from lib/tasks.ts at request time — no useEffect, no loading flicker.</div>
+          <div class="kb-type-size">14.5 / 400</div>
+        </div>
+        <div class="kb-type-row">
+          <div class="kb-type-label">Dateline · mono</div>
+          <div class="kb-t5">CDN 042 · Mon 18 May 2026 · v3</div>
+          <div class="kb-type-size">12 / 400 oldstyle</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kb-section">
+      <div class="kb-masthead"><span>Folio table · today's tasks</span><span>folio 04</span></div>
+      <div class="kb-masthead-rule"></div>
+      <div style="height: 20px"></div>
+      <table class="kb-folio">
+        <thead>
+          <tr>
+            <th class="col-headline">Headline</th>
+            <th class="col-dateline">Dateline · author</th>
+            <th class="col-status">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <h4 class="kb-headline">Wire client-side filter to server-rendered task list</h4>
+              <p class="kb-subhed">Confirm the filter state lives in the client wrapper, not the server parent.</p>
+            </td>
+            <td class="kb-dateline">
+              <span class="kb-dateline-id">CDN 042</span>
+              <strong>Mon 18 May 2026</strong><br>
+              filed by Marcus Peterson
+            </td>
+            <td><span class="kb-flag kb-flag-doing">in progress</span></td>
+          </tr>
+          <tr>
+            <td>
+              <h4 class="kb-headline">Add generateStaticParams to the dynamic detail route</h4>
+              <p class="kb-subhed">Pre-render every known task at build time so the static export works.</p>
+            </td>
+            <td class="kb-dateline">
+              <span class="kb-dateline-id">CDN 041</span>
+              <strong>Mon 18 May 2026</strong><br>
+              filed by Emily Klein
+            </td>
+            <td><span class="kb-flag kb-flag-doing">in progress</span></td>
+          </tr>
+          <tr>
+            <td>
+              <h4 class="kb-headline">Convert /tasks page to an async server component</h4>
+              <p class="kb-subhed">Lift the data read out of useEffect; render at request time, no spinner state machine.</p>
+            </td>
+            <td class="kb-dateline">
+              <span class="kb-dateline-id">CDN 039</span>
+              <strong>Sun 17 May 2026</strong><br>
+              filed by Zaro
+            </td>
+            <td><span class="kb-flag kb-flag-blocked">blocked</span></td>
+          </tr>
+          <tr>
+            <td>
+              <h4 class="kb-headline">Draft a shared layout.tsx with the global nav and footer</h4>
+              <p class="kb-subhed">One layout wraps every page; loading.tsx and error.tsx land here too.</p>
+            </td>
+            <td class="kb-dateline">
+              <span class="kb-dateline-id">CDN 038</span>
+              <strong>Sun 17 May 2026</strong><br>
+              filed by Beau Young
+            </td>
+            <td><span class="kb-flag">todo</span></td>
+          </tr>
+          <tr>
+            <td>
+              <h4 class="kb-headline">Audit AI-generated JSX for raw HTML injection of user input</h4>
+              <p class="kb-subhed">React escapes <span class="kb-t5" style="font-size: 11px">{userInput}</span> by default; bypass methods should be questioned on every diff.</p>
+            </td>
+            <td class="kb-dateline">
+              <span class="kb-dateline-id">CDN 035</span>
+              <strong>Fri 15 May 2026</strong><br>
+              filed by Marcus Peterson
+            </td>
+            <td><span class="kb-flag kb-flag-done">done</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kb-section">
+      <div class="kb-masthead"><span>Page composition · the daily front page</span><span>folio 05</span></div>
+      <div class="kb-masthead-rule"></div>
+      <div class="kb-mock">
+        <div class="kb-mock-masthead">
+          <h3 class="kb-mock-title">The Cadence Bulletin</h3>
+          <div class="kb-mock-title-meta">Vol. v5 · No. 18 · Mon 18 May 2026</div>
+        </div>
+        <p class="kb-mock-strap">A daily folio of the team's open work, filed and read together.</p>
+        <div class="kb-mock-cols">
+          <div class="kb-mock-lede">
+            <div class="kb-mock-byline">Lede · in progress · CDN 042 · filed by Marcus</div>
+            <h4>Wire client-side filter to server-rendered task list</h4>
+            <p>Direct AI to add a <strong>TaskFilter</strong> client component that wraps the existing server-rendered task list. The server component still owns the data read from <span class="kb-t5">lib/tasks.ts</span>; the client component receives the array as a prop and slices it locally.</p>
+            <p>The trap to watch for: AI will often "fix" the client component by lifting the data fetch into it. That defeats the entire point of v3. The server parent keeps the data; the client child keeps the interaction. Confirm the boundary on every diff.</p>
+            <p style="margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(14,15,17,0.18); font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: rgba(14,15,17,0.55);">— continued on folio 04 · see also <strong>CDN 041</strong>, <strong>CDN 039</strong></p>
+          </div>
+          <aside class="kb-mock-aside">
+            <div class="kb-section-h">Also on the desk</div>
+            <div class="kb-aside-row">
+              <h5 class="kb-aside-title">Add generateStaticParams to the dynamic route</h5>
+              <div class="kb-aside-meta"><span>CDN 041</span><span class="kb-flag kb-flag-doing" style="font-size: 9.5px">in progress</span></div>
+            </div>
+            <div class="kb-aside-row">
+              <h5 class="kb-aside-title">Convert /tasks to async server component</h5>
+              <div class="kb-aside-meta"><span>CDN 039</span><span class="kb-flag kb-flag-blocked" style="font-size: 9.5px">blocked</span></div>
+            </div>
+            <div class="kb-aside-row">
+              <h5 class="kb-aside-title">Draft shared layout.tsx</h5>
+              <div class="kb-aside-meta"><span>CDN 038</span><span class="kb-flag" style="font-size: 9.5px">todo</span></div>
+            </div>
+            <div class="kb-aside-row">
+              <h5 class="kb-aside-title">Audit AI JSX for raw HTML injection</h5>
+              <div class="kb-aside-meta"><span>CDN 035</span><span class="kb-flag kb-flag-done" style="font-size: 9.5px">done</span></div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                  DIRECTION C — INVERTED STUDIO                 -->
+<!-- ============================================================== -->
+<section class="kc" id="dir-c">
+  <div class="kc-wrap">
+    <div class="kc-head">
+      <div class="kc-eyebrow">Direction C · Inverted Studio</div>
+      <h2>The brand is the surface, not the accent.</h2>
+      <p class="concept">Violet <strong>#6B50FF</strong> is the page, not a button color (Charm.sh's actual approach — the brand IS the canvas). Cream cards sit on it like notes pinned to a studio wall. <strong>Bento</strong> composition: irregular tiles. Status as <strong>chevron flags</strong> pointing right — flags, not pills. Hard 0 px corners everywhere. Space Grotesk for display, Geist Mono for IDs. Neon-green and bright-pink flash through as accent.</p>
+    </div>
+
+    <div class="kc-section">
+      <div class="kc-section-tag">01 · Palette — violet is the canvas, accents flash through</div>
+      <div class="kc-palette">
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#6B50FF"></div><div class="kc-swatch-meta"><div>canvas</div><div>#6B50FF</div></div></div>
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#5A3FE0"></div><div class="kc-swatch-meta"><div>canvas-2</div><div>#5A3FE0</div></div></div>
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#FFFDF5"></div><div class="kc-swatch-meta"><div>card · cream</div><div>#FFFDF5</div></div></div>
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#00FFB2"></div><div class="kc-swatch-meta"><div>neon · done</div><div>#00FFB2</div></div></div>
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#FF7BF5"></div><div class="kc-swatch-meta"><div>pink · blocked</div><div>#FF7BF5</div></div></div>
+        <div class="kc-swatch"><div class="kc-swatch-color" style="background:#FFE066"></div><div class="kc-swatch-meta"><div>yellow · doing</div><div>#FFE066</div></div></div>
+      </div>
+    </div>
+
+    <div class="kc-section">
+      <div class="kc-section-tag">02 · Status — chevron flags, not pills</div>
+      <div class="kc-flag-row">
+        <span class="kc-flag kc-flag-open">Backlog</span>
+        <span class="kc-flag kc-flag-open">Todo</span>
+        <span class="kc-flag kc-flag-doing">In progress</span>
+        <span class="kc-flag kc-flag-blocked">Blocked</span>
+        <span class="kc-flag kc-flag-done">Done</span>
+        <span class="kc-flag kc-flag-canceled">Canceled</span>
+      </div>
+    </div>
+
+    <div class="kc-section">
+      <div class="kc-section-tag">03 · Typography — Space Grotesk display + Geist Mono IDs</div>
+      <div class="kc-type">
+        <div class="kc-type-row">
+          <div class="kc-type-label">Display · h1</div>
+          <div class="kc-t1">The team display board.</div>
+          <div class="kc-type-size">48 / 700 / -3%</div>
+        </div>
+        <div class="kc-type-row">
+          <div class="kc-type-label">Tile title</div>
+          <div class="kc-t2">Wire client-side filter</div>
+          <div class="kc-type-size">24 / 600 / -1.5%</div>
+        </div>
+        <div class="kc-type-row">
+          <div class="kc-type-label">Body</div>
+          <div class="kc-t3">Cream cards on violet canvas. Each card lives in a bento tile sized to its weight — today's focus is biggest, status counts are smaller, the activity ribbon spans the bottom.</div>
+          <div class="kc-type-size">14.5 / 400</div>
+        </div>
+        <div class="kc-type-row">
+          <div class="kc-type-label">Mono · IDs</div>
+          <div class="kc-t4">CDN-042 · v3 · 2026-05-20</div>
+          <div class="kc-type-size">12 / 400</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kc-section">
+      <div class="kc-section-tag">04 · Bento composition — irregular tile field</div>
+      <div class="kc-bento">
+
+        <div class="kc-tile span-6 row-2">
+          <div>
+            <div class="kc-tile-meta">CDN-042 · today's focus</div>
+          </div>
+          <div>
+            <h4 class="kc-tile-title" style="font-size: 28px; line-height: 1.1;">Wire client-side filter to server-rendered task list</h4>
+            <div class="kc-tile-sub" style="margin-top: 10px;">Confirm filter state lives in the client wrapper, not the server parent.</div>
+            <div style="margin-top: 16px; display: flex; gap: 8px;">
+              <span class="kc-flag kc-flag-doing">In progress</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="kc-tile span-3 kc-tile-green">
+          <div class="kc-tile-meta">Done · this week</div>
+          <div class="kc-tile-num">8</div>
+        </div>
+
+        <div class="kc-tile span-3 kc-tile-pink">
+          <div class="kc-tile-meta">Blocked</div>
+          <div class="kc-tile-num">1</div>
+        </div>
+
+        <div class="kc-tile span-3 kc-tile-yellow">
+          <div class="kc-tile-meta">In progress</div>
+          <div class="kc-tile-num">5</div>
+        </div>
+
+        <div class="kc-tile span-3">
+          <div class="kc-tile-meta">Todo</div>
+          <div class="kc-tile-num">11</div>
+        </div>
+
+        <div class="kc-tile span-4">
+          <div class="kc-tile-meta">CDN-041</div>
+          <h4 class="kc-tile-title">Add generateStaticParams to dynamic route</h4>
+          <div style="margin-top: 8px;"><span class="kc-flag kc-flag-doing" style="font-size: 10px;">In progress</span></div>
+        </div>
+
+        <div class="kc-tile span-4">
+          <div class="kc-tile-meta">CDN-039</div>
+          <h4 class="kc-tile-title">Convert /tasks to async server component</h4>
+          <div style="margin-top: 8px;"><span class="kc-flag kc-flag-blocked" style="font-size: 10px;">Blocked</span></div>
+        </div>
+
+        <div class="kc-tile span-4">
+          <div class="kc-tile-meta">CDN-038</div>
+          <h4 class="kc-tile-title">Draft shared layout.tsx</h4>
+          <div style="margin-top: 8px;"><span class="kc-flag" style="font-size: 10px;">Todo</span></div>
+        </div>
+
+        <div class="kc-tile span-12 kc-tile-dark">
+          <div class="kc-tile-meta" style="color: #00FFB2;">Activity ribbon · today</div>
+          <div style="display: flex; gap: 20px; font-family: 'Space Grotesk', sans-serif; font-size: 13px; flex-wrap: wrap; margin-top: 8px;">
+            <span><strong style="color: #FFE066;">MP</strong> moved CDN-042 → In progress · 2m</span>
+            <span><strong style="color: #FF7BF5;">EK</strong> labeled CDN-041 routing · 14m</span>
+            <span><strong style="color: #00FFB2;">ZR</strong> blocked CDN-039 · 1h</span>
+            <span><strong style="color: #FFE066;">AI</strong> drafted layout.tsx · 2h</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="kc-section">
+      <div class="kc-section-tag">05 · Page composition — full dashboard at 1280 px</div>
+      <div class="kc-mock">
+        <div class="kc-mock-bar">
+          <div class="kc-mock-brand">▸ Cadence</div>
+          <nav class="kc-mock-nav">
+            <a class="active" href="#">Tasks</a>
+            <a href="#">My work</a>
+            <a href="#">Inbox</a>
+            <a href="#">Roadmap</a>
+          </nav>
+        </div>
+        <div class="kc-bento">
+          <div class="kc-tile span-8 kc-tile-yellow row-2">
+            <div>
+              <div class="kc-tile-meta">Today's brief · 18 May</div>
+            </div>
+            <div>
+              <h4 class="kc-tile-title" style="font-size: 36px; line-height: 1.0;">Ship v3. Server list, client filter.</h4>
+              <div class="kc-tile-sub" style="margin-top: 14px; font-size: 14px; max-width: 50ch;">Three blockers cleared overnight. The agent drafted layout.tsx but needs a human eye on the nav structure before it lands.</div>
+              <div style="margin-top: 18px; display: flex; gap: 8px;">
+                <span class="kc-flag kc-flag-doing">Ship by EOD</span>
+              </div>
+            </div>
+          </div>
+          <div class="kc-tile span-4 kc-tile-green">
+            <div class="kc-tile-meta">Velocity · last 7 days</div>
+            <div>
+              <div class="kc-tile-num">+24%</div>
+              <div class="kc-tile-sub" style="margin-top: 6px;">vs. previous week</div>
+            </div>
+          </div>
+          <div class="kc-tile span-4 kc-tile-pink">
+            <div class="kc-tile-meta">Needs you · 1 review</div>
+            <h4 class="kc-tile-title" style="font-size: 15px;">layout.tsx draft from Agent</h4>
+            <div style="margin-top: 8px;"><span class="kc-flag kc-flag-canceled" style="font-size: 10px; background: rgba(10,10,10,0.15); color: #0A0A0A; text-decoration: none;">awaiting review</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- =================== FOOT =================== -->
+<footer class="foot">
+  <div class="foot-wrap">
+    <h2>How to choose between A, B, C.</h2>
+    <p>Each direction works pedagogically — they all carry the same v0→v6 demo content. The pick is about voice: which surface best matches the way Marcus wants W5D3 to feel to a student arriving from the Astro event-listing demo.</p>
+    <table class="foot-table">
+      <tbody>
+        <tr><th>If you want…</th><td><strong>To read as a real product tool</strong> — most professionally calibrated, lowest-risk, but in the genre Linear already owns.</td><th>Pick <strong>A · Build Log</strong></th></tr>
+        <tr><th>If you want…</th><td><strong>To read as a quiet, considered, almost-print object</strong> — most distinctive vs. event-listing, calmer tempo, requires more careful body copy.</td><th>Pick <strong>B · Broadsheet</strong></th></tr>
+        <tr><th>If you want…</th><td><strong>To read as a loud, playful studio piece</strong> — boldest, most opinionated, riskiest if W5D3's content is dry; rewards real personality in writing.</td><th>Pick <strong>C · Inverted Studio</strong></th></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 28px; font-size: 13.5px; color: rgba(0,0,0,0.55);">Sources sampled live: <a href="https://linear.app" style="color: inherit;">linear.app</a> · <a href="https://www.plain.com" style="color: inherit;">plain.com</a> · <a href="https://www.attio.com" style="color: inherit;">attio.com</a> · <a href="https://www.raycast.com" style="color: inherit;">raycast.com</a> · <a href="https://charm.sh" style="color: inherit;">charm.sh</a> — palette + typography + structural-component data extracted via browser inspection, not summary.</p>
+  </div>
+</footer>
+
+</body>
+</html>
