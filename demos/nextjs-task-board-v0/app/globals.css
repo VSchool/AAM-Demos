@@ -455,3 +455,624 @@ code, .cn-mono {
 .cn-prog-step-future {
   cursor: not-allowed;
 }
+
+/* ============================================================
+   Tier A shared chrome — ported from v6 (gold standard).
+   Status flag palette already lives above; this block adds
+   label/avatar color slots + the three Tier A components
+   (FeaturesStrip, DemoNote, PaletteToggle). All seven versions
+   carry the identical block so the v0 → v6 click-through reads
+   as one continuous demo arc.
+   DO NOT EDIT IN-PLACE — edit v6 and re-port.
+   ============================================================ */
+.cn-task-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+  /* fallback when no color slot is applied */
+  color: var(--ink-muted);
+  background: rgba(10, 10, 10, 0.05);
+}
+.cn-task-label-c0 { background: rgba(0, 200, 140, 0.85);   color: #002418; }   /* mint  */
+.cn-task-label-c1 { background: rgba(255, 123, 245, 0.85); color: #4A0044; }   /* pink  */
+.cn-task-label-c2 { background: rgba(255, 210, 80, 0.95);  color: #3D2E00; }   /* yellow */
+.cn-task-label-c3 { background: rgba(125, 200, 252, 0.95); color: #003B5C; }   /* sky   */
+.cn-task-label-c4 { background: rgba(180, 165, 255, 0.92); color: #221169; }   /* lilac */
+.cn-task-label-c5 { background: rgba(255, 160, 130, 0.92); color: #4A1500; }   /* coral */
+.cn-avatar {
+  width: 24px;
+  height: 24px;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: inline-grid;
+  place-content: center;
+  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.18);
+}
+/* Deterministic, non-violet palette so avatars contrast strongly with both
+   the cream task cards and the deep-violet Details aside. */
+.cn-avatar-c0 { background: #00FFB2; color: #002418; }  /* neon mint */
+.cn-avatar-c1 { background: #FF7BF5; color: #4A0044; }  /* pink      */
+.cn-avatar-c2 { background: #FFE066; color: #3D2E00; }  /* yellow    */
+.cn-avatar-c3 { background: #7DD3FC; color: #003B5C; }  /* sky       */
+.cn-avatar-c4 { background: #FFA082; color: #4A1500; }  /* coral     */
+.cn-avatar-c5 { background: #B4A5FF; color: #221169; }  /* lilac     */
+/* ============================================================
+   FeaturesStrip — bold typographic feature list.
+   Hover or click a word to swap the one-line caption beneath.
+   Visually distinct from the bento grids elsewhere on the page.
+   ============================================================ */
+.cn-features-section { padding-bottom: 16px; }
+
+.cn-feature-words {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: clamp(20px, 4vw, 56px);
+  row-gap: 6px;
+}
+@media (max-width: 700px) {
+  .cn-feature-words { grid-template-columns: 1fr; }
+}
+
+.cn-feature-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.cn-feature-word {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  padding: 4px 0;
+  color: rgba(255, 253, 245, 0.32);
+  transition:
+    color 220ms ease,
+    transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  text-align: left;
+}
+.cn-feature-word:hover { color: rgba(255, 253, 245, 0.65); }
+
+.cn-feature-word-num {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.30em;
+  letter-spacing: 0.18em;
+  align-self: flex-start;
+  margin-top: 0.55em;
+  opacity: 0.55;
+  min-width: 1.6em; /* keeps numbers aligned in a column */
+  transition: opacity 220ms ease;
+}
+
+.cn-feature-word-text {
+  position: relative;
+}
+.cn-feature-word-text::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -4px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cn-feature-word[data-active="true"] { transform: translateX(6px); }
+.cn-feature-word[data-active="true"] .cn-feature-word-text::after { transform: scaleX(1); }
+.cn-feature-word[data-active="true"] .cn-feature-word-num { opacity: 1; }
+
+/* Tone colors only show when active */
+.cn-feature-word[data-tone="yellow"][data-active="true"] { color: var(--yellow); }
+.cn-feature-word[data-tone="pink"][data-active="true"]   { color: var(--pink); }
+.cn-feature-word[data-tone="green"][data-active="true"]  { color: var(--neon); }
+.cn-feature-word[data-tone="sky"][data-active="true"]    { color: var(--sky); }
+.cn-feature-word[data-tone="cream"][data-active="true"]  { color: var(--cream); }
+.cn-feature-word[data-tone="orange"][data-active="true"] { color: #FF8C42; }
+
+.cn-feature-word:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+/* Caption slot — lives inside each row, expands only when that row
+   is active. The grid-template-rows 0fr → 1fr reveal animates height;
+   subsequent rows push down smoothly. */
+.cn-feature-caption-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  transition: grid-template-rows 380ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-feature-row[data-active="true"] .cn-feature-caption-wrap {
+  grid-template-rows: 1fr;
+}
+.cn-feature-caption {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  /* Indent so the caption aligns past the number column, under
+     the start of the word text. Matches .cn-feature-word-num width
+     (1.6em at ~0.30em scale) plus the 14px gap. */
+  padding: 0 0 0 clamp(40px, 5.5vw, 64px);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--on-canvas-muted);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 240ms ease 120ms,
+    transform 300ms ease 120ms,
+    padding 380ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-feature-row[data-active="true"] .cn-feature-caption {
+  opacity: 1;
+  transform: translateY(0);
+  padding-top: 6px;
+  padding-bottom: 10px;
+}
+/* ============================================================
+   DemoNote — pill → panel unfold animation (test bed).
+   Collapsed: a compact inline pill. Click: smooth widen + grid-row
+   expansion reveals the body. Runs on the orange helper palette.
+   ============================================================ */
+.cn-demo-note {
+  --dn-orange:        #D96618;
+  --dn-orange-hover:  #C2580F;
+  --dn-ink:           #1F0E04;
+  --dn-ink-muted:     rgba(31, 14, 4, 0.72);
+  --dn-ink-dim:       rgba(31, 14, 4, 0.55);
+  --dn-stroke:        rgba(31, 14, 4, 0.18);
+  --dn-ease:          cubic-bezier(0.22, 1, 0.36, 1); /* expo-out, no overshoot */
+  --dn-dur:           600ms;
+
+  margin: 28px 0;
+  display: block;
+  width: fit-content; /* fallback; JS measures the trigger and applies an inline px width */
+  max-width: 100%;
+  background: var(--dn-orange);
+  color: var(--dn-ink);
+  border: 1px solid var(--dn-stroke);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(15, 42, 68, 0.10);
+  will-change: width;
+  transition:
+    width            var(--dn-dur) var(--dn-ease),
+    border-radius    var(--dn-dur) var(--dn-ease),
+    box-shadow       var(--dn-dur) var(--dn-ease),
+    border-left-width var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note[data-open="true"] {
+  width: 100%;
+  border-radius: 6px;
+  border-left: 4px solid var(--dn-ink);
+  box-shadow: 0 10px 28px rgba(15, 42, 68, 0.20);
+}
+
+.cn-demo-note-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px 14px 18px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.005em;
+  transition:
+    background 160ms ease,
+    padding    var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note-trigger:hover { background: var(--dn-orange-hover); }
+.cn-demo-note[data-open="true"] .cn-demo-note-trigger { padding: 16px 22px 16px 20px; }
+
+.cn-demo-note-glyph {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.cn-demo-note-glyph-bar {
+  position: absolute;
+  background: var(--dn-ink);
+  border-radius: 1px;
+  transition:
+    transform var(--dn-dur) var(--dn-ease),
+    opacity   320ms var(--dn-ease);
+}
+.cn-demo-note-glyph-bar-h {
+  left: 0; right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.cn-demo-note-glyph-bar-v {
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-glyph-bar-v {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-glyph-bar-h {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.cn-demo-note-title {
+  white-space: nowrap;
+  line-height: 1.2;
+  flex-shrink: 0; /* never shrink below the title's natural width */
+}
+
+/* Small variant — tight pill sized to sit just above the + New task button. */
+.cn-demo-note-sm {
+  margin: 0 0 10px;
+  box-shadow: 0 1px 3px rgba(15, 42, 68, 0.08);
+}
+.cn-demo-note-sm .cn-demo-note-trigger {
+  padding: 7px 14px 7px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  gap: 8px;
+}
+.cn-demo-note-sm[data-open="true"] .cn-demo-note-trigger {
+  padding: 9px 16px 9px 14px;
+}
+.cn-demo-note-sm .cn-demo-note-glyph { width: 11px; height: 11px; }
+.cn-demo-note-sm .cn-demo-note-glyph-bar-h { height: 1.5px; }
+.cn-demo-note-sm .cn-demo-note-glyph-bar-v { width: 1.5px; }
+
+/* Demo-note slot floats absolutely so it doesn't add vertical space between
+   the section heading and the task board. The slot itself is layout-invisible
+   (display: contents); the demo-note inside positions absolutely against the
+   nearest positioned ancestor (.cn-board-actions), sitting right above the
+   + New task button. */
+.cn-board-note-slot { display: contents; }
+.cn-board-note-slot > .cn-demo-note {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  margin: 0;
+}
+/* When opened, cap the width so it stays right-anchored and grows leftward
+   above the button instead of stretching across the board. */
+.cn-board-note-slot > .cn-demo-note[data-open="true"] {
+  width: min(560px, 100%) !important;
+}
+
+.cn-demo-note-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-body-wrap {
+  grid-template-rows: 1fr;
+}
+.cn-demo-note-body {
+  overflow: hidden;
+  min-height: 0;
+}
+.cn-demo-note-body-inner {
+  padding: 4px 22px 22px 22px;
+  border-top: 1px solid var(--dn-stroke);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Content settles in after the pill has finished widening */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity   320ms var(--dn-ease) 240ms,
+    transform 360ms var(--dn-ease) 240ms;
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-body-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cn-demo-note-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--dn-ink);
+  margin-top: 10px;
+  opacity: 0.8;
+}
+.cn-demo-note-body-inner p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--dn-ink-muted);
+}
+.cn-demo-note-body-inner code {
+  background: rgba(31, 14, 4, 0.14);
+  color: var(--dn-ink);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+/* Rich body content — sub-heading, aside, code blocks */
+.cn-demo-note-sub {
+  margin: 6px 0 -4px 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dn-ink);
+}
+.cn-demo-note-aside {
+  font-size: 13px !important;
+  color: var(--dn-ink-dim) !important;
+}
+.cn-demo-note-body-inner .cn-code {
+  margin: 4px 0 0 0;
+}
+.cn-demo-note-body-inner .cn-code code {
+  background: transparent;
+  color: var(--cream);
+  padding: 0;
+}
+/* ============================================================
+   Palette toggle — floating "Palette" button + slide-up panel.
+   Lives in the root layout so every page gets it.
+   ============================================================ */
+.cn-palette-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 12px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid rgba(255, 253, 245, 0.18);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.cn-palette-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.34);
+}
+.cn-palette-fab-open {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
+}
+.cn-palette-fab-dots {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  border-radius: 50%;
+  background: rgba(255, 253, 245, 0.08);
+}
+.cn-palette-fab-open .cn-palette-fab-dots {
+  background: rgba(10, 10, 10, 0.06);
+}
+.cn-palette-fab-dots > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.cn-palette-fab-label { line-height: 1; }
+
+.cn-palette-panel {
+  position: fixed;
+  right: 22px;
+  bottom: 72px;
+  z-index: 79;
+  width: min(360px, calc(100vw - 36px));
+  max-height: min(560px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid rgba(10, 10, 10, 0.10);
+  border-radius: 10px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+  animation: cn-palette-pop 140ms ease-out;
+}
+@keyframes cn-palette-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.cn-palette-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+}
+.cn-palette-panel-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--canvas-2);
+}
+.cn-palette-panel-title {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.cn-palette-panel-close {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.cn-palette-panel-close:hover { background: rgba(10, 10, 10, 0.06); color: var(--ink); }
+
+.cn-palette-panel-body {
+  padding: 14px 18px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cn-palette-group { display: flex; flex-direction: column; gap: 8px; }
+.cn-palette-group-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--canvas-2);
+}
+.cn-palette-group-blurb {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.cn-palette-swatches {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cn-palette-swatch {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  border-radius: 6px;
+  background: rgba(10, 10, 10, 0.02);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  transition: border-color 100ms, background 100ms;
+}
+.cn-palette-swatch:hover {
+  border-color: rgba(10, 10, 10, 0.20);
+  background: rgba(10, 10, 10, 0.04);
+}
+.cn-palette-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(10, 10, 10, 0.10);
+  display: block;
+}
+.cn-palette-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.cn-palette-token {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cn-palette-hex {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+.cn-palette-role {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  text-align: right;
+  max-width: 130px;
+  line-height: 1.35;
+}
+.cn-palette-panel-foot {
+  margin: 2px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(10, 10, 10, 0.08);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.cn-palette-panel-foot code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(10, 10, 10, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--canvas-2);
+}
+
+@media (max-width: 600px) {
+  .cn-palette-fab { right: 14px; bottom: 14px; padding: 9px 14px 9px 10px; }
+  .cn-palette-panel { right: 14px; bottom: 64px; }
+}

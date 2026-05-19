@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Progression from "@/components/Progression";
+import FeaturesStrip from "@/components/FeaturesStrip";
 
 export default function Home() {
   return (
@@ -14,6 +15,61 @@ export default function Home() {
         Refresh and the store reinitializes; in-session edits vanish. That&apos;s the
         whole point: the patterns work, the persistence is for next week.
       </p>
+
+      {/* tier-a-hero-block (auto-aligned with v6) */}
+      <div
+        style={{
+          display: "flex",
+          gap: "12px",
+          flexWrap: "wrap",
+          alignItems: "center",
+          marginBottom: "44px",
+        }}
+      >
+        <Link
+          href="/tasks"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "10px",
+            background: "var(--neon)",
+            color: "var(--ink)",
+            fontFamily: "var(--font-sans)",
+            fontWeight: 700,
+            fontSize: "15px",
+            letterSpacing: "0.01em",
+            padding: "12px 22px 12px 18px",
+            clipPath:
+              "polygon(0 0, calc(100% - 12px) 0, 100% 50%, calc(100% - 12px) 100%, 0 100%)",
+          }}
+        >
+          Open the board →
+        </Link>
+        <Link
+          href="/about"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            color: "var(--on-canvas-muted)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "12px",
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            padding: "12px 16px",
+            border: "1px solid var(--hairline)",
+          }}
+        >
+          About this demo →
+        </Link>
+      </div>
+
+      <section className="cn-section cn-features-section">
+        <div className="cn-section-tag">what this state ships</div>
+        <h2 className="cn-section-h">The shape of this version, at a glance.</h2>
+        <FeaturesStrip />
+      </section>
+
 
       <Progression current={5} />
 
