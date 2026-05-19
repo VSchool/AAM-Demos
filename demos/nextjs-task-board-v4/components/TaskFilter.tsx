@@ -7,6 +7,7 @@ import TaskCard from "./TaskCard";
 
 type StatusFilter = TaskStatus | "all";
 type SortKey = "priority" | "due" | "updated";
+type View = "list" | "board";
 
 const FILTERS: { key: StatusFilter; label: string; dot: string }[] = [
   { key: "all", label: "All", dot: "rgba(255,253,245,0.45)" },
@@ -15,6 +16,15 @@ const FILTERS: { key: StatusFilter; label: string; dot: string }[] = [
   { key: "done", label: "Done", dot: "#00FFB2" },
   { key: "todo", label: "Todo", dot: "rgba(255,253,245,0.45)" },
   { key: "backlog", label: "Backlog", dot: "rgba(255,253,245,0.30)" },
+  { key: "canceled", label: "Canceled", dot: "rgba(255,253,245,0.20)" },
+];
+
+const BOARD_COLUMNS: { key: TaskStatus; label: string; dot: string }[] = [
+  { key: "backlog", label: "Backlog", dot: "rgba(255,253,245,0.30)" },
+  { key: "todo", label: "Todo", dot: "rgba(255,253,245,0.45)" },
+  { key: "in_progress", label: "In progress", dot: "#FFE066" },
+  { key: "blocked", label: "Blocked", dot: "#FF7BF5" },
+  { key: "done", label: "Done", dot: "#00FFB2" },
   { key: "canceled", label: "Canceled", dot: "rgba(255,253,245,0.20)" },
 ];
 
@@ -38,6 +48,7 @@ function dueWeight(due: string): number {
 export default function TaskFilter({ tasks }: { tasks: Task[] }) {
   const [status, setStatus] = useState<StatusFilter>("all");
   const [sort, setSort] = useState<SortKey>("priority");
+  const [view, setView] = useState<View>("list");
 
   const visible = useMemo(() => {
     const filtered =
@@ -56,6 +67,15 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
     for (const t of tasks) c[t.status] = (c[t.status] || 0) + 1;
     return c;
   }, [tasks]);
+
+  // For board view, group visible tasks by status into columns.
+  const grouped = useMemo(() => {
+    const g: Record<TaskStatus, Task[]> = {
+      backlog: [], todo: [], in_progress: [], blocked: [], done: [], canceled: [],
+    };
+    for (const t of visible) g[t.status].push(t);
+    return g;
+  }, [visible]);
 
   return (
     <div className="cn-filter">
@@ -83,24 +103,51 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
             );
           })}
         </div>
-        <div className="cn-filter-sort">
-          <label htmlFor="cn-sort" className="cn-filter-sort-label">Sort</label>
-          <select
-            id="cn-sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value as SortKey)}
-            className="cn-filter-sort-select"
+        <div className="cn-filter-right">
+          <div
+            className="cn-view-toggle"
+            role="tablist"
+            aria-label="view mode"
           >
-            <option value="priority">Priority</option>
-            <option value="due">Due date</option>
-            <option value="updated">Recently updated</option>
-          </select>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "list"}
+              onClick={() => setView("list")}
+              className={`cn-view-btn${view === "list" ? " cn-view-btn-active" : ""}`}
+            >
+              ☰ List
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={view === "board"}
+              onClick={() => setView("board")}
+              className={`cn-view-btn${view === "board" ? " cn-view-btn-active" : ""}`}
+            >
+              ▦ Board
+            </button>
+          </div>
+          <div className="cn-filter-sort">
+            <label htmlFor="cn-sort" className="cn-filter-sort-label">Sort</label>
+            <select
+              id="cn-sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value as SortKey)}
+              className="cn-filter-sort-select"
+            >
+              <option value="priority">Priority</option>
+              <option value="due">Due date</option>
+              <option value="updated">Recently updated</option>
+            </select>
+          </div>
         </div>
       </div>
 
       <div className="cn-filter-status" aria-live="polite">
         Showing <strong>{visible.length}</strong> of {tasks.length} ·{" "}
-        {status === "all" ? "all statuses" : STATUS_LABEL[status]} · sorted by {sort}
+        {status === "all" ? "all statuses" : STATUS_LABEL[status]} · sorted by {sort} ·{" "}
+        {view} view
       </div>
 
       {visible.length === 0 ? (
@@ -119,11 +166,43 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
             Clear filter
           </button>
         </div>
-      ) : (
+      ) : view === "list" ? (
         <div className="cn-task-list">
           {visible.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}
+        </div>
+      ) : (
+        <div className="cn-board">
+          {BOARD_COLUMNS.map((col) => {
+            const items = grouped[col.key];
+            return (
+              <section
+                key={col.key}
+                className="cn-board-col"
+                aria-label={`${col.label} column`}
+              >
+                <header className="cn-board-col-head">
+                  <span
+                    className="cn-board-col-dot"
+                    style={{ background: col.dot }}
+                    aria-hidden="true"
+                  />
+                  <h3 className="cn-board-col-title">{col.label}</h3>
+                  <span className="cn-board-col-count">{items.length}</span>
+                </header>
+                <div className="cn-board-col-body">
+                  {items.length === 0 ? (
+                    <div className="cn-board-col-empty" aria-hidden="true">
+                      —
+                    </div>
+                  ) : (
+                    items.map((task) => <TaskCard key={task.id} task={task} />)
+                  )}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>
