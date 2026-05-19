@@ -169,6 +169,10 @@ jobs:
         working-directory: demos/nextjs-task-board-v5
         run: npm ci && npm run build
 
+      - name: Build Next.js Task Board v6
+        working-directory: demos/nextjs-task-board-v6
+        run: npm ci && npm run build
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -219,6 +223,7 @@ jobs:
           cp -r demos/nextjs-task-board-v3/out _site/nextjs-task-board-v3
           cp -r demos/nextjs-task-board-v4/out _site/nextjs-task-board-v4
           cp -r demos/nextjs-task-board-v5/out _site/nextjs-task-board-v5
+          cp -r demos/nextjs-task-board-v6/out _site/nextjs-task-board-v6
 
       - uses: actions/upload-pages-artifact@v3
 
