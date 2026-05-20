@@ -124,6 +124,11 @@ jobs:
         working-directory: demos/astro-lighthouse
         run: npm ci && npm run build
 
+      # Build Astro Island Highlight (W5D2S1 — Island Architecture lesson)
+      - name: Build Astro Island Highlight
+        working-directory: demos/astro-island-highlight
+        run: npm ci && npm run build
+
       - name: Build Astro Event Listing v0
         working-directory: demos/astro-event-listing-v0
         run: npm ci && npm run build
@@ -210,6 +215,8 @@ jobs:
           # W5D2S3 Lighthouse comparison pair
           cp -r demos/react-spa-lighthouse/dist _site/react-spa-lighthouse
           cp -r demos/astro-lighthouse/dist _site/astro-lighthouse
+          # W5D2S1 Island Architecture (highlighted islands)
+          cp -r demos/astro-island-highlight/dist _site/astro-island-highlight
           # W5D2 progressive event-listing series (Astro lane)
           cp -r demos/astro-event-listing-v0/dist _site/astro-event-listing-v0
           cp -r demos/astro-event-listing-v1/dist _site/astro-event-listing-v1
