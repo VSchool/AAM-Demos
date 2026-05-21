@@ -146,11 +146,29 @@
   .ps-quest.done span{background:var(--success)}
   .ps-quest.miss span{background:var(--danger);color:#fff}
   .ps-quest.open span{background:var(--accent);color:var(--ink-on-accent)}
-  .ps-icons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-  .ps-icons b{aspect-ratio:1;border-radius:var(--radius);display:grid;place-items:center;background:var(--phone-surface);border:1px solid var(--line);color:var(--accent)}
-  .ps-reward{margin-top:12px}
-  .ps-reward span{color:var(--muted);font-size:11px}
-  .ps-reward strong{font-size:13px;text-align:right}
+  .ps-section-label{display:block;color:var(--muted);font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em;margin:6px 0 6px}
+  .ps-icons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+  .ps-icons b{aspect-ratio:1;border-radius:var(--radius);display:grid;place-items:center;background:var(--phone-surface);border:1px solid var(--line);color:var(--muted)}
+  .ps-icons b.on{background:var(--accent);color:var(--ink-on-accent);border-color:transparent;box-shadow:0 4px 10px rgba(255,207,50,.35)}
+  .ps-field{display:grid;gap:5px;margin-bottom:10px}
+  .ps-field span{color:var(--muted);font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.1em}
+  .ps-field input{width:100%;min-width:0;height:32px;border:1px solid var(--line);border-radius:var(--radius);background:var(--phone-surface);color:var(--text);padding:0 10px;font-size:12px;font-weight:600;font-family:var(--font-body)}
+  .ps-difficulty{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;background:var(--phone-surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px}
+  .ps-difficulty b{font-weight:600;text-align:center;padding:6px 4px;border-radius:5px;font-size:11px;color:var(--muted)}
+  .ps-difficulty b.on{background:var(--accent);color:var(--ink-on-accent)}
+  .ps-reward{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;background:var(--phone-surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px}
+  .ps-reward span{color:var(--muted);font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+  .ps-reward strong{font-size:12px;text-align:right}
+  .ps-submit{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:38px;border-radius:var(--radius);background:var(--accent);color:var(--ink-on-accent);font-weight:700;font-size:12px;border:0;font-family:var(--font-body);box-shadow:0 6px 16px rgba(255,207,50,.32)}
+  .ps-settings{display:grid;background:var(--phone-surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;overflow:hidden}
+  .ps-settings > div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 11px;border-top:1px solid var(--line);font-size:12px;font-weight:500}
+  .ps-settings > div:first-child{border-top:0}
+  .ps-settings > div > span{display:flex;align-items:center;gap:8px;min-width:0}
+  .ps-settings > div > span > i{color:var(--accent);flex:none}
+  .ps-settings > div > i:last-child{flex:none;width:28px;height:16px;border-radius:999px;background:var(--surface-2);position:relative;border:1px solid var(--line)}
+  .ps-settings > div > i:last-child::after{content:'';position:absolute;top:1px;left:1px;width:12px;height:12px;border-radius:50%;background:var(--muted);transition:transform 160ms}
+  .ps-settings > div > i.on{background:var(--accent);border-color:transparent}
+  .ps-settings > div > i.on::after{background:var(--ink-on-accent);transform:translateX(12px)}
   .ps-badge-big{width:82px;height:82px;display:grid;place-items:center;border-radius:var(--radius);background:var(--accent);color:var(--ink-on-accent);margin:4px auto 12px;box-shadow:var(--shadow)}
   .ps-level{display:flex;align-items:end;justify-content:space-between;border:1px solid var(--line);background:var(--phone-surface);border-radius:var(--radius);padding:12px;margin-bottom:10px}
   .ps-level span{color:var(--muted);font-size:11px}
@@ -220,10 +238,12 @@
 <div class="screen-title"><span>Add Habit</span><i data-lucide="sparkles" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
 <h2>Create quest</h2>
-<div class="ps-icons"><b><i data-lucide="sparkles" style="width:18px;height:18px"></i></b><b><i data-lucide="book-open" style="width:18px;height:18px"></i></b><b><i data-lucide="dumbbell" style="width:18px;height:18px"></i></b><b><i data-lucide="moon" style="width:18px;height:18px"></i></b></div>
+<span class="ps-section-label">Pick a vibe</span>
+<div class="ps-icons"><b class="on"><i data-lucide="sparkles" style="width:18px;height:18px"></i></b><b><i data-lucide="book-open" style="width:18px;height:18px"></i></b><b><i data-lucide="dumbbell" style="width:18px;height:18px"></i></b><b><i data-lucide="moon" style="width:18px;height:18px"></i></b></div>
 <label class="ps-field"><span>Quest name</span><input value="Evening stretch" /></label>
+<span class="ps-section-label">Difficulty</span>
 <div class="ps-difficulty"><b>Easy</b><b class="on">Medium</b><b>Boss</b></div>
-<div class="ps-reward"><span>Reward</span><strong>35 xp + badge chance</strong></div>
+<div class="ps-reward"><span>Reward</span><strong>35 xp + badge</strong></div>
 <button class="ps-submit"><i data-lucide="wand-sparkles" style="width:15px;height:15px"></i> Create quest</button>
 </div>
 </article>
@@ -260,13 +280,15 @@
 <div class="screen-title"><span>Settings</span><i data-lucide="sparkles" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
 <h2>Studio</h2>
+<span class="ps-section-label">Preferences</span>
 <div class="ps-settings">
 <div><span><i data-lucide="party-popper" style="width:15px;height:15px"></i> Celebrations</span><i class="on"></i></div>
 <div><span><i data-lucide="bell" style="width:15px;height:15px"></i> Quest nudges</span><i class="on"></i></div>
 <div><span><i data-lucide="palette" style="width:15px;height:15px"></i> Color themes</span><i></i></div>
 </div>
-<div class="ps-difficulty"><b class="on">Low glow</b><b>Bright</b><b>Arcade</b></div>
-<div class="ps-reward"><span>Reminder voice</span><strong>Friendly, short, optional.</strong></div>
+<span class="ps-section-label">Glow level</span>
+<div class="ps-difficulty"><b class="on">Low</b><b>Bright</b><b>Arcade</b></div>
+<div class="ps-reward"><span>Voice</span><strong>Friendly · short</strong></div>
 <nav class="tabbar"><span class=""><i data-lucide="sparkles" style="width:15px;height:15px"></i>Quests</span><span class=""><i data-lucide="badge" style="width:15px;height:15px"></i>Badges</span><span class="active"><i data-lucide="palette" style="width:15px;height:15px"></i>Studio</span></nav>
 </div>
 </article>

@@ -181,6 +181,104 @@
   .kc-leader p{color:#b8c0b6;margin:6px 0 0;font-size:12px}
   .kc-stack.compact .kc-task{grid-template-columns:32px 1fr 28px}
   .kc-segment{display:grid;grid-template-columns:repeat(3,1fr)}
+  .phone-add .kc-form{display:grid;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--phone-surface),color-mix(in srgb,var(--phone-surface) 60%,var(--surface-2)));box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 6px 18px rgba(17,19,21,.06)}
+  .phone-add .kc-form-label{display:block;color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+  .phone-add .kc-template-grid{margin:0;gap:6px}
+  .phone-add .kc-template-grid b{padding:10px;border-radius:10px;font-weight:500;color:var(--text);transition:all 160ms;position:relative}
+  .phone-add .kc-template-grid b svg{color:var(--muted);transition:color 160ms}
+  .phone-add .kc-template-grid b.on{border-color:#111315;background:#111315;color:#f7f9f2;box-shadow:0 6px 16px rgba(17,19,21,.18)}
+  .phone-add .kc-template-grid b.on svg{color:var(--accent)}
+  .phone-add .kc-field{margin:0;gap:6px}
+  .phone-add .kc-field>span,.phone-add .kc-slider>span{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+  .phone-add .kc-field input{height:40px;border-radius:10px;font-size:13px;font-weight:500;transition:border-color 160ms,box-shadow 160ms}
+  .phone-add .kc-field input:focus{outline:none;border-color:#111315;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 55%,transparent)}
+  .phone-add .kc-slider{grid-template-columns:1fr auto;gap:10px;align-items:center;margin:0}
+  .phone-add .kc-slider>span{grid-column:1/-1;margin-bottom:2px}
+  .phone-add .kc-slider>div{position:relative;height:8px;border-radius:999px;background:var(--surface-2);overflow:visible}
+  .phone-add .kc-slider>div>i{border-radius:999px;background:linear-gradient(90deg,#00c2a8,var(--accent));position:relative}
+  .phone-add .kc-slider>div>i::after{content:'';position:absolute;right:-8px;top:50%;width:16px;height:16px;border-radius:50%;background:#111315;transform:translateY(-50%);box-shadow:0 4px 10px rgba(17,19,21,.28),inset 0 0 0 2px var(--accent)}
+  .phone-add .kc-slider>b{min-width:30px;text-align:center;font-family:var(--font-mono);font-size:14px;font-weight:700;color:#111315;background:var(--accent);border-radius:8px;padding:4px 8px}
+  .phone-add .kc-color-row{margin:0;gap:8px;align-items:center}
+  .phone-add .kc-color-row i{width:30px;height:30px;border-radius:10px;border:2px solid transparent;cursor:default;transition:transform 160ms,border-color 160ms,box-shadow 160ms}
+  .phone-add .kc-color-row i.on{border-color:#111315;transform:scale(1.08);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 50%,transparent)}
+  .phone-add .kc-submit{min-height:46px;border-radius:12px;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 92%,white),var(--accent));font-weight:700;font-size:13px;letter-spacing:.02em;text-transform:uppercase;color:#111315;box-shadow:0 12px 26px color-mix(in srgb,var(--accent) 40%,transparent),inset 0 1px 0 rgba(255,255,255,.4);margin-top:auto}
+  /* polished native-app screens (Today, Detail, Stats, Settings) */
+  .phone .app-screen{padding:0 12px 12px;gap:0}
+  .phone .app-topbar{display:flex;align-items:center;justify-content:space-between;padding:2px 0 12px;gap:10px}
+  .phone .app-topbar .app-eyebrow{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block}
+  .phone .app-topbar strong{font-family:var(--font-display);font-size:14px;font-weight:600}
+  .phone .app-topbar button{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);color:var(--text);flex:none}
+  .phone .app-hero{display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:center;background:#111315;color:#f7f9f2;border-radius:18px;padding:14px;margin-bottom:12px;box-shadow:0 12px 26px rgba(17,19,21,.18)}
+  .phone .app-hero-ring{aspect-ratio:1;width:100%;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--accent) 0 var(--pct,67%),rgba(255,255,255,.13) 0)}
+  .phone .app-hero-ring::after{content:'';position:absolute;inset:8px;border-radius:50%;background:#111315}
+  .phone .app-hero-ring strong{position:relative;font-family:var(--font-display);font-size:21px;font-weight:600;color:#f7f9f2}
+  .phone .app-hero-eyebrow{color:#a5b0a3;font-family:var(--font-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;display:block}
+  .phone .app-hero h2{color:#f7f9f2;font-family:var(--font-display);font-size:17px;line-height:1.2;margin:0 0 8px;font-weight:600}
+  .phone .app-hero-meta{display:flex;align-items:center;gap:7px;color:#a5b0a3;font-size:10.5px}
+  .phone .app-hero-meta .dot{width:3px;height:3px;border-radius:50%;background:#a5b0a3;display:inline-block}
+  .phone .app-quick{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+  .phone .app-quick button{display:flex;align-items:center;justify-content:center;gap:6px;height:38px;border-radius:11px;font-size:12px;font-weight:500;font-family:var(--font-body)}
+  .phone .app-quick button.primary{background:var(--accent);color:#111315;font-weight:600}
+  .phone .app-quick button.ghost{background:var(--surface);border:1px solid var(--line);color:var(--text)}
+  .phone .app-section-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 8px;gap:8px}
+  .phone .app-section-head strong{font-family:var(--font-display);font-size:13px;font-weight:600}
+  .phone .app-section-head span{color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+  .phone .app-habit{display:grid;grid-template-columns:34px 1fr 30px;gap:10px;align-items:center;padding:9px 10px;background:var(--surface);border:1px solid var(--line);border-radius:14px;margin-bottom:6px}
+  .phone .app-habit-icon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--tint,#00c2a8);color:#111315}
+  .phone .app-habit-meta{min-width:0}
+  .phone .app-habit-meta strong{display:block;font-size:12.5px;font-weight:600;line-height:1.1;color:var(--text)}
+  .phone .app-habit-meta span{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+  .phone .app-habit-cta{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#111315;color:#f7f9f2}
+  .phone .app-habit.done .app-habit-cta{background:var(--accent);color:#111315}
+  .phone .app-habit.done .app-habit-meta strong{text-decoration:none}
+  .phone .app-title-block{margin:0 2px 12px}
+  .phone .app-title-block h2{font-family:var(--font-display);font-size:20px;line-height:1.1;margin:0;font-weight:600}
+  .phone .app-title-block p{margin:5px 0 0;color:var(--muted);font-size:11px}
+  .phone .app-streak-hero{background:#111315;color:#f7f9f2;border-radius:18px;padding:14px 14px 12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:10px;box-shadow:0 10px 24px rgba(17,19,21,.16)}
+  .phone .app-streak-hero strong{font-family:var(--font-display);font-size:42px;line-height:1;display:block;font-weight:600}
+  .phone .app-streak-hero .app-streak-label{color:#a5b0a3;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;margin-top:6px;font-family:var(--font-mono);display:block}
+  .phone .app-streak-badge{background:var(--accent);color:#111315;border-radius:999px;padding:4px 9px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px}
+  .phone .app-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+  .phone .app-stat-row b{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-family:var(--font-display);font-size:17px;font-weight:600;display:block;color:var(--text)}
+  .phone .app-stat-row b span{display:block;color:var(--muted);font-family:var(--font-body);font-size:9px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px}
+  .phone .app-chart{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+  .phone .app-chart-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .phone .app-chart-head strong{font-family:var(--font-display);font-size:12.5px;font-weight:600}
+  .phone .app-chart-head span{color:var(--muted);font-size:10px;font-family:var(--font-mono)}
+  .phone .app-chart-bars{height:78px;display:flex;align-items:end;gap:6px}
+  .phone .app-chart-bars i{flex:1;background:linear-gradient(180deg,var(--accent),#00c2a8);border-radius:4px 4px 3px 3px}
+  .phone .app-chart-bars i.muted{background:var(--surface-2)}
+  .phone .app-chart-labels{display:flex;justify-content:space-between;margin-top:6px;color:var(--muted);font-size:9.5px;font-family:var(--font-mono)}
+  .phone .app-chart-labels span{flex:1;text-align:center}
+  .phone .app-cta{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:7px;height:44px;border-radius:12px;background:var(--accent);color:#111315;font-weight:600;font-size:13px;font-family:var(--font-body);box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 32%,transparent)}
+  .phone .app-cta.dark{background:#111315;color:#f7f9f2;box-shadow:0 10px 24px rgba(17,19,21,.18)}
+  .phone .app-stat-hero{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;display:grid;gap:6px}
+  .phone .app-stat-hero-head{display:flex;align-items:center;justify-content:space-between}
+  .phone .app-stat-hero-head span{color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+  .phone .app-stat-hero-head em{font-style:normal;background:color-mix(in srgb,#00c2a8 18%,transparent);color:#00a087;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px}
+  .phone .app-stat-hero strong{font-family:var(--font-display);font-size:38px;line-height:1;font-weight:600;color:var(--text)}
+  .phone .app-stat-hero p{margin:0;color:var(--muted);font-size:11px;line-height:1.4}
+  .phone .app-week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+  .phone .app-week-cell{display:flex;flex-direction:column;gap:5px;align-items:center}
+  .phone .app-week-dot{width:78%;aspect-ratio:1;border-radius:50%;background:var(--accent)}
+  .phone .app-week-dot.partial{background:color-mix(in srgb,var(--accent) 50%,var(--surface-2))}
+  .phone .app-week-dot.miss{background:var(--surface-2);border:1px dashed color-mix(in srgb,var(--text) 22%,transparent)}
+  .phone .app-week-cell span{font-size:9.5px;color:var(--muted);font-family:var(--font-mono)}
+  .phone .app-segmented{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:14px}
+  .phone .app-segmented button{height:30px;border-radius:9px;background:transparent;color:var(--muted);font-size:12px;font-weight:500;font-family:var(--font-body)}
+  .phone .app-segmented button.active{background:#111315;color:var(--accent);font-weight:600}
+  .phone .app-list{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px}
+  .phone .app-list-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:1px solid var(--line)}
+  .phone .app-list-row:first-child{border-top:0}
+  .phone .app-list-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--surface-2);color:var(--text);flex:none}
+  .phone .app-list-text{flex:1;min-width:0}
+  .phone .app-list-text strong{display:block;font-size:12.5px;font-weight:600;line-height:1.15}
+  .phone .app-list-text>span{display:block;color:var(--muted);font-size:10.5px;margin-top:2px;line-height:1.3}
+  .phone .app-list-meta{color:var(--muted);font-size:11px;font-family:var(--font-mono);flex:none}
+  .phone .app-list-toggle{width:34px;height:20px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);position:relative;flex:none}
+  .phone .app-list-toggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;top:2px;left:2px;background:var(--muted);transition:transform 160ms}
+  .phone .app-list-toggle.on{background:var(--accent);border-color:transparent}
+  .phone .app-list-toggle.on::after{background:#111315;transform:translateX(14px)}
 </style>
 </head>
 <body class="theme-kinetic">
@@ -209,39 +307,34 @@
 <div><i></i><i></i><i></i></div>
 </div>
 <div class="screen-title"><span>Today</span><i data-lucide="activity" style="width:14px;height:14px"></i></div>
-<div class="screen-body">
-<div class="kc-hero">
-<div class="kc-ring"><strong>67%</strong><span>4 of 6</span></div>
-<div>
-<p>Today score</p>
-<h2>Keep the chain moving.</h2>
+<div class="screen-body app-screen">
+<div class="app-topbar">
+<div><span class="app-eyebrow">Tue, May 21</span><strong style="display:block;margin-top:2px">Good morning</strong></div>
+<button aria-label="Notifications"><i data-lucide="bell" style="width:14px;height:14px"></i></button>
 </div>
+<div class="app-hero" style="--pct:67%">
+<div class="app-hero-ring"><strong>67%</strong></div>
+<div><span class="app-hero-eyebrow">Today's score</span><h2>Keep the chain moving</h2><div class="app-hero-meta"><span>4 of 6 done</span><i class="dot"></i><span>+12 vs yesterday</span></div></div>
 </div>
-<div class="kc-actions">
-<button><i data-lucide="check" style="width:15px;height:15px"></i> Quick complete</button>
-<button><i data-lucide="timer" style="width:15px;height:15px"></i> Focus 10</button>
+<div class="app-quick">
+<button class="primary"><i data-lucide="check" style="width:14px;height:14px"></i> Quick complete</button>
+<button class="ghost"><i data-lucide="timer" style="width:14px;height:14px"></i> Focus 10</button>
 </div>
-<div class="kc-stack">
-<div class="kc-task" style="--ring:#00c2a8;--pct:78%">
-<div class="kc-mini-ring"><i data-lucide="droplets" style="width:15px;height:15px"></i></div>
-<span><strong>Hydrate</strong><small>24 oz left</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
+<div class="app-section-head"><strong>Today's habits</strong><span>4 / 6</span></div>
+<div class="app-habit done" style="--tint:#00c2a8">
+<div class="app-habit-icon"><i data-lucide="droplets" style="width:15px;height:15px"></i></div>
+<div class="app-habit-meta"><strong>Hydrate</strong><span>24 oz left today</span></div>
+<button class="app-habit-cta"><i data-lucide="check" style="width:13px;height:13px"></i></button>
 </div>
-<div class="kc-task" style="--ring:#ff6b4a;--pct:95%">
-<div class="kc-mini-ring"><i data-lucide="footprints" style="width:15px;height:15px"></i></div>
-<span><strong>Walk</strong><small>12 day streak</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
+<div class="app-habit" style="--tint:#ff6b4a">
+<div class="app-habit-icon"><i data-lucide="footprints" style="width:15px;height:15px"></i></div>
+<div class="app-habit-meta"><strong>Walk after lunch</strong><span>12 day streak</span></div>
+<button class="app-habit-cta"><i data-lucide="zap" style="width:13px;height:13px"></i></button>
 </div>
-<div class="kc-task" style="--ring:#f5d547;--pct:42%">
-<div class="kc-mini-ring"><i data-lucide="dumbbell" style="width:15px;height:15px"></i></div>
-<span><strong>Strength</strong><small>starts 5 PM</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
-</div>
-<div class="kc-task" style="--ring:#7c5cff;--pct:18%">
-<div class="kc-mini-ring"><i data-lucide="book-open" style="width:15px;height:15px"></i></div>
-<span><strong>Read</strong><small>open</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
-</div>
+<div class="app-habit" style="--tint:#f5d547">
+<div class="app-habit-icon"><i data-lucide="dumbbell" style="width:15px;height:15px"></i></div>
+<div class="app-habit-meta"><strong>Strength</strong><span>Starts at 5:00 PM</span></div>
+<button class="app-habit-cta"><i data-lucide="play" style="width:12px;height:12px"></i></button>
 </div>
 <nav class="tabbar"><span class="active"><i data-lucide="activity" style="width:15px;height:15px"></i>Today</span><span class=""><i data-lucide="radio" style="width:15px;height:15px"></i>Coach</span><span class=""><i data-lucide="bar-chart-3" style="width:15px;height:15px"></i>Stats</span></nav>
 </div>
@@ -253,12 +346,18 @@
 <div class="screen-title"><span>Add Habit</span><i data-lucide="activity" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
 <h2>Build a target</h2>
-<div class="kc-template-grid"><b><i data-lucide="dumbbell" style="width:18px;height:18px"></i>Strength</b><b><i data-lucide="droplets" style="width:18px;height:18px"></i>Water</b><b><i data-lucide="brain" style="width:18px;height:18px"></i>Focus</b><b><i data-lucide="bed" style="width:18px;height:18px"></i>Sleep</b></div>
+<div class="kc-form">
+<div><span class="kc-form-label">Template</span>
+<div class="kc-template-grid"><b class="on"><i data-lucide="dumbbell" style="width:18px;height:18px"></i>Strength</b><b><i data-lucide="droplets" style="width:18px;height:18px"></i>Water</b><b><i data-lucide="brain" style="width:18px;height:18px"></i>Focus</b><b><i data-lucide="bed" style="width:18px;height:18px"></i>Sleep</b></div>
+</div>
 <label class="kc-field"><span>Goal</span><input value="20 minute walk" /></label>
 <div class="kc-slider"><span>Intensity</span>
 <div><i style="width:72%"></i></div>
 <b>7</b></div>
-<div class="kc-color-row"><i></i><i></i><i></i><i></i><i></i></div>
+<div><span class="kc-form-label">Accent</span>
+<div class="kc-color-row"><i></i><i class="on"></i><i></i><i></i><i></i></div>
+</div>
+</div>
 <button class="kc-submit"><i data-lucide="rocket" style="width:15px;height:15px"></i> Start habit</button>
 </div>
 </article>
@@ -267,12 +366,27 @@
 <div><i></i><i></i><i></i></div>
 </div>
 <div class="screen-title"><span>Habit Detail</span><i data-lucide="activity" style="width:14px;height:14px"></i></div>
-<div class="screen-body">
-<div class="kc-detail-ring"><strong>12</strong><span>day streak</span></div>
+<div class="screen-body app-screen">
+<div class="app-topbar">
+<button aria-label="Back"><i data-lucide="chevron-left" style="width:15px;height:15px"></i></button>
+<span class="app-eyebrow">Habit</span>
+<button aria-label="More"><i data-lucide="more-horizontal" style="width:15px;height:15px"></i></button>
+</div>
+<div class="app-title-block">
 <h2>Walk after lunch</h2>
-<div class="kc-metric-row"><b><span>Avg</span>18m</b><b><span>Best</span>31m</b><b><span>Week</span>5/7</b></div>
-<div class="kc-bars"><i style="height:48%"></i><i style="height:64%"></i><i style="height:32%"></i><i style="height:82%"></i><i style="height:76%"></i><i style="height:91%"></i><i style="height:55%"></i></div>
-<button class="kc-submit secondary"><i data-lucide="play" style="width:15px;height:15px"></i> Start walk timer</button>
+<p>Daily &middot; 20 min &middot; 12:30 PM</p>
+</div>
+<div class="app-streak-hero">
+<div><strong>12</strong><span class="app-streak-label">Day streak</span></div>
+<span class="app-streak-badge"><i data-lucide="flame" style="width:11px;height:11px"></i> on fire</span>
+</div>
+<div class="app-stat-row"><b><span>Avg</span>18m</b><b><span>Best</span>31m</b><b><span>Week</span>5/7</b></div>
+<div class="app-chart">
+<div class="app-chart-head"><strong>This week</strong><span>min · day</span></div>
+<div class="app-chart-bars"><i style="height:48%"></i><i style="height:64%"></i><i style="height:32%"></i><i style="height:82%"></i><i style="height:76%"></i><i style="height:91%"></i><i style="height:55%"></i></div>
+<div class="app-chart-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+</div>
+<button class="app-cta dark"><i data-lucide="play" style="width:15px;height:15px"></i> Start walk timer</button>
 </div>
 </article>
 <article class="phone phone-stats" aria-label="Stats screen">
@@ -280,24 +394,36 @@
 <div><i></i><i></i><i></i></div>
 </div>
 <div class="screen-title"><span>Stats</span><i data-lucide="activity" style="width:14px;height:14px"></i></div>
-<div class="screen-body">
-<h2>Performance week</h2>
-<div class="kc-score-grid"><b>92<span>consistency</span></b><b>18<span>best run</span></b></div>
-<div class="kc-week-rings"><span style="--pct:82%">M</span><span style="--pct:64%">T</span><span style="--pct:76%">W</span><span style="--pct:91%">T</span><span style="--pct:88%">F</span><span style="--pct:42%">S</span><span style="--pct:23%">S</span></div>
-<div class="kc-leader"><strong><i data-lucide="trophy" style="width:16px;height:16px"></i> Top momentum</strong>
-<p>Hydrate, Walk, Strength</p>
+<div class="screen-body app-screen">
+<div class="app-topbar">
+<div><span class="app-eyebrow">This week</span><strong style="display:block;margin-top:2px">Your momentum</strong></div>
+<button aria-label="Filter"><i data-lucide="sliders-horizontal" style="width:14px;height:14px"></i></button>
 </div>
-<div class="kc-stack compact">
-<div class="kc-task" style="--ring:#00c2a8;--pct:98%">
-<div class="kc-mini-ring"><i data-lucide="droplets" style="width:15px;height:15px"></i></div>
-<span><strong>Hydrate</strong><small>98% this month</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
+<div class="app-stat-hero">
+<div class="app-stat-hero-head"><span>Consistency score</span><em><i data-lucide="trending-up" style="width:11px;height:11px"></i> +8</em></div>
+<strong>92</strong>
+<p>4 of 5 habits trending up this week</p>
 </div>
-<div class="kc-task" style="--ring:#ff6b4a;--pct:86%">
-<div class="kc-mini-ring"><i data-lucide="footprints" style="width:15px;height:15px"></i></div>
-<span><strong>Walk</strong><small>86% this month</small></span>
-<button><i data-lucide="zap" style="width:14px;height:14px"></i></button>
+<div class="app-section-head"><strong>This week</strong><span>Mon - Sun</span></div>
+<div class="app-week">
+<div class="app-week-cell"><i class="app-week-dot"></i><span>M</span></div>
+<div class="app-week-cell"><i class="app-week-dot"></i><span>T</span></div>
+<div class="app-week-cell"><i class="app-week-dot partial"></i><span>W</span></div>
+<div class="app-week-cell"><i class="app-week-dot"></i><span>T</span></div>
+<div class="app-week-cell"><i class="app-week-dot"></i><span>F</span></div>
+<div class="app-week-cell"><i class="app-week-dot partial"></i><span>S</span></div>
+<div class="app-week-cell"><i class="app-week-dot miss"></i><span>S</span></div>
 </div>
+<div class="app-section-head"><strong>Top momentum</strong><span>this month</span></div>
+<div class="app-habit" style="--tint:#00c2a8">
+<div class="app-habit-icon"><i data-lucide="droplets" style="width:15px;height:15px"></i></div>
+<div class="app-habit-meta"><strong>Hydrate</strong><span>98% complete</span></div>
+<button class="app-habit-cta"><i data-lucide="chevron-right" style="width:13px;height:13px"></i></button>
+</div>
+<div class="app-habit" style="--tint:#ff6b4a">
+<div class="app-habit-icon"><i data-lucide="footprints" style="width:15px;height:15px"></i></div>
+<div class="app-habit-meta"><strong>Walk after lunch</strong><span>86% complete</span></div>
+<button class="app-habit-cta"><i data-lucide="chevron-right" style="width:13px;height:13px"></i></button>
 </div>
 </div>
 </article>
@@ -306,16 +432,37 @@
 <div><i></i><i></i><i></i></div>
 </div>
 <div class="screen-title"><span>Settings</span><i data-lucide="activity" style="width:14px;height:14px"></i></div>
-<div class="screen-body">
-<h2>Coach settings</h2>
-<div class="kc-segment"><b class="on">Chill</b><b>Firm</b><b>Elite</b></div>
-<div class="kc-settings">
-<div><span><i data-lucide="bell-ring" style="width:15px;height:15px"></i> Smart nudges</span><i class="on"></i></div>
-<div><span><i data-lucide="watch" style="width:15px;height:15px"></i> Watch sync</span><i class="on"></i></div>
-<div><span><i data-lucide="volume-2" style="width:15px;height:15px"></i> Haptics</span><i></i></div>
+<div class="screen-body app-screen">
+<div class="app-topbar">
+<div><span class="app-eyebrow">Coach</span><strong style="display:block;margin-top:2px">Settings</strong></div>
+<button aria-label="Profile"><i data-lucide="user" style="width:14px;height:14px"></i></button>
 </div>
-<div class="kc-leader"><strong>Notification window</strong>
-<p>7:00 AM - 9:30 PM</p>
+<div class="app-section-head"><strong>Intensity</strong><span>tone</span></div>
+<div class="app-segmented"><button class="active">Chill</button><button>Firm</button><button>Elite</button></div>
+<div class="app-section-head"><strong>Reminders</strong><span>daemon</span></div>
+<div class="app-list">
+<div class="app-list-row">
+<div class="app-list-icon"><i data-lucide="bell-ring" style="width:14px;height:14px"></i></div>
+<div class="app-list-text"><strong>Smart nudges</strong><span>Adapts to your active hours</span></div>
+<i class="app-list-toggle on"></i>
+</div>
+<div class="app-list-row">
+<div class="app-list-icon"><i data-lucide="watch" style="width:14px;height:14px"></i></div>
+<div class="app-list-text"><strong>Watch sync</strong><span>Apple Watch &middot; paired</span></div>
+<i class="app-list-toggle on"></i>
+</div>
+<div class="app-list-row">
+<div class="app-list-icon"><i data-lucide="volume-2" style="width:14px;height:14px"></i></div>
+<div class="app-list-text"><strong>Haptics</strong><span>Subtle taps on complete</span></div>
+<i class="app-list-toggle"></i>
+</div>
+</div>
+<div class="app-list">
+<div class="app-list-row">
+<div class="app-list-icon"><i data-lucide="clock" style="width:14px;height:14px"></i></div>
+<div class="app-list-text"><strong>Notification window</strong></div>
+<span class="app-list-meta">7:00 AM - 9:30 PM</span>
+</div>
 </div>
 <nav class="tabbar"><span class=""><i data-lucide="activity" style="width:15px;height:15px"></i>Today</span><span class="active"><i data-lucide="radio" style="width:15px;height:15px"></i>Coach</span><span class=""><i data-lucide="bar-chart-3" style="width:15px;height:15px"></i>Stats</span></nav>
 </div>

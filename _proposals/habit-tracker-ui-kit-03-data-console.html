@@ -163,6 +163,36 @@
   .dc-heat .l3{background:rgba(37,220,163,.7)}
   .dc-heat .l4{background:var(--accent)}
   .dc-list.mini{margin-top:12px}
+  .phone-add .screen-body{padding:12px;gap:0;font-family:var(--font-mono)}
+  .phone-add .dc-add-topbar{display:flex;align-items:center;justify-content:space-between;padding:0 0 10px;border-bottom:1px dashed var(--line);margin-bottom:10px}
+  .phone-add .dc-add-topbar button{background:transparent;color:var(--muted);display:inline-flex;align-items:center;gap:3px;font-size:10px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.08em;padding:0}
+  .phone-add .dc-add-topbar button:hover{color:var(--accent)}
+  .phone-add .dc-add-topbar .dc-step{color:var(--warning);font-size:9.5px;font-family:var(--font-mono);letter-spacing:.1em;text-transform:uppercase}
+  .phone-add .dc-add-cmd{border:1px solid var(--line);background:#0c0f0e;border-radius:var(--radius);padding:10px;margin-bottom:12px}
+  .phone-add .dc-add-cmd code{display:block;color:var(--accent);font-family:var(--font-mono);font-size:10px;line-height:1.4}
+  .phone-add .dc-add-cmd code::before{content:'$ ';color:var(--muted)}
+  .phone-add .dc-add-cmd span{display:block;color:var(--muted);font-family:var(--font-mono);font-size:10px;margin-top:5px;line-height:1.45}
+  .phone-add .dc-add-field{display:grid;grid-template-columns:60px 1fr;align-items:center;gap:8px;margin-bottom:8px}
+  .phone-add .dc-add-field>label{color:var(--muted);font-family:var(--font-mono);font-size:10px;text-transform:lowercase;letter-spacing:.02em}
+  .phone-add .dc-add-field>label::after{content:' :'}
+  .phone-add .dc-add-field>input{height:30px;padding:0 9px;border-radius:5px;border:1px solid var(--line);background:#070909;color:var(--accent);font-size:11.5px;font-family:var(--font-mono);min-width:0;transition:border-color 160ms,box-shadow 160ms}
+  .phone-add .dc-add-field>input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 20%,transparent)}
+  .phone-add .dc-flags{grid-column:2;display:flex;flex-wrap:wrap;gap:5px}
+  .phone-add .dc-flags button{padding:5px 8px;border-radius:4px;background:transparent;border:1px solid var(--line);color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;transition:color 160ms,border-color 160ms,background 160ms}
+  .phone-add .dc-flags button::before{content:'[ '}
+  .phone-add .dc-flags button::after{content:' ]'}
+  .phone-add .dc-flags button.active{color:var(--accent);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+  .phone-add .dc-add-row{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;min-height:32px;border-bottom:1px solid var(--line);padding:8px 0}
+  .phone-add .dc-add-row:first-of-type{border-top:1px solid var(--line)}
+  .phone-add .dc-add-row strong{font-family:var(--font-mono);font-size:11px;font-weight:500;color:var(--text)}
+  .phone-add .dc-add-row span.meta{display:block;color:var(--muted);font-family:var(--font-mono);font-size:9.5px;margin-top:2px}
+  .phone-add .dc-add-row code{font-family:var(--font-mono);font-size:10px;letter-spacing:.08em}
+  .phone-add .dc-add-row code.on{color:var(--success)}
+  .phone-add .dc-add-row code.off{color:var(--muted)}
+  .phone-add .dc-submit-cta{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;height:38px;border-radius:6px;background:transparent;border:1px solid var(--accent);color:var(--accent);font-family:var(--font-mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:background 160ms}
+  .phone-add .dc-submit-cta::before{content:'[ '}
+  .phone-add .dc-submit-cta::after{content:' ]'}
+  .phone-add .dc-submit-cta:hover{background:color-mix(in srgb,var(--accent) 14%,transparent)}
 </style>
 </head>
 <body class="theme-data">
@@ -213,13 +243,24 @@
 </div>
 <div class="screen-title"><span>Add Habit</span><i data-lucide="terminal" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
-<div class="dc-config"><code>habit.create</code>
-<label>name<input value="evening_stretch" /></label>
-<label>cadence<input value="daily" /></label>
-<label>reminder<input value="21:15" /></label>
+<div class="dc-add-topbar">
+<button aria-label="Back"><i data-lucide="chevron-left" style="width:14px;height:14px"></i> cancel</button>
+<span class="dc-step">step 01 / 02</span>
 </div>
-<div class="dc-flags"><span class="on">notify:true</span><span>skip:false</span><span>archive:false</span></div>
-<button class="dc-submit"><i data-lucide="git-commit-horizontal" style="width:15px;height:15px"></i> Commit habit</button>
+<div class="dc-add-cmd"><code>notch new --habit</code><span># name it, pick cadence, commit to ledger.</span></div>
+<div class="dc-add-field"><label>name</label><input value="evening_stretch" /></div>
+<div class="dc-add-field"><label>cadence</label>
+<div class="dc-flags"><button class="active">daily</button><button>weekdays</button><button>custom</button></div>
+</div>
+<div class="dc-add-row">
+<div><strong>reminder</strong><span class="meta">daily @ 21:15</span></div>
+<code class="on">[ ON ]</code>
+</div>
+<div class="dc-add-row">
+<div><strong>push_notify</strong><span class="meta">device.daemon</span></div>
+<code class="on">[ TRUE ]</code>
+</div>
+<button class="dc-submit-cta">commit habit</button>
 </div>
 </article>
 <article class="phone phone-detail" aria-label="Habit Detail screen">

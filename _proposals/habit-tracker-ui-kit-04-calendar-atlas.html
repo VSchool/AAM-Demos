@@ -167,6 +167,57 @@
   .ca-calendar-card{margin-top:12px}
   .ca-calendar-card span{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
   .ca-calendar-card strong{font-size:14px;line-height:1.35;display:block}
+  .ca-form{display:grid;gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--phone-surface),color-mix(in srgb,var(--phone-surface) 70%,var(--surface-2)));box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 6px 18px rgba(24,54,74,.06)}
+  .ca-field{display:grid;gap:6px;margin:0}
+  .ca-field>span{color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+  .ca-field input{width:100%;min-width:0;height:38px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--phone-surface);color:var(--text);font-size:13px;font-weight:500;transition:border-color 160ms,box-shadow 160ms}
+  .ca-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+  .ca-repeat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+  .ca-repeat b{display:grid;place-items:center;aspect-ratio:1;border:1px solid var(--line);border-radius:50%;background:var(--phone-surface);color:var(--muted);font-size:10.5px;font-weight:600;transition:transform 160ms,background 160ms,color 160ms}
+  .ca-repeat b.on{background:var(--accent);color:var(--ink-on-accent);border-color:transparent;box-shadow:0 4px 10px color-mix(in srgb,var(--accent) 32%,transparent)}
+  .ca-form .ca-timepick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0}
+  .ca-form .ca-timepick button{min-height:42px;display:flex;align-items:center;justify-content:center;gap:6px;border-radius:10px;border:1px solid var(--line);background:var(--phone-surface);color:var(--muted);font-size:12px;font-weight:500;transition:all 160ms}
+  .ca-form .ca-timepick button.on{background:var(--accent);color:var(--ink-on-accent);border-color:transparent;box-shadow:0 6px 14px color-mix(in srgb,var(--accent) 30%,transparent)}
+  .ca-reminder{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--phone-surface)}
+  .ca-reminder>span{display:flex;align-items:center;gap:8px;min-width:0;font-size:12px}
+  .ca-reminder>span>svg{color:var(--accent);flex:none}
+  .ca-reminder>span b{font-weight:600;color:var(--text)}
+  .ca-reminder>span em{font-style:normal;color:var(--muted);font-family:var(--font-mono);font-size:10.5px;margin-left:2px}
+  .ca-reminder>i{flex:none;width:34px;height:20px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);position:relative;transition:background 160ms,border-color 160ms}
+  .ca-reminder>i::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;top:2px;left:2px;background:var(--muted);transition:transform 160ms,background 160ms}
+  .ca-reminder>i.on{background:var(--accent);border-color:transparent}
+  .ca-reminder>i.on::after{background:var(--ink-on-accent);transform:translateX(14px)}
+  .ca-submit{width:100%;min-height:44px;margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:12px;border:0;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 92%,white),var(--accent));color:var(--ink-on-accent);font-size:13px;font-weight:600;letter-spacing:.01em;box-shadow:0 10px 22px color-mix(in srgb,var(--accent) 34%,transparent),inset 0 1px 0 rgba(255,255,255,.18)}
+  .ca-settings{display:grid;gap:8px}
+  .ca-settings>div{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--phone-surface)}
+  .ca-settings>div>span{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+  .ca-settings>div>span>svg{color:var(--accent);flex:none}
+  .ca-settings>div>i{flex:none;width:34px;height:20px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);position:relative;transition:background 160ms,border-color 160ms}
+  .ca-settings>div>i::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;top:2px;left:2px;background:var(--muted);transition:transform 160ms,background 160ms}
+  .ca-settings>div>i.on{background:var(--accent);border-color:transparent}
+  .ca-settings>div>i.on::after{background:var(--ink-on-accent);transform:translateX(14px)}
+  .phone-settings .screen-body{gap:0}
+  .phone-settings .screen-body h2{font-size:clamp(18px,calc(2.6cqi + 11px),22px);margin:2px 0 12px}
+  .ca-profile-card{display:grid;grid-template-columns:38px 1fr 14px;gap:11px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,var(--phone-surface),color-mix(in srgb,var(--phone-surface) 80%,var(--surface-2)));box-shadow:0 4px 12px rgba(24,54,74,.05);margin-bottom:14px}
+  .ca-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 88%,white),var(--accent));color:var(--ink-on-accent);display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:.04em;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+  .ca-profile-text{min-width:0}
+  .ca-profile-text b{display:block;font-size:12.5px;line-height:1.15;color:var(--text);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ca-profile-text span{display:block;color:var(--muted);font-size:10px;line-height:1.2;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ca-profile-card>i{color:var(--muted);display:block}
+  .ca-section-label{color:var(--muted);font-family:var(--font-mono);font-size:9px;text-transform:uppercase;letter-spacing:.12em;margin:0 4px 6px;font-weight:600}
+  .ca-list{display:grid;background:var(--phone-surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:0 2px 8px rgba(24,54,74,.04)}
+  .ca-list-row{display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:9px 10px;border-top:1px solid var(--line);min-height:40px}
+  .ca-list-row:first-child{border-top:0}
+  .ca-list-icon{width:26px;height:26px;border-radius:7px;background:color-mix(in srgb,var(--accent) 12%,var(--surface-2));display:grid;place-items:center;color:var(--accent)}
+  .ca-list-text{min-width:0}
+  .ca-list-text b{display:block;font-size:11.5px;line-height:1.15;color:var(--text);font-weight:600}
+  .ca-list-text em{font-style:normal;display:block;color:var(--muted);font-size:9.5px;line-height:1.25;margin-top:2px}
+  .ca-list-value{font-family:var(--font-mono);font-size:10px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+  .ca-switch{width:30px;height:18px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);position:relative;flex:none;display:block}
+  .ca-switch::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;top:2px;left:2px;background:var(--muted);transition:transform 160ms}
+  .ca-switch.on{background:var(--accent);border-color:transparent;box-shadow:0 2px 6px color-mix(in srgb,var(--accent) 28%,transparent)}
+  .ca-switch.on::after{background:var(--ink-on-accent);transform:translateX(12px)}
+  .phone-settings .tabbar{margin-top:auto}
 </style>
 </head>
 <body class="theme-calendar">
@@ -214,13 +265,19 @@
 <div class="screen-title"><span>Add Habit</span><i data-lucide="calendar-days" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
 <h2>Schedule habit</h2>
-<label class="ca-field"><span>Habit</span><input value="Evening stretch" /></label>
-<div class="ca-repeat"><b class="on">Mon</b><b>Tue</b><b class="on">Wed</b><b>Thu</b><b class="on">Fri</b></div>
+<div class="ca-form">
+<label class="ca-field"><span>Habit name</span><input value="Evening stretch" /></label>
+<div class="ca-field"><span>Repeat on</span>
+<div class="ca-repeat"><b>S</b><b class="on">M</b><b>T</b><b class="on">W</b><b>T</b><b class="on">F</b><b>S</b></div>
+</div>
+<div class="ca-field"><span>Time of day</span>
 <div class="ca-timepick">
 <button><i data-lucide="sunrise" style="width:15px;height:15px"></i> Morning</button>
 <button class="on"><i data-lucide="sunset" style="width:15px;height:15px"></i> Evening</button>
 </div>
-<div class="ca-reminder"><span>Reminder at 9:15 PM</span><i class="on"></i></div>
+</div>
+<div class="ca-reminder"><span><i data-lucide="bell-ring" style="width:15px;height:15px"></i><b>Reminder</b><em>9:15 PM</em></span><i class="on"></i></div>
+</div>
 <button class="ca-submit"><i data-lucide="calendar-plus" style="width:15px;height:15px"></i> Add to plan</button>
 </div>
 </article>
@@ -256,13 +313,38 @@
 </div>
 <div class="screen-title"><span>Settings</span><i data-lucide="calendar-days" style="width:14px;height:14px"></i></div>
 <div class="screen-body">
-<h2>Calendar sync</h2>
-<div class="ca-settings">
-<div><span><i data-lucide="calendar-check" style="width:15px;height:15px"></i> System calendar</span><i class="on"></i></div>
-<div><span><i data-lucide="bell" style="width:15px;height:15px"></i> Pre-window nudges</span><i class="on"></i></div>
-<div><span><i data-lucide="clock-3" style="width:15px;height:15px"></i> Snooze follow-up</span><i></i></div>
+<h2>Settings</h2>
+<div class="ca-profile-card">
+<div class="ca-avatar">JM</div>
+<div class="ca-profile-text"><b>Jordan Mills</b><span>jordan@plan.app · Pro plan</span></div>
+<i data-lucide="chevron-right" style="width:14px;height:14px"></i>
 </div>
-<div class="ca-calendar-card"><span>Quiet hours</span><strong>10:30 PM - 7:00 AM</strong></div>
+<div class="ca-section-label">Calendar sync</div>
+<div class="ca-list">
+<div class="ca-list-row">
+<div class="ca-list-icon"><i data-lucide="calendar-check" style="width:14px;height:14px"></i></div>
+<div class="ca-list-text"><b>System calendar</b><em>iCloud · Personal</em></div>
+<i class="ca-switch on"></i>
+</div>
+<div class="ca-list-row">
+<div class="ca-list-icon"><i data-lucide="moon" style="width:14px;height:14px"></i></div>
+<div class="ca-list-text"><b>Quiet hours</b></div>
+<span class="ca-list-value">10:30 PM – 7:00 AM<i data-lucide="chevron-right" style="width:12px;height:12px"></i></span>
+</div>
+</div>
+<div class="ca-section-label">Notifications</div>
+<div class="ca-list">
+<div class="ca-list-row">
+<div class="ca-list-icon"><i data-lucide="bell" style="width:14px;height:14px"></i></div>
+<div class="ca-list-text"><b>Pre-window nudges</b><em>10 min before slot</em></div>
+<i class="ca-switch on"></i>
+</div>
+<div class="ca-list-row">
+<div class="ca-list-icon"><i data-lucide="clock-3" style="width:14px;height:14px"></i></div>
+<div class="ca-list-text"><b>Snooze follow-up</b></div>
+<i class="ca-switch"></i>
+</div>
+</div>
 <nav class="tabbar"><span class=""><i data-lucide="calendar-days" style="width:15px;height:15px"></i>Plan</span><span class=""><i data-lucide="layout-grid" style="width:15px;height:15px"></i>Month</span><span class="active"><i data-lucide="bell" style="width:15px;height:15px"></i>Alerts</span></nav>
 </div>
 </article>

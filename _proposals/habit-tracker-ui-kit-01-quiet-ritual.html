@@ -192,6 +192,24 @@
   .quiet-settings div,.ca-settings div,.ps-settings div,.kc-settings div{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
   .quiet-settings div:first-child,.ca-settings div:first-child,.ps-settings div:first-child,.kc-settings div:first-child{border-top:0}
   .quiet-settings span,.ca-settings span,.ps-settings span,.kc-settings span{display:flex;align-items:center;gap:7px;font-size:12px}
+  .phone-add .qr-sheet{padding:16px;background:linear-gradient(180deg,var(--phone-surface),color-mix(in srgb,var(--phone-surface) 55%,var(--surface-2)));box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 6px 18px rgba(54,45,31,.08)}
+  .phone-add .qr-sheet h2{margin:0 0 14px}
+  .phone-add .quiet-input{margin-bottom:12px;gap:6px}
+  .phone-add .quiet-input>span,.phone-add .qr-field-label{color:var(--muted);font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+  .phone-add .qr-field-label{display:block;margin-bottom:6px}
+  .phone-add .quiet-input input,.phone-add .quiet-input textarea{padding:10px 12px;border-radius:10px;background:var(--phone-surface);font-size:13px;font-weight:500;font-family:var(--font-body);transition:border-color 160ms,box-shadow 160ms}
+  .phone-add .quiet-input input{height:38px}
+  .phone-add .quiet-input textarea{height:54px;line-height:1.45;resize:none}
+  .phone-add .quiet-input input:focus,.phone-add .quiet-input textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+  .phone-add .quiet-chipset{margin:0 0 12px;gap:6px}
+  .phone-add .quiet-chipset b{padding:8px 12px;border-radius:999px;font-size:11px;font-weight:500;transition:background 160ms,color 160ms,box-shadow 160ms}
+  .phone-add .quiet-chipset b.on{box-shadow:0 4px 10px color-mix(in srgb,var(--accent) 28%,transparent)}
+  .phone-add .quiet-reminder{padding:10px 12px;border-radius:10px;background:var(--phone-surface);font-size:12px}
+  .phone-add .quiet-reminder>span{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+  .phone-add .quiet-reminder>span>svg{color:var(--accent);flex:none}
+  .phone-add .quiet-reminder>span b{font-weight:600}
+  .phone-add .quiet-reminder>span em{font-style:normal;font-family:var(--font-mono);font-size:10.5px;color:var(--muted);margin-left:auto;padding-left:8px}
+  .phone-add .quiet-submit{min-height:44px;border-radius:12px;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 92%,white),var(--accent));font-weight:600;font-size:13px;letter-spacing:.01em;box-shadow:0 10px 22px color-mix(in srgb,var(--accent) 32%,transparent),inset 0 1px 0 rgba(255,255,255,.18);margin-top:14px}
 </style>
 </head>
 <body class="theme-quiet">
@@ -246,8 +264,9 @@
 <h2>New ritual</h2>
 <label class="quiet-input"><span>Name</span><input value="Evening stretch" /></label>
 <label class="quiet-input"><span>Why it matters</span><textarea>Close the day before sleep.</textarea></label>
+<span class="qr-field-label">Cadence</span>
 <div class="quiet-chipset"><b class="on">Daily</b><b>Weekdays</b><b>3x week</b></div>
-<div class="quiet-reminder"><span><i data-lucide="bell" style="width:15px;height:15px"></i> 9:15 PM</span><i class="on"></i></div>
+<div class="quiet-reminder"><span><i data-lucide="bell-ring" style="width:15px;height:15px"></i><b>Evening reminder</b><em>9:15 PM</em></span><i class="on"></i></div>
 <button class="quiet-submit"><i data-lucide="plus" style="width:15px;height:15px"></i> Add ritual</button>
 </div>
 </div>
