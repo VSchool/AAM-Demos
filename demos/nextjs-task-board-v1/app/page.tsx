@@ -1,8 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Progression from "@/components/Progression";
 import FeaturesStrip from "@/components/FeaturesStrip";
+import ExpandableTile from "@/components/ExpandableTile";
+import { DemoV1 } from "@/components/VersionDemos";
+import {
+  TasksLibDemo,
+  LoadingDelayDemo,
+  NewFileDemo,
+  HooksDemo,
+} from "@/components/V1DeepDive";
 
 export default function Home() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const tileProps = (i: number) => ({
+    isOpen: openIdx === i,
+    onToggle: () => setOpenIdx((cur) => (cur === i ? null : i)),
+  });
   return (
     <main className="cn-page">
       <div className="cn-eyebrow">State v1 · client-side data</div>
@@ -74,56 +90,98 @@ export default function Home() {
       <Progression current={1} />
 
       <section className="cn-section">
-        <div className="cn-section-tag">01 · What v1 added</div>
+        <div className="cn-section-tag">
+          01 · v1 deep-dive · client-side data{" "}
+          <span className="cn-section-h-hint">click any tile to expand</span>
+        </div>
         <h2 className="cn-section-h">The W5D1 pattern, transplanted into Next.js</h2>
         <div className="cn-bento">
-          <div className="cn-tile span-6 row-2 cn-tile-yellow">
-            <div className="cn-tile-meta">/tasks · client component</div>
-            <div>
-              <h3
-                className="cn-tile-title"
-                style={{ fontSize: "26px", lineHeight: 1.1 }}
-              >
-                <code>&quot;use client&quot;</code> at the top. <code>useEffect</code>{" "}
-                loads from <code>lib/tasks.ts</code>. Skeleton until it lands.
-              </h3>
-              <p
-                className="cn-tile-sub"
-                style={{ marginTop: "10px", fontSize: "14px" }}
-              >
-                The browser receives the static HTML for /tasks, hydrates React, fires the
-                effect, then re-renders with the data. The ~700&nbsp;ms flicker you see is
-                a teaching delay — it&apos;s the trade-off you&apos;re paying for staying
-                on the client.
-              </p>
-              <div style={{ marginTop: "16px" }}>
-                <Link
-                  href="/tasks"
-                  style={{ textDecoration: "underline", fontWeight: 600 }}
-                >
-                  See /tasks →
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="cn-tile span-3 cn-tile-green">
-            <div className="cn-tile-meta">Tasks in lib</div>
-            <div className="cn-tile-num">12</div>
-          </div>
-          <div className="cn-tile span-3 cn-tile-pink">
-            <div className="cn-tile-meta">Loading delay</div>
-            <div className="cn-tile-num">700ms</div>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">New file</div>
-            <h3 className="cn-tile-title">lib/tasks.ts</h3>
-            <p className="cn-tile-sub">Typed task array + getTasks() reader.</p>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">New hooks</div>
-            <h3 className="cn-tile-title">useState · useEffect</h3>
-            <p className="cn-tile-sub">Both fire only in the browser, not at build.</p>
-          </div>
+          <ExpandableTile
+            {...tileProps(0)}
+            className="span-6 row-2 cn-tile-yellow"
+            summary={
+              <>
+                <div className="cn-tile-meta">/tasks · client component</div>
+                <div>
+                  <h3
+                    className="cn-tile-title"
+                    style={{ fontSize: "26px", lineHeight: 1.1 }}
+                  >
+                    <code>&quot;use client&quot;</code> at the top.{" "}
+                    <code>useEffect</code> loads from <code>lib/tasks.ts</code>. Skeleton
+                    until it lands.
+                  </h3>
+                  <p
+                    className="cn-tile-sub"
+                    style={{ marginTop: "10px", fontSize: "14px" }}
+                  >
+                    The browser receives the static HTML for /tasks, hydrates React, fires
+                    the effect, then re-renders with the data. The ~700&nbsp;ms flicker
+                    is a teaching delay — the trade-off you&apos;re paying for staying on
+                    the client.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <DemoV1 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            {...tileProps(1)}
+            className="span-3 cn-tile-green"
+            summary={
+              <>
+                <div className="cn-tile-meta">Tasks in lib</div>
+                <div className="cn-tile-num">12</div>
+                <p className="cn-tile-sub">peek inside lib/tasks.ts</p>
+              </>
+            }
+          >
+            <TasksLibDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            {...tileProps(2)}
+            className="span-3 cn-tile-pink"
+            summary={
+              <>
+                <div className="cn-tile-meta">Loading delay</div>
+                <div className="cn-tile-num">700ms</div>
+                <p className="cn-tile-sub">drag the slider, watch the spinner</p>
+              </>
+            }
+          >
+            <LoadingDelayDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            {...tileProps(3)}
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">New file</div>
+                <h3 className="cn-tile-title">lib/tasks.ts</h3>
+                <p className="cn-tile-sub">toggle: source · shape</p>
+              </>
+            }
+          >
+            <NewFileDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            {...tileProps(4)}
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">New hooks</div>
+                <h3 className="cn-tile-title">useState · useEffect</h3>
+                <p className="cn-tile-sub">click each to see its role</p>
+              </>
+            }
+          >
+            <HooksDemo />
+          </ExpandableTile>
         </div>
       </section>
 

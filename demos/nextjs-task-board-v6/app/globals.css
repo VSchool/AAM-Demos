@@ -2554,3 +2554,46 @@ code, .cn-mono {
   .cn-palette-fab { right: 14px; bottom: 14px; padding: 9px 14px 9px 10px; }
   .cn-palette-panel { right: 14px; bottom: 64px; }
 }
+
+/* ============== LOCKED TILE (Coming Soon — future version) ============== */
+.cn-tile-locked {
+  background: transparent;
+  border: 1px dashed var(--hairline-strong);
+  color: var(--on-canvas-muted);
+  opacity: 0.7;
+  cursor: not-allowed;
+  position: relative;
+}
+.cn-tile-locked::after {
+  content: "LOCKED";
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  opacity: 0.55;
+}
+.cn-tile-locked .cn-tile-meta { opacity: 0.85; }
+.cn-tile-locked .cn-tile-title {
+  color: var(--on-canvas);
+  opacity: 0.78;
+  font-weight: 600;
+}
+.cn-tile-locked .cn-tile-sub { opacity: 0.7; }
+
+
+
+
+/* ============== BENTO HEIGHT CAP (open state) ============== */
+/* When a tile is expanded, cap the bento at 520px and clip overflow.
+   Using max-height (not a fixed height) lets the grid lay out children at
+   their natural sizes — only the bottom edge clips when content exceeds the
+   cap. Fixed height was collapsing rows and causing tiles to overlap. */
+.cn-bento-expandable.has-open {
+  max-height: 520px;
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  .cn-bento-expandable.has-open { max-height: 620px; }
+}

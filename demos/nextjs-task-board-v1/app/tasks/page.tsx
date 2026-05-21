@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import type { Task } from "@/lib/tasks";
 import { getTasks } from "@/lib/tasks";
+import DemoNote from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import Progression from "@/components/Progression";
 import TaskCard from "@/components/TaskCard";
 import TaskListSkeleton from "@/components/TaskListSkeleton";
@@ -43,15 +45,44 @@ export default function TasksPage() {
 
       <Progression current={1} />
 
-      <section className="cn-banner cn-banner-yellow" aria-live="polite">
-        <div className="cn-banner-meta">why the loading flicker</div>
-        <p>
-          The list is empty for ~700 ms while <code>useEffect</code> runs after the page
-          hydrates. The browser receives the HTML, mounts React, fires the effect, then
-          re-renders with data. This is the trade-off of client-side fetch — v2 eliminates
-          the wait entirely by rendering on the server.
-        </p>
-      </section>
+      <div style={{ position: "relative" }}>
+        <div style={{ position: "absolute", top: "12px", left: "-32px", zIndex: 2 }}>
+          <FeatureCallout
+            title="Pill that unfolds into a panel"
+            description={
+              <>
+                That little orange pill? Click it and it stretches out
+                into a full panel with the explanation inside. Click again — or
+                hit Escape — and it shrinks back into the pill. The pill
+                width adjusts itself so it never jumps when fonts load.
+              </>
+            }
+            snippet={`Build a small pill-shaped button in React that, when
+clicked, expands smoothly into a full-width panel showing
+extra content. Clicking again — or pressing Escape —
+collapses it back to the pill. Animate the width and height
+between the two states so the transition feels fluid instead
+of snapping.
+
+Measure the pill's natural width on mount and store it so
+the collapsed state always fits the trigger text exactly.
+Re-measure after web fonts finish loading and on window
+resize, so the pill never visibly jumps when the font swaps
+in late or the viewport changes. The expanded panel should
+be focusable and dismissible with the Escape key.`}
+            side="right"
+          />
+        </div>
+        <DemoNote title="Why the loading flicker">
+          <p>
+            The list is empty for ~700 ms while <code>useEffect</code> runs after
+            the page hydrates. The browser receives the HTML, mounts React, fires
+            the effect, then re-renders with data. This is the trade-off of
+            client-side fetch — v2 eliminates the wait entirely by rendering on
+            the server.
+          </p>
+        </DemoNote>
+      </div>
 
       <section className="cn-section">
         <div className="cn-section-tag">

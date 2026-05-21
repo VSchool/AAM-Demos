@@ -193,3 +193,26 @@ export const STATUS_LABEL: Record<TaskStatus, string> = {
   done: "Done",
   canceled: "Canceled",
 };
+
+// Deterministic color slot for a tag label. Same label string -> same color
+// everywhere it renders (task card, detail meta, anywhere else).
+export function labelClass(label: string): string {
+  let h = 0;
+  for (let i = 0; i < label.length; i++) {
+    h = (h * 31 + label.charCodeAt(i)) | 0;
+  }
+  const slot = Math.abs(h) % 6;
+  return `cn-task-label cn-task-label-c${slot}`;
+}
+
+// Deterministic color slot for an assignee avatar. Same assignee string ->
+// same color everywhere it renders. Palette deliberately excludes the violet
+// canvas family so avatars always pop on the Details aside.
+export function avatarClass(name: string): string {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) {
+    h = (h * 31 + name.charCodeAt(i)) | 0;
+  }
+  const slot = Math.abs(h) % 6;
+  return `cn-avatar cn-avatar-c${slot}`;
+}

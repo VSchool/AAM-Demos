@@ -1,8 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { DragEvent } from "react";
 import type { Task, TaskStatus } from "@/lib/tasks";
 import { STATUS_LABEL } from "@/lib/tasks";
+import { useTaskStore } from "@/lib/task-store";
 import TaskCard from "./TaskCard";
 
 type StatusFilter = TaskStatus | "all";
@@ -46,9 +48,94 @@ function dueWeight(due: string): number {
 }
 
 export default function TaskFilter({ tasks }: { tasks: Task[] }) {
+  const { reorderTask } = useTaskStore();
   const [status, setStatus] = useState<StatusFilter>("all");
   const [sort, setSort] = useState<SortKey>("priority");
-  const [view, setView] = useState<View>("list");
+  const [view, setView] = useState<View>("board");
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOverTask, setDragOverTask] = useState<
+    { id: string; pos: "above" | "below" } | null
+  >(null);
+  const [dragOverColEnd, setDragOverColEnd] = useState<TaskStatus | null>(null);
+
+  const clearDrag = () => {
+    setDraggingId(null);
+    setDragOverTask(null);
+    setDragOverColEnd(null);
+  };
+
+  const handleDragStart = (taskId: string) => (e: DragEvent<HTMLAnchorElement>) => {
+    setDraggingId(taskId);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", taskId);
+  };
+  const handleDragEnd = () => clearDrag();
+
+  const handleCardDragOver =
+    (taskId: string) => (e: DragEvent<HTMLDivElement>) => {
+      if (!draggingId || draggingId === taskId) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      const rect = e.currentTarget.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const pos: "above" | "below" = e.clientY < midY ? "above" : "below";
+      setDragOverColEnd(null);
+      setDragOverTask((cur) =>
+        cur?.id === taskId && cur.pos === pos ? cur : { id: taskId, pos },
+      );
+    };
+  const handleCardDragLeave =
+    (taskId: string) => (e: DragEvent<HTMLDivElement>) => {
+      if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+      setDragOverTask((cur) => (cur?.id === taskId ? null : cur));
+    };
+  const handleCardDrop =
+    (targetTaskId: string, colKey: TaskStatus) =>
+    (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain") || draggingId;
+      if (!id || id === targetTaskId) {
+        clearDrag();
+        return;
+      }
+      const pos = dragOverTask?.pos ?? "below";
+      const colItems = grouped[colKey];
+      const idx = colItems.findIndex((t) => t.id === targetTaskId);
+      let beforeId: string | null;
+      if (pos === "above") {
+        beforeId = targetTaskId;
+      } else {
+        const next = colItems[idx + 1];
+        beforeId = next ? next.id : null;
+      }
+      reorderTask(id, colKey, beforeId);
+      setSort("updated");
+      clearDrag();
+    };
+
+  const handleColEndDragOver =
+    (colKey: TaskStatus) => (e: DragEvent<HTMLDivElement>) => {
+      if (!draggingId) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      setDragOverTask(null);
+      if (dragOverColEnd !== colKey) setDragOverColEnd(colKey);
+    };
+  const handleColEndDragLeave =
+    (colKey: TaskStatus) => (e: DragEvent<HTMLDivElement>) => {
+      if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+      setDragOverColEnd((cur) => (cur === colKey ? null : cur));
+    };
+  const handleColEndDrop =
+    (colKey: TaskStatus) => (e: DragEvent<HTMLDivElement>) => {
+      e.preventDefault();
+      const id = e.dataTransfer.getData("text/plain") || draggingId;
+      if (id) {
+        reorderTask(id, colKey, null);
+        setSort("updated");
+      }
+      clearDrag();
+    };
 
   const visible = useMemo(() => {
     const filtered =
@@ -176,6 +263,7 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
         <div className="cn-board">
           {BOARD_COLUMNS.map((col) => {
             const items = grouped[col.key];
+            const endOver = dragOverColEnd === col.key;
             return (
               <section
                 key={col.key}
@@ -193,11 +281,49 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
                 </header>
                 <div className="cn-board-col-body">
                   {items.length === 0 ? (
-                    <div className="cn-board-col-empty" aria-hidden="true">
-                      —
+                    <div
+                      className={`cn-board-col-empty${endOver ? " cn-board-col-empty-over" : ""}`}
+                      onDragOver={handleColEndDragOver(col.key)}
+                      onDragLeave={handleColEndDragLeave(col.key)}
+                      onDrop={handleColEndDrop(col.key)}
+                    >
+                      {endOver ? "Drop here" : "—"}
                     </div>
                   ) : (
-                    items.map((task) => <TaskCard key={task.id} task={task} />)
+                    <>
+                      {items.map((task) => {
+                        const slotPos =
+                          dragOverTask?.id === task.id ? dragOverTask.pos : null;
+                        const slotCls =
+                          "cn-board-card-slot" +
+                          (slotPos === "above" ? " cn-board-card-slot-above" : "") +
+                          (slotPos === "below" ? " cn-board-card-slot-below" : "");
+                        return (
+                          <div
+                            key={task.id}
+                            className={slotCls}
+                            onDragOver={handleCardDragOver(task.id)}
+                            onDragLeave={handleCardDragLeave(task.id)}
+                            onDrop={handleCardDrop(task.id, col.key)}
+                          >
+                            <TaskCard
+                              task={task}
+                              draggable
+                              isDragging={draggingId === task.id}
+                              onDragStart={handleDragStart(task.id)}
+                              onDragEnd={handleDragEnd}
+                            />
+                          </div>
+                        );
+                      })}
+                      <div
+                        className={`cn-board-col-trailing${endOver ? " cn-board-col-trailing-over" : ""}`}
+                        onDragOver={handleColEndDragOver(col.key)}
+                        onDragLeave={handleColEndDragLeave(col.key)}
+                        onDrop={handleColEndDrop(col.key)}
+                        aria-hidden="true"
+                      />
+                    </>
                   )}
                 </div>
               </section>

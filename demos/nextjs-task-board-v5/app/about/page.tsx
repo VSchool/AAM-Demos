@@ -1,4 +1,14 @@
 import Progression from "@/components/Progression";
+import ExpandableTile from "@/components/ExpandableTile";
+import ExpandableBento from "@/components/ExpandableBento";
+import {
+  DemoV0,
+  DemoV1,
+  DemoV2,
+  DemoV3,
+  DemoV4,
+  DemoV5,
+} from "@/components/VersionDemos";
 
 export const metadata = {
   title: "About · Cadence v5",
@@ -13,68 +23,125 @@ export default function AboutPage() {
       <h1 className="cn-h1">Seven states, one task board.</h1>
       <p className="cn-lede">
         Cadence is a Next.js task-board demo built in seven progressive states (v0 → v6).
-        Each state adds <strong>one Next.js concept</strong> to the previous one. You can
-        read every state in isolation, or scroll the sequence to watch the architecture
-        evolve from scaffold to a layout-wrapped multi-route app.
+        Each state adds <strong>one Next.js concept</strong> to the previous one. Each
+        tile below expands to a tiny interactive demo of what that version introduced.
       </p>
 
       <Progression current={5} />
 
       <section className="cn-section">
-        <div className="cn-section-tag">the seven states</div>
-        <h2 className="cn-section-h">What each version adds</h2>
-        <div className="cn-bento">
-          <div className="cn-tile span-12 cn-tile-yellow">
-            <div className="cn-tile-meta">v5 · you are here</div>
-            <div>
-              <h3 className="cn-tile-title" style={{ fontSize: "20px" }}>
-                Create / edit / delete UI on a client-side Context store. Refresh
-                wipes it. Real persistence is W6.
-              </h3>
-              <p className="cn-tile-sub" style={{ marginTop: "6px", fontSize: "13.5px" }}>
-                <code>NewTaskForm</code> on <code>/tasks</code>,{" "}
-                <code>TaskDetailActions</code> on every <code>/tasks/[id]</code>, all
-                wired to a single <code>TaskStoreProvider</code> mounted at the root
-                layout.
-              </p>
-            </div>
-          </div>
-
-          <div className="cn-tile span-2">
-            <div className="cn-tile-meta">v0 · done</div>
-            <h3 className="cn-tile-title" style={{ fontSize: "14px" }}>scaffold</h3>
-          </div>
-          <div className="cn-tile span-2">
-            <div className="cn-tile-meta">v1 · done</div>
-            <h3 className="cn-tile-title" style={{ fontSize: "14px" }}>client list</h3>
-          </div>
-          <div className="cn-tile span-2">
-            <div className="cn-tile-meta">v2 · done</div>
-            <h3 className="cn-tile-title" style={{ fontSize: "14px" }}>server list</h3>
-          </div>
-          <div className="cn-tile span-2">
-            <div className="cn-tile-meta">v3 · done</div>
-            <h3 className="cn-tile-title" style={{ fontSize: "14px" }}>client filter</h3>
-          </div>
-          <div className="cn-tile span-4">
-            <div className="cn-tile-meta">v4 · done</div>
-            <h3 className="cn-tile-title" style={{ fontSize: "14px" }}>
-              dynamic detail route
-            </h3>
-            <p className="cn-tile-sub" style={{ fontSize: "12px" }}>
-              <code>generateStaticParams</code> over <code>lib/tasks.ts</code>
-            </p>
-          </div>
-
-          <div className="cn-tile span-12 cn-tile-violet">
-            <div className="cn-tile-meta">v6 · layout + states</div>
-            <h3 className="cn-tile-title">Shared <code>layout.tsx</code> + <code>loading.tsx</code> + <code>error.tsx</code></h3>
-            <p className="cn-tile-sub">
-              Global nav, an artificial loading state, a graceful error fallback. The
-              finished shape.
-            </p>
-          </div>
+        <div className="cn-section-tag">
+          the seven states <span className="cn-section-h-hint">click any unlocked tile to try it</span>
         </div>
+        <h2 className="cn-section-h">What each version adds</h2>
+        <ExpandableBento>
+          <ExpandableTile
+            className="span-12 cn-tile-yellow"
+            summary={
+              <>
+                <div className="cn-tile-meta">v5 · you are here</div>
+                <div>
+                  <h3 className="cn-tile-title" style={{ fontSize: "20px" }}>
+                    CRUD UI — add, edit, delete on a client-side store.
+                  </h3>
+                  <p className="cn-tile-sub" style={{ marginTop: "6px", fontSize: "13.5px" }}>
+                    The UI shape is real (forms, optimistic updates, confirm flows).
+                    Persistence is W6 territory — refresh and the board resets.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <DemoV5 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4"
+            summary={
+              <>
+                <div className="cn-tile-meta">v0 · done</div>
+                <h3 className="cn-tile-title" style={{ fontSize: "16px" }}>scaffold + file routing</h3>
+                <p className="cn-tile-sub" style={{ marginTop: "4px", fontSize: "12.5px" }}>
+                  Drop a <code>page.tsx</code> into a folder, get a URL.
+                </p>
+              </>
+            }
+          >
+            <DemoV0 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4"
+            summary={
+              <>
+                <div className="cn-tile-meta">v1 · done</div>
+                <h3 className="cn-tile-title" style={{ fontSize: "16px" }}>client list</h3>
+                <p className="cn-tile-sub" style={{ marginTop: "4px", fontSize: "12.5px" }}>
+                  <code>useState</code> + <code>useEffect</code>, a spinner, then data.
+                </p>
+              </>
+            }
+          >
+            <DemoV1 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4"
+            summary={
+              <>
+                <div className="cn-tile-meta">v2 · done</div>
+                <h3 className="cn-tile-title" style={{ fontSize: "16px" }}>server list</h3>
+                <p className="cn-tile-sub" style={{ marginTop: "4px", fontSize: "12.5px" }}>
+                  Same UI, no spinner. HTML arrives already populated.
+                </p>
+              </>
+            }
+          >
+            <DemoV2 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4"
+            summary={
+              <>
+                <div className="cn-tile-meta">v3 · done</div>
+                <h3 className="cn-tile-title" style={{ fontSize: "16px" }}>client filter</h3>
+                <p className="cn-tile-sub" style={{ marginTop: "4px", fontSize: "12.5px" }}>
+                  Server owns the array, client owns the chips.
+                </p>
+              </>
+            }
+          >
+            <DemoV3 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4"
+            summary={
+              <>
+                <div className="cn-tile-meta">v4 · done</div>
+                <h3 className="cn-tile-title" style={{ fontSize: "16px" }}>detail route</h3>
+                <p className="cn-tile-sub" style={{ marginTop: "4px", fontSize: "12.5px" }}>
+                  <code>[id]</code> dynamic segment, one URL per task.
+                </p>
+              </>
+            }
+          >
+            <DemoV4 />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-4 cn-tile-soon"
+            summary={
+              <>
+                <div className="cn-tile-meta">v6</div>
+                <h3 className="cn-tile-title">Coming Soon</h3>
+              </>
+            }
+          >
+            <p>Coming Soon.</p>
+          </ExpandableTile>
+        </ExpandableBento>
       </section>
 
       <section className="cn-section">
@@ -90,9 +157,9 @@ export default function AboutPage() {
                 Every state here deploys as a <strong>static export</strong> to GitHub
                 Pages. Server components in v2/v3 are evaluated at build time, not at
                 request time — the rendered HTML is what the browser receives. The{" "}
-                <code>lib/tasks.ts</code> file is a typed array, not an API call. v5's
-                "CRUD" is a UI pattern over local in-memory state. Real backends — API
-                routes that run on a server, persistence, auth — that's the entire focus of
+                <code>lib/tasks.ts</code> file is a typed array, not an API call. v5&apos;s
+                &quot;CRUD&quot; is a UI pattern over local in-memory state. Real backends — API
+                routes that run on a server, persistence, auth — that&apos;s the entire focus of
                 Week 6. The architecture you learn here is what plugs into that backend
                 next week.
               </p>

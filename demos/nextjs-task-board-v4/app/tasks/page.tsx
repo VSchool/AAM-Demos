@@ -1,19 +1,21 @@
-// Server component — owns the data read.
-// TaskFilter is the client component — owns the interaction.
-// This is the v3 lesson: the boundary, drawn explicitly.
+// Server component — sets up the page chrome.
+// Layout seeds <TaskStoreProvider initial={getTasks()}>. <TaskBoard />
+// reads from the store and renders the drag-enabled kanban. v4's new
+// piece is the dynamic /tasks/[id] route — each card is now a Link.
 
 import { getTasks } from "@/lib/tasks";
+import DemoNote from "@/components/DemoNote";
 import Progression from "@/components/Progression";
-import TaskFilter from "@/components/TaskFilter";
+import TaskBoard from "@/components/TaskBoard";
 
 export const metadata = {
   title: "Tasks · Cadence v4",
   description:
-    "Server-rendered task list with filter + sort. Each card now links to its own dynamic detail page pre-rendered via generateStaticParams.",
+    "Drag-enabled kanban whose cards link to dynamic per-task detail pages, pre-rendered via generateStaticParams.",
 };
 
 export default async function TasksPage() {
-  // This runs on the server (at build time for static export).
+  // Count is server-rendered for first paint; live tasks come from the store.
   const tasks = getTasks();
 
   return (
@@ -21,66 +23,67 @@ export default async function TasksPage() {
       <div className="cn-eyebrow">/tasks · v4 · cards link to detail pages</div>
       <h1 className="cn-h1">All tasks.</h1>
       <p className="cn-lede">
-        The data still comes from <code>getTasks()</code> in this <strong>server
-        component</strong> — same as v2. What&apos;s new: a{" "}
-        <code>&quot;use client&quot;</code> component called <code>TaskFilter</code>{" "}
-        receives the array as a prop and decides which tasks to show, sorted how. Try the
-        chips and sort below — the filter logic runs in your browser, but the data was
-        rendered on the server.
+        v3&apos;s kanban + drag is still here, server-seeded into a writable
+        client store the same way. What v4 adds is the dynamic{" "}
+        <code>/tasks/[id]</code> route — every task card is now a{" "}
+        <code>&lt;Link&gt;</code> to its own pre-rendered detail page, built
+        at compile time via <code>generateStaticParams()</code>.
       </p>
 
       <Progression current={4} />
 
-      <section className="cn-banner cn-banner-pink">
-        <div className="cn-banner-meta">where the boundary is</div>
+      <DemoNote title="Where the boundary is">
         <p>
-          <code>app/tasks/page.tsx</code> (this page) is a server component — no{" "}
-          <code>&quot;use client&quot;</code>, no hooks, top of file says{" "}
-          <code>async</code>. It reads <code>lib/tasks.ts</code> and passes the array to{" "}
-          <code>&lt;TaskFilter tasks=&#123;tasks&#125; /&gt;</code>.{" "}
-          <code>components/TaskFilter.tsx</code> opens with{" "}
-          <code>&quot;use client&quot;</code> and uses <code>useState</code> for the
-          active filter and sort. Server owns the data; client owns the interaction. If
-          you lifted the <code>getTasks()</code> call into TaskFilter, you&apos;d undo
-          v2.
+          Same shape as v3. <code>app/layout.tsx</code> (server-rendered)
+          calls <code>getTasks()</code> and passes it into{" "}
+          <code>&lt;TaskStoreProvider initial=&#123;tasks&#125;&gt;</code>.
+          Inside the provider, <code>&lt;TaskBoard /&gt;</code> reads the live
+          tasks with <code>useTaskStore()</code> and renders{" "}
+          <code>TaskFilter</code>, which now wraps each card in{" "}
+          <code>&lt;Link href=&#123;`/tasks/$&#123;task.id&#125;`&#125;&gt;</code>.
+          Clicking navigates to the static-built detail page; dragging mutates
+          the store via <code>reorderTask</code>.
         </p>
+      </DemoNote>
+
+      <section className="cn-section">
+        <div className="cn-section-tag">{tasks.length} tasks · filter + sort + drag live</div>
+        <h2 className="cn-section-h">Filter, sort, and drag</h2>
+        <TaskBoard />
       </section>
 
       <section className="cn-section">
-        <div className="cn-section-tag">{tasks.length} tasks · filter + sort live</div>
-        <h2 className="cn-section-h">Filter + sort</h2>
-        <TaskFilter tasks={tasks} />
-      </section>
-
-      <section className="cn-section">
-        <div className="cn-section-tag">the boundary in code</div>
-        <h2 className="cn-section-h">Two files. One arrow.</h2>
+        <div className="cn-section-tag">the new piece in code</div>
+        <h2 className="cn-section-h">generateStaticParams pre-renders every detail page</h2>
         <pre className="cn-code">
-          <code>{`// app/tasks/page.tsx — SERVER component
-import { getTasks } from "@/lib/tasks";
-import TaskFilter from "@/components/TaskFilter";
+          <code>{`// app/tasks/[id]/page.tsx — SERVER component
+import { getTasks, getTaskById } from "@/lib/tasks";
 
-export default async function TasksPage() {
-  const tasks = getTasks();              // runs on the server
-  return <TaskFilter tasks={tasks} />;   // serializes, sent to client
+// Tells Next which dynamic params to pre-render at build time.
+export async function generateStaticParams() {
+  return getTasks().map((t) => ({ id: t.id }));
 }
 
-// components/TaskFilter.tsx — CLIENT component
-"use client";
-import { useState, useMemo } from "react";
+export default async function TaskDetailPage({
+  params,
+}: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const task = getTaskById(id);
+  if (!task) notFound();
+  return <TaskView task={task} />;
+}
 
-export default function TaskFilter({ tasks }) {
-  const [status, setStatus] = useState("all");   // runs in the browser
-  const visible = useMemo(() => ..., [tasks, status]);
-  return <List items={visible} />;
-}`}</code>
+// components/TaskCard.tsx — now wrapped in <Link>
+<Link href={\`/tasks/\${task.id}\`}>
+  <article className="cn-task">...</article>
+</Link>`}</code>
         </pre>
         <p className="cn-aside">
-          The handoff: the server component renders the client component as a JSX tag
-          with the data as a prop. Next.js serializes the prop, ships the client
-          component&apos;s code, hydrates it in the browser with the data already in
-          place. No re-fetch. The user sees the full list immediately — and the filter
-          works as soon as React mounts.
+          Build runs <code>generateStaticParams()</code>, gets one entry per
+          task, and renders a separate static HTML file at each URL —{" "}
+          <code>/tasks/CDN-030.html</code>, <code>/tasks/CDN-031.html</code>,
+          and so on. Click a card and you land on a page that&apos;s already
+          on disk, no API call.
         </p>
       </section>
 
@@ -88,24 +91,25 @@ export default function TaskFilter({ tasks }) {
         <div className="cn-section-tag">the trap to watch for</div>
         <h2 className="cn-section-h">When AI &quot;simplifies&quot; this badly</h2>
         <pre className="cn-code">
-          <code>{`// The wrong fix — moves getTasks into the client
+          <code>{`// The wrong fix — skip generateStaticParams, fetch on the client
 "use client";
-import { useEffect, useState } from "react";
-import { getTasks } from "@/lib/tasks";
-
-export default function TaskFilter() {
-  const [tasks, setTasks] = useState([]);
-  useEffect(() => { setTasks(getTasks()); }, []);
-  // ... filter logic
+export default function TaskDetailPage() {
+  const { id } = useParams();
+  const [task, setTask] = useState(null);
+  useEffect(() => { setTask(getTasks().find(t => t.id === id)); }, [id]);
+  if (!task) return <Skeleton />;
+  return <TaskView task={task} />;
 }
 
-// You just deleted everything v2 did. Back to the v1 flicker.`}</code>
+// You just turned a static HTML file into a client-fetch flicker.
+// Also: the static export step crashes because the route isn't pre-rendered.`}</code>
         </pre>
         <p className="cn-aside">
-          When AI sees a client component and decides to &quot;clean up&quot; by lifting
-          the data into it, that&apos;s the move to question. The whole reason v3 exists
-          is to show that the boundary works both ways: keep the read on the server, keep
-          the interaction on the client.
+          When AI sees a dynamic route and reaches for <code>useEffect</code>{" "}
+          to load the task, that&apos;s the move to question. The whole reason
+          v4 introduces <code>generateStaticParams()</code> is so every detail
+          page ships as static HTML — no spinner, no fetch, no hydration cost
+          for the read.
         </p>
       </section>
     </main>

@@ -1,6 +1,16 @@
 import Link from "next/link";
 import Progression from "@/components/Progression";
 import FeaturesStrip from "@/components/FeaturesStrip";
+import ExpandableBento from "@/components/ExpandableBento";
+import ExpandableTile from "@/components/ExpandableTile";
+import { DemoV5 } from "@/components/VersionDemos";
+import {
+  DeletedBannerDemo,
+  StoreActionsDemo,
+  PersistenceDemo,
+  StoreLocationDemo,
+  FilesAddedDemo,
+} from "@/components/V5DeepDive";
 
 export default function Home() {
   return (
@@ -90,80 +100,154 @@ export default function Home() {
 
       <section className="cn-section">
         <div className="cn-section-tag">01 · What v5 added</div>
-        <h2 className="cn-section-h">Three new components, one client store</h2>
-        <div className="cn-bento">
-          <div className="cn-tile span-6 row-2 cn-tile-pink">
-            <div className="cn-tile-meta">create</div>
-            <div>
-              <h3
-                className="cn-tile-title"
-                style={{ fontSize: "22px", lineHeight: 1.2 }}
-              >
-                <code>NewTaskForm.tsx</code> — &quot;+ New task&quot; button reveals an
-                inline form. Submit appends to the store.
-              </h3>
-              <p
-                className="cn-tile-sub"
-                style={{ marginTop: "10px", fontSize: "13.5px" }}
-              >
-                Sits at the top of <code>/tasks</code>. New tasks land at the head of
-                the list. ID is auto-generated as <code>CDN-###</code>.
-              </p>
-            </div>
-          </div>
-          <div className="cn-tile span-6 row-2 cn-tile-yellow">
-            <div className="cn-tile-meta">edit + delete</div>
-            <div>
-              <h3
-                className="cn-tile-title"
-                style={{ fontSize: "22px", lineHeight: 1.2 }}
-              >
-                <code>TaskDetailActions.tsx</code> — sits on every{" "}
-                <code>/tasks/[id]</code> page. Edit inline; delete with confirm.
-              </h3>
-              <p
-                className="cn-tile-sub"
-                style={{ marginTop: "10px", fontSize: "13.5px" }}
-              >
-                If the task was deleted in-session, the actions block shows a pink
-                &quot;deleted in this session&quot; banner. The pre-rendered HTML for
-                the detail page stays — the actions block reflects the live store.
-              </p>
-              <div style={{ marginTop: "16px" }}>
-                <Link
-                  href="/tasks"
-                  style={{ textDecoration: "underline", fontWeight: 600 }}
-                >
-                  Try it on /tasks →
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="cn-tile span-3 cn-tile-green">
-            <div className="cn-tile-meta">Store actions</div>
-            <div className="cn-tile-num">3</div>
-            <div className="cn-tile-sub">create · update · delete</div>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">Persistence</div>
-            <h3 className="cn-tile-title">None</h3>
-            <p className="cn-tile-sub">All in-memory · refresh wipes it</p>
-          </div>
-          <div className="cn-tile span-3 cn-tile-violet">
-            <div className="cn-tile-meta">Where the store lives</div>
-            <h3 className="cn-tile-title">app/layout.tsx</h3>
-            <p className="cn-tile-sub">
-              <code>&lt;TaskStoreProvider initial=&#123;getTasks()&#125;&gt;</code>
+        <h2 className="cn-section-h">
+          Three new components, one client store{" "}
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", opacity: 0.55, textTransform: "uppercase", letterSpacing: "0.12em", marginLeft: "8px" }}>
+            click any tile to expand
+          </span>
+        </h2>
+        <ExpandableBento>
+          <ExpandableTile
+            className="span-6 row-2 cn-tile-pink"
+            summary={
+              <>
+                <div className="cn-tile-meta">create</div>
+                <div>
+                  <h3
+                    className="cn-tile-title"
+                    style={{ fontSize: "22px", lineHeight: 1.2 }}
+                  >
+                    <code>NewTaskForm.tsx</code> — &quot;+ New task&quot;
+                    button reveals an inline form. Submit appends to the
+                    store.
+                  </h3>
+                  <p
+                    className="cn-tile-sub"
+                    style={{ marginTop: "10px", fontSize: "13.5px" }}
+                  >
+                    Sits at the top of <code>/tasks</code>. New tasks land at
+                    the head of the list. ID is auto-generated as{" "}
+                    <code>CDN-###</code>.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <DemoV5 />
+            <pre className="cn-tile-code">
+              <code>{`// NewTaskForm.tsx — "use client"
+const { createTask } = useTaskStore();
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  createTask({ title, description, status: "todo", priority: "P2" });
+  setOpen(false);  // collapse the pill back
+};`}</code>
+            </pre>
+            <p className="cn-tile-body-note">
+              Optimistic UI — the new card appears immediately because the
+              store updates synchronously. No spinner.
             </p>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">Files added</div>
-            <h3 className="cn-tile-title">4</h3>
-            <p className="cn-tile-sub">
-              task-store · NewTaskForm · TaskBoard · TaskDetailActions
-            </p>
-          </div>
-        </div>
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-6 row-2 cn-tile-yellow"
+            summary={
+              <>
+                <div className="cn-tile-meta">edit + delete</div>
+                <div>
+                  <h3
+                    className="cn-tile-title"
+                    style={{ fontSize: "22px", lineHeight: 1.2 }}
+                  >
+                    <code>TaskDetailActions.tsx</code> — sits on every{" "}
+                    <code>/tasks/[id]</code> page. Edit inline; delete with
+                    confirm.
+                  </h3>
+                  <p
+                    className="cn-tile-sub"
+                    style={{ marginTop: "10px", fontSize: "13.5px" }}
+                  >
+                    If the task was deleted in-session, the actions block
+                    shows a pink &quot;deleted in this session&quot; banner.
+                    The pre-rendered HTML for the detail page stays — the
+                    actions block reflects the live store.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <DeletedBannerDemo />
+            <pre className="cn-tile-code">
+              <code>{`const { tasks, updateTask, deleteTask } = useTaskStore();
+const liveTask = tasks.find(t => t.id === task.id);
+
+if (!liveTask) return <DeletedBanner />;
+return (
+  <EditForm
+    task={liveTask}
+    onSave={(patch) => updateTask(task.id, patch)}
+    onDelete={() => deleteTask(task.id)}
+  />
+);`}</code>
+            </pre>
+            <Link href="/tasks" className="cn-tile-body-link">
+              Try it on /tasks →
+            </Link>
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3 cn-tile-green"
+            summary={
+              <>
+                <div className="cn-tile-meta">Store actions</div>
+                <div className="cn-tile-num">3</div>
+                <div className="cn-tile-sub">click each: signature + role</div>
+              </>
+            }
+          >
+            <StoreActionsDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">Persistence</div>
+                <h3 className="cn-tile-title">None</h3>
+                <p className="cn-tile-sub">create, reload, watch the wipe</p>
+              </>
+            }
+          >
+            <PersistenceDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3 cn-tile-violet"
+            summary={
+              <>
+                <div className="cn-tile-meta">Where the store lives</div>
+                <h3 className="cn-tile-title">app/layout.tsx</h3>
+                <p className="cn-tile-sub">toggle the route, follow the tree</p>
+              </>
+            }
+          >
+            <StoreLocationDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">Files added</div>
+                <h3 className="cn-tile-title">4</h3>
+                <p className="cn-tile-sub">click a file → its role</p>
+              </>
+            }
+          >
+            <FilesAddedDemo />
+          </ExpandableTile>
+        </ExpandableBento>
       </section>
 
       <section className="cn-section">
@@ -176,17 +260,18 @@ export default function Home() {
             </div>
             <div>
               <h3 className="cn-tile-title" style={{ fontSize: "20px" }}>
-                v6 adds <code>loading.tsx</code> and <code>error.tsx</code> at the
-                detail-route boundary, plus a slightly more deliberate global layout.
+                v6 adds <code>loading.tsx</code> and <code>error.tsx</code> at
+                the detail-route boundary, plus a slightly more deliberate
+                global layout.
               </h3>
               <p
                 className="cn-tile-sub"
                 style={{ marginTop: "8px", fontSize: "14px" }}
               >
-                <code>loading.tsx</code> renders during async navigation (with an
-                artificial delay so it&apos;s visible). <code>error.tsx</code> catches
-                errors thrown in the segment. The finished shape — the kind of thing
-                you&apos;d ship.
+                <code>loading.tsx</code> renders during async navigation (with
+                an artificial delay so it&apos;s visible).{" "}
+                <code>error.tsx</code> catches errors thrown in the segment.
+                The finished shape — the kind of thing you&apos;d ship.
               </p>
             </div>
           </div>

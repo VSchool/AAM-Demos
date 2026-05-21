@@ -3,6 +3,7 @@
 // The data is read at build time (static export) and baked into the HTML.
 
 import { getTasks } from "@/lib/tasks";
+import DemoNote from "@/components/DemoNote";
 import Progression from "@/components/Progression";
 import TaskCard from "@/components/TaskCard";
 
@@ -35,15 +36,15 @@ export default async function TasksPage() {
 
       <Progression current={2} />
 
-      <section className="cn-banner cn-banner-green">
-        <div className="cn-banner-meta">what changed from v1</div>
+      <DemoNote title="What changed from v1">
         <p>
-          v1&apos;s entire data-loading block (4 lines of hooks + a skeleton fallback) is
-          gone. In its place: one line — <code>const tasks = getTasks()</code> — at the
-          top of an <code>async</code> page function. The component runs on the server (at
-          build time for this static export), renders to HTML, and ships.
+          v1&apos;s entire data-loading block (4 lines of hooks + a skeleton
+          fallback) is gone. In its place: one line —{" "}
+          <code>const tasks = getTasks()</code> — at the top of an{" "}
+          <code>async</code> page function. The component runs on the server
+          (at build time for this static export), renders to HTML, and ships.
         </p>
-      </section>
+      </DemoNote>
 
       <section className="cn-section">
         <div className="cn-section-tag">{tasks.length} tasks · server-rendered</div>

@@ -2,6 +2,7 @@
 // The TaskBoard client component reads tasks from the in-memory store
 // (initialized at the root layout from getTasks()).
 
+import DemoNote from "@/components/DemoNote";
 import Progression from "@/components/Progression";
 import TaskBoard from "@/components/TaskBoard";
 
@@ -26,19 +27,16 @@ export default function TasksPage() {
 
       <Progression current={5} />
 
-      <section className="cn-banner cn-banner-pink">
-        <div className="cn-banner-meta">
-          this UI demonstrates the patterns only · W6 makes them real
-        </div>
+      <DemoNote title="This UI demonstrates the patterns only · W6 makes them real">
         <p>
-          The &quot;+ New task&quot; form, the edit form on every detail page, the
-          delete-with-confirmation flow — they all run in your browser, against a
-          client-side store. There is no API route, no database, no server-side write.
-          That&apos;s next week&apos;s scope. v5&apos;s job is to make the patterns
-          (forms, optimistic UI, confirm flows) feel right before any persistence is
-          plugged in.
+          The &quot;+ New task&quot; form, the edit form on every detail page,
+          the delete-with-confirmation flow — they all run in your browser,
+          against a client-side store. There is no API route, no database, no
+          server-side write. That&apos;s next week&apos;s scope. v5&apos;s job
+          is to make the patterns (forms, optimistic UI, confirm flows) feel
+          right before any persistence is plugged in.
         </p>
-      </section>
+      </DemoNote>
 
       <section className="cn-section">
         <div className="cn-section-tag">try it · all changes are session-only</div>

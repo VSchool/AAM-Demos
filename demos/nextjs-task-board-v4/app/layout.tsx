@@ -4,6 +4,8 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import PaletteToggle from "@/components/PaletteToggle";
+import { TaskStoreProvider } from "@/lib/task-store";
+import { getTasks } from "@/lib/tasks";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -30,13 +32,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialTasks = getTasks();
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${geistMono.variable}`}>
       <body>
-        <Nav />
-        {children}
-        <Footer />
-        <PaletteToggle />
+        <TaskStoreProvider initial={initialTasks}>
+          <Nav />
+          {children}
+          <Footer />
+          <PaletteToggle />
+        </TaskStoreProvider>
       </body>
     </html>
   );

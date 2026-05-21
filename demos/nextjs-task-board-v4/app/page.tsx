@@ -1,6 +1,15 @@
 import Link from "next/link";
 import Progression from "@/components/Progression";
 import FeaturesStrip from "@/components/FeaturesStrip";
+import ExpandableBento from "@/components/ExpandableBento";
+import ExpandableTile from "@/components/ExpandableTile";
+import { DemoV4 } from "@/components/VersionDemos";
+import {
+  PagesAddedDemo,
+  FilesWrittenDemo,
+  LinkWrapDemo,
+  NotFoundDemo,
+} from "@/components/V4DeepDive";
 import { getTasks } from "@/lib/tasks";
 
 export default function Home() {
@@ -79,77 +88,155 @@ export default function Home() {
       <section className="cn-section">
         <div className="cn-section-tag">01 · The new file</div>
         <h2 className="cn-section-h">
-          <code>app/tasks/[id]/page.tsx</code> — one file, every detail page
+          <code>app/tasks/[id]/page.tsx</code> — one file, every detail page{" "}
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", opacity: 0.55, textTransform: "uppercase", letterSpacing: "0.12em", marginLeft: "8px" }}>
+            click any tile to expand
+          </span>
         </h2>
-        <div className="cn-bento">
-          <div className="cn-tile span-6 row-2 cn-tile-violet">
-            <div className="cn-tile-meta">how the route is matched</div>
-            <div>
-              <h3
-                className="cn-tile-title"
-                style={{ fontSize: "22px", lineHeight: 1.2 }}
-              >
-                The square brackets in <code>[id]</code> are how the router says
-                &quot;any segment.&quot;
-              </h3>
-              <p
-                className="cn-tile-sub"
-                style={{ marginTop: "10px", fontSize: "13.5px" }}
-              >
-                <code>/tasks/CDN-042</code> matches <code>app/tasks/[id]/page.tsx</code>{" "}
-                with <code>params.id === &quot;CDN-042&quot;</code>. Same file handles every
-                task — the component looks up the matching task in{" "}
-                <code>lib/tasks.ts</code> and renders.
-              </p>
-            </div>
-          </div>
-          <div className="cn-tile span-6 row-2 cn-tile-green">
-            <div className="cn-tile-meta">how it ships statically</div>
-            <div>
-              <h3
-                className="cn-tile-title"
-                style={{ fontSize: "22px", lineHeight: 1.2 }}
-              >
-                <code>generateStaticParams()</code> tells Next.js{" "}
-                <em>which IDs to bake into the export.</em>
-              </h3>
-              <p
-                className="cn-tile-sub"
-                style={{ marginTop: "10px", fontSize: "13.5px" }}
-              >
-                It returns <code>{`[{ id: "CDN-042" }, { id: "CDN-041" }, ... ]`}</code>{" "}
-                — every task ID from <code>getTasks()</code>. The build runs the page
-                component once per ID and writes one HTML file each. No spinner, no
-                client fetch on the detail page.
-              </p>
-            </div>
-          </div>
-          <div className="cn-tile span-3 cn-tile-yellow">
-            <div className="cn-tile-meta">Pages added</div>
-            <div className="cn-tile-num">{tasks.length}</div>
-            <div className="cn-tile-sub">one HTML file per task</div>
-          </div>
-          <div className="cn-tile span-3 cn-tile-pink">
-            <div className="cn-tile-meta">Files written</div>
-            <div className="cn-tile-num">1</div>
-            <div className="cn-tile-sub">app/tasks/[id]/page.tsx</div>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">What changed in TaskCard</div>
-            <h3 className="cn-tile-title">Wrapped in Link</h3>
-            <p className="cn-tile-sub">
-              <code>&lt;Link href=&#123;`/tasks/$&#123;task.id&#125;`&#125; /&gt;</code>{" "}
-              around the card.
+        <ExpandableBento>
+          <ExpandableTile
+            className="span-6 row-2 cn-tile-violet"
+            summary={
+              <>
+                <div className="cn-tile-meta">how the route is matched</div>
+                <div>
+                  <h3
+                    className="cn-tile-title"
+                    style={{ fontSize: "22px", lineHeight: 1.2 }}
+                  >
+                    The square brackets in <code>[id]</code> are how the
+                    router says &quot;any segment.&quot;
+                  </h3>
+                  <p
+                    className="cn-tile-sub"
+                    style={{ marginTop: "10px", fontSize: "13.5px" }}
+                  >
+                    <code>/tasks/CDN-042</code> matches{" "}
+                    <code>app/tasks/[id]/page.tsx</code> with{" "}
+                    <code>params.id === &quot;CDN-042&quot;</code>. Same file
+                    handles every task — the component looks up the matching
+                    task in <code>lib/tasks.ts</code> and renders.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <DemoV4 />
+            <pre className="cn-tile-code">
+              <code>{`// app/tasks/[id]/page.tsx
+export default async function TaskDetail({
+  params,
+}: { params: Promise<{ id: string }> }) {
+  const { id } = await params;          // "CDN-042"
+  const task = getTaskById(id);
+  if (!task) notFound();
+  return <TaskView task={task} />;
+}`}</code>
+            </pre>
+            <p className="cn-tile-body-note">
+              <code>params</code> is async in Next.js 15+; <code>await</code>{" "}
+              it before reading.
             </p>
-          </div>
-          <div className="cn-tile span-3">
-            <div className="cn-tile-meta">notFound() handling</div>
-            <h3 className="cn-tile-title">Built in</h3>
-            <p className="cn-tile-sub">
-              Unknown IDs hit <code>next/navigation</code>&apos;s notFound().
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-6 row-2 cn-tile-green"
+            summary={
+              <>
+                <div className="cn-tile-meta">how it ships statically</div>
+                <div>
+                  <h3
+                    className="cn-tile-title"
+                    style={{ fontSize: "22px", lineHeight: 1.2 }}
+                  >
+                    <code>generateStaticParams()</code> tells Next.js{" "}
+                    <em>which IDs to bake into the export.</em>
+                  </h3>
+                  <p
+                    className="cn-tile-sub"
+                    style={{ marginTop: "10px", fontSize: "13.5px" }}
+                  >
+                    It returns{" "}
+                    <code>{`[{ id: "CDN-042" }, { id: "CDN-041" }, ... ]`}</code>{" "}
+                    — every task ID from <code>getTasks()</code>. The build
+                    runs the page component once per ID and writes one HTML
+                    file each. No spinner, no client fetch on the detail page.
+                  </p>
+                </div>
+              </>
+            }
+          >
+            <FilesWrittenDemo />
+            <pre className="cn-tile-code">
+              <code>{`// app/tasks/[id]/page.tsx
+export async function generateStaticParams() {
+  return getTasks().map((t) => ({ id: t.id }));
+}
+
+// Build output:
+// out/tasks/CDN-030.html
+// out/tasks/CDN-031.html
+// ...
+// out/tasks/CDN-042.html`}</code>
+            </pre>
+            <p className="cn-tile-body-note">
+              Static export only; for a server-deployed app, you&apos;d return
+              the same array and Next would render on demand instead.
             </p>
-          </div>
-        </div>
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3 cn-tile-yellow"
+            summary={
+              <>
+                <div className="cn-tile-meta">Pages added</div>
+                <div className="cn-tile-num">{tasks.length}</div>
+                <div className="cn-tile-sub">drag the count slider</div>
+              </>
+            }
+          >
+            <PagesAddedDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3 cn-tile-pink"
+            summary={
+              <>
+                <div className="cn-tile-meta">Files written</div>
+                <div className="cn-tile-num">1</div>
+                <div className="cn-tile-sub">click ▸ run the build</div>
+              </>
+            }
+          >
+            <FilesWrittenDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">What changed in TaskCard</div>
+                <h3 className="cn-tile-title">Wrapped in Link</h3>
+                <p className="cn-tile-sub">idle · hover · click</p>
+              </>
+            }
+          >
+            <LinkWrapDemo />
+          </ExpandableTile>
+
+          <ExpandableTile
+            className="span-3"
+            summary={
+              <>
+                <div className="cn-tile-meta">notFound() handling</div>
+                <h3 className="cn-tile-title">Built in</h3>
+                <p className="cn-tile-sub">try a known vs unknown id</p>
+              </>
+            }
+          >
+            <NotFoundDemo />
+          </ExpandableTile>
+        </ExpandableBento>
       </section>
 
       <section className="cn-section">
@@ -194,16 +281,17 @@ export default function Home() {
             <div className="cn-tile-meta">up next</div>
             <div>
               <h3 className="cn-tile-title" style={{ fontSize: "20px" }}>
-                v5 adds create / edit / delete UI — buttons, forms, dialogs — driven by
-                local in-memory state.
+                v5 adds create / edit / delete UI — buttons, forms, dialogs —
+                driven by local in-memory state.
               </h3>
               <p
                 className="cn-tile-sub"
                 style={{ marginTop: "8px", fontSize: "14px" }}
               >
-                The UI shapes are real. The persistence isn&apos;t — refresh the page and
-                the changes are gone. Real saves are W6 territory (API routes + a
-                backend). v5 builds the patterns; W6 plugs them in.
+                The UI shapes are real. The persistence isn&apos;t — refresh
+                the page and the changes are gone. Real saves are W6 territory
+                (API routes + a backend). v5 builds the patterns; W6 plugs
+                them in.
               </p>
             </div>
           </div>
