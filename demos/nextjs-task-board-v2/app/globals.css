@@ -1674,15 +1674,89 @@ code, .cn-mono {
 
 
 
+
+/* ============== "COMING SOON" TILE ============== */
+.cn-tile-soon {
+  background: var(--canvas-3);
+  color: var(--cream);
+  border: 1px dashed rgba(255, 253, 245, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.cn-tile-soon::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(circle at 28% 30%, rgba(255, 224, 102, 0.14), transparent 38%),
+    radial-gradient(circle at 72% 72%, rgba(255, 123, 245, 0.16), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(0, 255, 178, 0.10), transparent 45%);
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+}
+.cn-tile-soon > * { position: relative; z-index: 1; }
+
+.cn-tile-soon .cn-tile-summary {
+  min-height: 140px;
+  gap: 16px;
+}
+.cn-tile-soon .cn-tile-meta {
+  color: var(--neon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  opacity: 1;
+}
+.cn-tile-soon .cn-tile-title {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  background: linear-gradient(95deg, #FFE066 0%, #FF7BF5 55%, #00FFB2 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: cn-soon-shimmer 6s ease-in-out infinite;
+  margin: 0;
+}
+@keyframes cn-soon-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cn-tile-soon .cn-tile-title { animation: none; }
+}
+
+/* Chevron: tone it down on the gradient background, keep affordance. */
+.cn-tile-soon .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.10);
+}
+.cn-tile-soon:hover .cn-tile-chevron,
+.cn-tile-soon.is-open .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.22);
+}
+
+/* Compact (sibling) state inside a bento with an open tile. */
+.cn-tile-soon.is-compact .cn-tile-title {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0;
+}
+
 /* ============== BENTO HEIGHT CAP (open state) ============== */
-/* When a tile is expanded, cap the bento at 520px and clip overflow.
-   Using max-height (not a fixed height) lets the grid lay out children at
-   their natural sizes — only the bottom edge clips when content exceeds the
-   cap. Fixed height was collapsing rows and causing tiles to overlap. */
+/* Cap the bento at a height that fits the tallest opened tile (interactive
+   demo + code block + notes). Marginal bump from the prior 520px so no
+   content is clipped, while still bounding the section so what follows
+   stays in view. overflow: hidden prevents an accidental scrollbar if a
+   tile ever pushes past the cap. */
 .cn-bento-expandable.has-open {
-  max-height: 520px;
+  max-height: 820px;
   overflow: hidden;
 }
 @media (max-width: 760px) {
-  .cn-bento-expandable.has-open { max-height: 620px; }
+  .cn-bento-expandable.has-open { max-height: 920px; }
 }
