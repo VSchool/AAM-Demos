@@ -199,6 +199,10 @@ jobs:
         working-directory: demos/expo-habit-tracker-v4
         run: npm ci && npx expo export -p web
 
+      - name: Build Pulse (expo-habit-tracker v5)
+        working-directory: demos/expo-habit-tracker-v5
+        run: npm ci && npx expo export -p web
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -258,6 +262,7 @@ jobs:
           cp -r demos/expo-habit-tracker-v2/dist _site/expo-habit-tracker-v2
           cp -r demos/expo-habit-tracker-v3/dist _site/expo-habit-tracker-v3
           cp -r demos/expo-habit-tracker-v4/dist _site/expo-habit-tracker-v4
+          cp -r demos/expo-habit-tracker-v5/dist _site/expo-habit-tracker-v5
 
       - uses: actions/upload-pages-artifact@v3
 
