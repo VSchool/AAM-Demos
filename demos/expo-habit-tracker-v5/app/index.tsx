@@ -22,6 +22,7 @@ import ExpandableTile from "@/components/ExpandableTile";
 import MotionFeatureBento from "@/components/MotionFeatureBento";
 import ExpoGoQR from "@/components/ExpoGoQR";
 import DemoNote, { NoteCode, NoteText } from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import { PushFlow, CoachVoices, NewFilesV5 } from "@/components/V5Demos";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -146,7 +147,26 @@ export default function Home() {
       {/* ---- 04 · INSIDE v5 ---- */}
       <Section>
         <SectionTag>04 · Inside v5</SectionTag>
-        <H2>The files this version introduces.</H2>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <H2>The files this version introduces.</H2>
+          <FeatureCallout
+            title="Daily local notifications — permission + schedule"
+            description="v5's new concept. Pulse schedules a daily reminder at the time you pick, with Coach-tone-driven copy (Chill / Firm / Elite). Real push fires only on a phone (Expo Go or a dev build); the deployed web build no-ops and shows an in-app preview banner instead. Permission, scheduling, and cancelling all live in lib/notifications."
+            prompt={`In a React Native (Expo) app, schedule a daily local notification with expo-notifications:
+
+1. Install: npx expo install expo-notifications. Native (Expo Go / dev build) supports scheduling; web is a no-op — guard every call with Platform.OS !== "web".
+2. At module load, call Notifications.setNotificationHandler({ handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: true, shouldSetBadge: false }) }) so foreground notifications render a banner.
+3. Implement requestPermission(): const { status } = await Notifications.getPermissionsAsync(); if not granted, request it via Notifications.requestPermissionsAsync(). Return the final status.
+4. Implement scheduleDailyReminder(hour, minute, copy): first cancelAllScheduledNotificationsAsync(), then schedule a DAILY trigger:
+   await Notifications.scheduleNotificationAsync({
+     content: { title: copy.title, body: copy.body, sound: true },
+     trigger: { type: SchedulableTriggerInputTypes.DAILY, hour, minute },
+   })
+5. Implement cancelReminder() that calls cancelAllScheduledNotificationsAsync (or removes the specific identifier you stashed).
+6. Keep tone (chill | firm | elite) and enabled state in a Context provider; persist them to AsyncStorage so the choice survives a restart. Whenever tone or time changes AND enabled is true, reschedule.
+7. On web, render an in-app preview banner with a Reanimated overshoot-then-settle entrance (withSequence) so the Coach tone still feels live for desktop reviewers.`}
+          />
+        </View>
         <ExpandableBento>
           <ExpandableTile
             summary={<TileSummary tag="push" title="A daily reminder you schedule" />}
