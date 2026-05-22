@@ -22,6 +22,7 @@ import ExpandableTile from "@/components/ExpandableTile";
 import MotionFeatureBento from "@/components/MotionFeatureBento";
 import ExpoGoQR from "@/components/ExpoGoQR";
 import DemoNote, { NoteCode, NoteText } from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import { TabRouteMap, NewFilesV1 } from "@/components/V1Demos";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -146,7 +147,20 @@ export default function Home() {
       {/* ---- 04 · INSIDE v1 ---- */}
       <Section>
         <SectionTag>04 · Inside v1</SectionTag>
-        <H2>The files this version introduces.</H2>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <H2>The files this version introduces.</H2>
+          <FeatureCallout
+            title="Tab navigation with Expo Router"
+            description="v1's new concept. Pulse goes from one screen to three (Today / Streaks / Settings) via a real navigator at the bottom of the device — Expo Router's file-based (tabs) group. Tap a tab; the route changes; the AppBar above stays mounted."
+            prompt={`In a React Native app with Expo Router, set up file-based tab navigation across three screens:
+
+1. Create app/(tabs)/_layout.tsx and export a <Tabs> navigator from "expo-router", with screenOptions for the header and tab bar style.
+2. Inside app/(tabs)/, add one .tsx file per tab — e.g. today.tsx, streaks.tsx, settings.tsx. The filename becomes the route segment; the (tabs) group means they share the layout (the tab bar) and keep the group OUT of the URL.
+3. Keep routes that should sit OUTSIDE the tab bar (a marketing home, an about page) at app/index.tsx and app/about.tsx — they won't render the tab bar.
+4. To fully restyle the bar (e.g. a hardware-strip look), pass a custom tabBar prop to <Tabs> — accept the navigation/state props and render a row of Pressables that call navigation.navigate(routeName).
+5. Wrap every Pressable's pressed-feedback in a useSharedValue + useAnimatedStyle pair gated by useReducedMotion() so the tab buttons dim on press without a state re-render.`}
+          />
+        </View>
         <ExpandableBento>
           <ExpandableTile
             summary={<TileSummary tag="navigation" title="Three tabs, zero router config" />}
