@@ -22,6 +22,7 @@ import ExpandableTile from "@/components/ExpandableTile";
 import MotionFeatureBento from "@/components/MotionFeatureBento";
 import ExpoGoQR from "@/components/ExpoGoQR";
 import DemoNote, { NoteCode, NoteText } from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import { AddFlowMap, NewFilesV2 } from "@/components/V2Demos";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -147,7 +148,24 @@ export default function Home() {
       {/* ---- 04 · INSIDE v2 ---- */}
       <Section>
         <SectionTag>04 · Inside v2</SectionTag>
-        <H2>The files this version introduces.</H2>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <H2>The files this version introduces.</H2>
+          <FeatureCallout
+            title="Data-driven Today — FlatList + inline add form"
+            description="v2's new concept. The Today screen becomes a real list backed by a Context store, with an add-channel form pinned at the top. FlatList virtualises rows; a TextInput captures the new habit name; KeyboardAvoidingView lifts the form above the on-screen keyboard. Refresh still resets — persistence lands in v4."
+            prompt={`In a React Native (Expo) app, build a data-driven list screen with an inline add form:
+
+1. Lift state into a Context store: createContext + a Provider that holds an array of items and exposes addItem / toggleItem. Wrap your app root in the Provider.
+2. Render a FlatList:
+   - data={items}, keyExtractor={(it) => it.id}
+   - renderItem returns a styled row (FlatList virtualises — don't ScrollView a list of rows)
+   - keyboardShouldPersistTaps="handled" so taps on rows still register while the keyboard is open
+   - ListHeaderComponent={<AddForm />} pins the form ABOVE the list (the FlatList scrolls; the form sits at the top of the scroll content)
+3. In AddForm, use a controlled TextInput (value + onChangeText) plus any select-like fields (cadence, window) as segmented controls. On submit, call addItem() from context and reset the local form state.
+4. Wrap the screen in <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}> so the form lifts above the keyboard on iOS.
+5. Animate newly-added rows with a Reanimated useSharedValue → withSpring (translateY + opacity 0→1 on mount), gated by useReducedMotion(). Identify "new" rows by capturing the initial id set in a ref; rows already present mount at rest.`}
+          />
+        </View>
         <ExpandableBento>
           <ExpandableTile
             summary={<TileSummary tag="list" title="Today is a FlatList now" />}
