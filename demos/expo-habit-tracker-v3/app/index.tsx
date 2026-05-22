@@ -22,6 +22,7 @@ import ExpandableTile from "@/components/ExpandableTile";
 import MotionFeatureBento from "@/components/MotionFeatureBento";
 import ExpoGoQR from "@/components/ExpoGoQR";
 import DemoNote, { NoteCode, NoteText } from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import { ThrowAnatomy, NewFilesV3 } from "@/components/V3Demos";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -146,7 +147,22 @@ export default function Home() {
       {/* ---- 04 · INSIDE v3 ---- */}
       <Section>
         <SectionTag>04 · Inside v3</SectionTag>
-        <H2>The files this version introduces.</H2>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <H2>The files this version introduces.</H2>
+          <FeatureCallout
+            title="Swipe to complete — gesture + spring + haptic"
+            description="v3's new concept. Each habit row is swipeable: drag it and a knob slides across its track; release and it springs home while the LED snaps amber→green and a heavy haptic thunks. A tap is the accessible quick-complete path. Feel it on the Today screen or the live tile below."
+            prompt={`In a React Native app built with Expo, using react-native-gesture-handler and react-native-reanimated, make each list row swipeable to mark it complete:
+
+1. Wrap the row in a GestureDetector with a horizontal Gesture.Pan(). Set .activeOffsetX([-14, 14]) and .failOffsetY([-12, 12]) so a vertical scroll still passes through to the FlatList.
+2. In .onChange, drive a useSharedValue from event.translationX and use it to slide a "knob" across a track (useAnimatedStyle).
+3. In .onEnd, animate the knob home with withSpring({ damping: 12, stiffness: 220 }) for a mechanical overshoot. If the swipe crossed a threshold, commit "complete" via runOnJS.
+4. On commit, snap the status color from amber (due) to green (done) and fire Haptics.impactAsync(Heavy) from expo-haptics — guard it with Platform.OS !== "web" so the web build no-ops instead of throwing.
+5. Compose a Gesture.Tap() with the pan via Gesture.Exclusive(pan, tap) as an accessible quick-complete path.
+6. Gate every animation behind useReducedMotion() so reduced-motion users get an instant state change, never a slower one.
+7. Wrap your app root in <GestureHandlerRootView style={{ flex: 1 }}>.`}
+          />
+        </View>
         <ExpandableBento>
           <ExpandableTile
             summary={<TileSummary tag="gesture" title="Swipe to throw the switch" />}
