@@ -22,6 +22,7 @@ import ExpandableTile from "@/components/ExpandableTile";
 import MotionFeatureBento from "@/components/MotionFeatureBento";
 import ExpoGoQR from "@/components/ExpoGoQR";
 import DemoNote, { NoteCode, NoteText } from "@/components/DemoNote";
+import FeatureCallout from "@/components/FeatureCallout";
 import { PersistFlow, RestStateMachine, NewFilesV4 } from "@/components/V4Demos";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
@@ -148,7 +149,22 @@ export default function Home() {
       {/* ---- 04 · INSIDE v4 ---- */}
       <Section>
         <SectionTag>04 · Inside v4</SectionTag>
-        <H2>The files this version introduces.</H2>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <H2>The files this version introduces.</H2>
+          <FeatureCallout
+            title="Persist across restarts — AsyncStorage with a hydrate gate"
+            description="v4's new concept. The Context store now hydrates from AsyncStorage on mount and persists on every mutation, so throws and added channels survive a refresh. A ready flag holds the splash until disk reads back — the empty initial state never overwrites real data. Web maps to localStorage; native uses device storage."
+            prompt={`In a React Native (Expo) app, persist your Context store with @react-native-async-storage/async-storage:
+
+1. Install: npx expo install @react-native-async-storage/async-storage
+2. In your store, keep useState for items (start empty), a ready flag (default false), and a hydrated ref (default false).
+3. On mount, run an effect: AsyncStorage.getItem("yourapp.items.v1") → JSON.parse; if present, setItems(parsed); else fall back to your seed. Then set hydrated.current = true and setReady(true).
+4. Add a SECOND effect that runs on every items change: if (!hydrated.current) return; AsyncStorage.setItem("yourapp.items.v1", JSON.stringify(items)). The ready gate prevents the empty initial state from clobbering persisted data.
+5. Expose a resetToSeed() action that does setItems(seed) + AsyncStorage.removeItem(...) — wire it to a Settings affordance so the demo stays resettable.
+6. Hold your splash screen / show a loading state until ready is true (e.g. extend SplashScreen.hideAsync() to wait for fonts AND store hydration).
+7. Bump the storage key when your schema changes (yourapp.items.v2, v3) so old shapes don't deserialise into new ones.`}
+          />
+        </View>
         <ExpandableBento>
           <ExpandableTile
             summary={<TileSummary tag="storage" title="Habits survive a restart" />}
