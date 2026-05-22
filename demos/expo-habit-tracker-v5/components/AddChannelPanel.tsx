@@ -11,13 +11,13 @@
    the new row in via the v2 withSpring primitive), then resets + collapses. */
 
 import { useState } from "react";
-import { LayoutAnimation, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import type { Cadence, Window } from "@/lib/habits";
 import type { NewHabit } from "@/lib/habit-store";
 import { Field, SegmentedControl, TextField } from "./instrument";
-import { PressFade } from "./motion";
+import { PressFade, layoutReflow } from "./motion";
 
 const CADENCES: { label: string; value: Cadence }[] = [
   { label: "Daily", value: "daily" },
@@ -49,7 +49,7 @@ export default function AddChannelPanel({
   const canSubmit = name.trim().length > 0;
 
   const toggle = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    layoutReflow(); // gated by reduced-motion
     setOpen((v) => !v);
   };
 
@@ -68,7 +68,7 @@ export default function AddChannelPanel({
       window: WINDOWS[windowIdx].value,
       why: why.trim() || undefined,
     });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    layoutReflow(); // gated by reduced-motion
     reset();
     setOpen(false);
   };

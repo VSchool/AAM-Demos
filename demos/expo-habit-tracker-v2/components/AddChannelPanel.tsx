@@ -16,6 +16,7 @@ import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import type { Cadence, Window } from "@/lib/habits";
 import type { NewHabit } from "@/lib/habit-store";
+import { useReducedMotion } from "react-native-reanimated";
 import { Field, SegmentedControl, TextField } from "./instrument";
 import { PressFade } from "./motion";
 
@@ -39,6 +40,7 @@ export default function AddChannelPanel({
   onAdd: (input: NewHabit) => void;
 }) {
   const { theme } = useTheme();
+  const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [why, setWhy] = useState("");
@@ -49,7 +51,7 @@ export default function AddChannelPanel({
   const canSubmit = name.trim().length > 0;
 
   const toggle = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (!reduce) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setOpen((v) => !v);
   };
 
@@ -68,7 +70,7 @@ export default function AddChannelPanel({
       window: WINDOWS[windowIdx].value,
       why: why.trim() || undefined,
     });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    if (!reduce) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     reset();
     setOpen(false);
   };
