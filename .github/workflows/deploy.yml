@@ -183,6 +183,10 @@ jobs:
         working-directory: demos/expo-habit-tracker-v0
         run: npm ci && npx expo export -p web
 
+      - name: Build Pulse (expo-habit-tracker v1)
+        working-directory: demos/expo-habit-tracker-v1
+        run: npm ci && npx expo export -p web
+
       # Assemble output
       - name: Assemble Pages output
         run: |
@@ -238,6 +242,7 @@ jobs:
           cp -r demos/nextjs-task-board-v6/out _site/nextjs-task-board-v6
           # W5D4 Expo habit-tracker (Pulse) — expo web export lands in dist/
           cp -r demos/expo-habit-tracker-v0/dist _site/expo-habit-tracker-v0
+          cp -r demos/expo-habit-tracker-v1/dist _site/expo-habit-tracker-v1
 
       - uses: actions/upload-pages-artifact@v3
 
