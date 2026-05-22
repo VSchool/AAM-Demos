@@ -5,6 +5,7 @@
 
 import { useState, type ReactNode } from "react";
 import { LayoutAnimation, Pressable, Text, View } from "react-native";
+import { useReducedMotion } from "react-native-reanimated";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 
@@ -25,12 +26,15 @@ export default function ExpandableTile({
   isCompact = false,
 }: ExpandableTileProps) {
   const { theme } = useTheme();
+  const reduce = useReducedMotion();
   const [localOpen, setLocalOpen] = useState(false);
   const controlled = isOpen !== undefined;
   const open = controlled ? isOpen : localOpen;
 
   const toggle = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // Guideline §0 non-negotiable: skip the layout tween when the user
+    // prefers reduced motion. State still flips; the change is instant.
+    if (!reduce) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     if (controlled) onToggle?.();
     else setLocalOpen((v) => !v);
   };

@@ -13,6 +13,7 @@ import {
   UIManager,
   View,
 } from "react-native";
+import { useReducedMotion } from "react-native-reanimated";
 import { FONTS, HELPER } from "@/theme/tokens";
 
 if (
@@ -32,9 +33,12 @@ export default function DemoNote({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const reduce = useReducedMotion();
 
   const toggle = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    // Guideline §0 non-negotiable: skip the layout tween when the user
+    // prefers reduced motion. State still flips; the change is instant.
+    if (!reduce) LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setOpen((v) => !v);
   };
 
