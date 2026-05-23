@@ -271,6 +271,11 @@
     <h1>Pulse — a habit-tracking pocket instrument.</h1>
     <p class="lede">The selected direction. The build started as two candidates; the machined-hardware instrument won and is renamed <strong>Pulse</strong>, and the light athletic console it beat is folded back in as a <strong>day-mode theme</strong>. One app, two themes, a coach you can dial.</p>
 
+    <div class="asks" style="margin-top:26px;border-color:#3ddc84">
+      <h3 style="color:#3ddc84">✓ Built progression — shipped 2026-05-23</h3>
+      <p style="margin:6px 0 0;font-size:13px;line-height:1.55;color:rgba(231,232,236,.78)">v0–v6 of <code>demos/expo-habit-tracker-v*</code> are live at <code style="color:#9bdcff">vschool.github.io/AAM-Demos/expo-habit-tracker-v{0..6}/</code>. The Habit detail mockup below shipped at v6 (dynamic routes — <code style="color:#9bdcff">app/habit/[id].tsx</code>). The Add-habit dedicated screen and the Signature moment screen are intentionally <b>deferred</b> — the inline AddChannelPanel covers add (v2), and the swipe-to-complete animation lives in-row (v3 ThrowRow) rather than as a separate screen.</p>
+    </div>
+
     <div class="asks" id="read" style="margin-top:26px">
       <h3>✓ Locked build spec</h3>
       <ol>
@@ -392,7 +397,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Add habit.</b> "Patch in a channel": auto CH number, screen-print label field, hardware toggles for cadence + window.</div>
+      <div class="pcap"><b>Add habit.</b> "Patch in a channel": auto CH number, screen-print label field, hardware toggles for cadence + window. <span style="color:#9aa0a8">✗ deferred · not in v0–v6 (covered inline by v2's AddChannelPanel)</span></div>
     </div>
 
     <!-- DETAIL -->
@@ -419,7 +424,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Habit detail.</b> Amber LCD streak readout; last-30 as an LED dot-matrix; rest days don't break the run.</div>
+      <div class="pcap"><b>Habit detail.</b> Amber LCD streak readout; last-30 as an LED dot-matrix; rest days don't break the run. <span style="color:#3ddc84">✓ shipped at v6 (app/habit/[id].tsx + components/HabitDetail.tsx)</span></div>
     </div>
 
     <!-- STATS / STREAKS -->
@@ -481,7 +486,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Signature moment.</b> Swipe completes the switch: it snaps over, the LED flips amber→green, a mechanical "thunk" haptic fires.</div>
+      <div class="pcap"><b>Signature moment.</b> Swipe completes the switch: it snaps over, the LED flips amber→green, a mechanical "thunk" haptic fires. <span style="color:#9aa0a8">✗ deferred as a screen · not in v0–v6 (the in-row ThrowRow throw is the v3 hero moment)</span></div>
     </div>
   </div>
 
@@ -593,7 +598,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Add habit (light).</b> Identical "patch in a channel" flow; light fields + hardware toggles.</div>
+      <div class="pcap"><b>Add habit (light).</b> Identical "patch in a channel" flow; light fields + hardware toggles. <span style="color:#767b82">✗ deferred · not in v0–v6 (covered inline by v2's AddChannelPanel)</span></div>
     </div>
 
     <!-- DETAIL -->
@@ -620,7 +625,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Habit detail (light).</b> The amber LCD becomes a positive readout; dot-matrix on a silver face. Rest days still don't break the run.</div>
+      <div class="pcap"><b>Habit detail (light).</b> The amber LCD becomes a positive readout; dot-matrix on a silver face. Rest days still don't break the run. <span style="color:#17b56e">✓ shipped at v6 (app/habit/[id].tsx + components/HabitDetail.tsx)</span></div>
     </div>
 
     <!-- STATS -->
@@ -682,7 +687,7 @@
           <div class="homebar"></div>
         </div>
       </div>
-      <div class="pcap"><b>Signature moment (light).</b> "The Throw" is identical — switch snaps, LED flips amber→green, haptic fires. Only the face is lighter.</div>
+      <div class="pcap"><b>Signature moment (light).</b> "The Throw" is identical — switch snaps, LED flips amber→green, haptic fires. Only the face is lighter. <span style="color:#767b82">✗ deferred as a screen · not in v0–v6 (the in-row ThrowRow throw is the v3 hero moment)</span></div>
     </div>
   </div>
 
@@ -711,8 +716,9 @@
       <tr><td>v1</td><td>Tab navigation (Expo Router)</td><td><code>Pressable</code> + <code>useSharedValue</code> opacity</td><td>Touch-feedback baseline on tabs and rows</td></tr>
       <tr><td>v2</td><td>FlatList + add-habit form</td><td><code>withSpring</code> + <code>useReducedMotion()</code></td><td>Native easing on item insert + the accessibility gate, built in early</td></tr>
       <tr class="hero"><td>v3</td><td>Swipe-to-complete gesture</td><td><code>Gesture.Pan()</code> → <code>withSpring</code> + <code>Haptics</code></td><td><strong>The hero moment — "The Throw"</strong> (identical in both themes)</td></tr>
-      <tr><td>v4</td><td>AsyncStorage persistence</td><td><code>LayoutAnimation</code> / shared-element transition</td><td>Restored streak grid + detail screen morph on load</td></tr>
+      <tr><td>v4</td><td>AsyncStorage persistence</td><td><code>LayoutAnimation</code></td><td>List arrives on hydration; row reflows when parked on rest</td></tr>
       <tr><td>v5</td><td>Push-notification reminder (EAS)</td><td><code>withSequence</code> entrance choreography</td><td>Reminder-confirmed + daily streak-reveal arrival</td></tr>
+      <tr><td>v6</td><td>Dynamic routes + push navigation</td><td><code>Stack.Screen options={"{ animation: 'slide_from_right' }"}</code></td><td>Per-route push transition for the new detail screen (the motion IS the routing)</td></tr>
     </tbody>
   </table>
 </section>
