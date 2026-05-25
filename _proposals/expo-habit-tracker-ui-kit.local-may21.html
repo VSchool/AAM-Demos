@@ -1,0 +1,1290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Notch — three UI-kit directions side-by-side (expo-habit-tracker, W5D4)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: #111;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  img, svg { display: block; max-width: 100%; }
+
+  /* ============ NAV ============ */
+  .topnav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .topnav-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 56px;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .topnav .brand { font-weight: 600; font-size: 14px; letter-spacing: -0.01em; }
+  .topnav .brand small { color: rgba(0,0,0,0.5); font-weight: 400; margin-left: 8px; }
+  .topnav .jumps { display: flex; gap: 4px; }
+  .topnav .jumps a {
+    font-size: 12px;
+    text-decoration: none;
+    color: rgba(0,0,0,0.6);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: background 100ms, color 100ms;
+  }
+  .topnav .jumps a:hover { background: rgba(0,0,0,0.04); color: #111; }
+
+  /* ============ INTRO ============ */
+  .intro {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 80px 32px 56px;
+  }
+  .intro .eyebrow {
+    font-size: 11px;
+    font-family: "JetBrains Mono", monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 16px;
+  }
+  .intro h1 {
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin: 0 0 14px;
+    font-weight: 600;
+    max-width: 24ch;
+  }
+  .intro p {
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(0,0,0,0.65);
+    max-width: 64ch;
+    margin: 0 0 14px;
+  }
+  .intro .note {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: #FFFBEB;
+    border: 1px solid #FCD34D;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #713F12;
+    max-width: 70ch;
+    line-height: 1.55;
+  }
+  .intro .note strong { color: #1F2937; }
+
+  .pivots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 40px;
+  }
+  .pivot {
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 20px 22px;
+    background: #fafafa;
+  }
+  .pivot .tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(0,0,0,0.55);
+    margin-bottom: 8px;
+  }
+  .pivot h3 {
+    font-size: 19px;
+    margin: 0 0 8px;
+    letter-spacing: -0.018em;
+    font-weight: 600;
+  }
+  .pivot p { font-size: 14px; line-height: 1.55; color: rgba(0,0,0,0.65); margin: 0; }
+  .pivot .anchor {
+    margin-top: 12px;
+    font-size: 12px;
+    color: rgba(0,0,0,0.45);
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  /* ============ DIRECTION SHELL ============ */
+  .dir-wrap { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .dir-head { margin-bottom: 40px; }
+  .dir-eyebrow {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .dir-eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dir-h2 {
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin: 0 0 14px;
+    font-weight: 600;
+    max-width: 18ch;
+  }
+  .dir-concept {
+    font-size: 17px;
+    line-height: 1.55;
+    max-width: 60ch;
+    margin: 0;
+  }
+  .dir-section-tag {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin: 0 0 18px;
+    opacity: 0.7;
+  }
+
+  /* ============================================================== */
+  /*       DIRECTION A — QUIET COMPANION (Things 3 + Sunsama)        */
+  /* ============================================================== */
+  .qc {
+    background: #F6F5F1;
+    color: #303336;
+    padding: 96px 0 112px;
+    font-family: "Inter", sans-serif;
+  }
+  .qc .dir-eyebrow { color: #303336; }
+  .qc .dir-eyebrow .dot { background: #FF891C; }
+  .qc .dir-h2 { color: #1F2421; font-weight: 600; }
+  .qc .dir-concept { color: rgba(48,51,54,0.72); }
+
+  /* QC palette grid */
+  .qc-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin: 40px 0 56px; }
+  .qc-sw { border-radius: 10px; padding: 12px; min-height: 110px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(0,15,36,0.08); }
+  .qc-sw .role { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .qc-sw .hex { font-family: "JetBrains Mono", monospace; font-size: 11px; opacity: 0.7; }
+
+  /* QC typography */
+  .qc-type { background: #FFFFFF; border-radius: 14px; border: 1px solid rgba(0,15,36,0.06); padding: 32px 40px; margin-bottom: 56px; }
+  .qc-type-row { display: grid; grid-template-columns: 240px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid rgba(0,15,36,0.05); }
+  .qc-type-row:last-child { border-bottom: none; }
+  .qc-type-meta { font-family: "JetBrains Mono", monospace; font-size: 11px; color: rgba(48,51,54,0.55); line-height: 1.5; padding-top: 8px; }
+  .qc-type-sample { color: #1F2421; }
+  .qc-tp-display { font-size: 32px; line-height: 1.1; letter-spacing: -0.022em; font-weight: 600; }
+  .qc-tp-h2 { font-size: 22px; line-height: 1.2; letter-spacing: -0.018em; font-weight: 600; }
+  .qc-tp-h3 { font-size: 17px; letter-spacing: -0.012em; font-weight: 600; }
+  .qc-tp-body { font-size: 16px; line-height: 1.55; }
+  .qc-tp-label { font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase; font-weight: 600; color: rgba(48,51,54,0.55); }
+  .qc-tp-mono { font-family: "JetBrains Mono", monospace; font-size: 13px; }
+
+  /* QC status (diagnostic) */
+  .qc-status {
+    background: #FFFFFF;
+    border-radius: 14px;
+    border: 1px solid rgba(0,15,36,0.06);
+    padding: 32px;
+    margin-bottom: 56px;
+  }
+  .qc-status .stack { display: flex; flex-direction: column; gap: 12px; max-width: 420px; }
+  .qc-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0,15,36,0.06);
+    border-radius: 12px;
+  }
+  .qc-marker { width: 16px; height: 16px; border-radius: 4px; flex: none; }
+  .qc-row .title { font-weight: 600; font-size: 16px; flex: 1; color: #1F2421; }
+  .qc-row .meta { font-family: "JetBrains Mono", monospace; font-size: 12px; color: rgba(48,51,54,0.5); }
+  .qc-row.is-pending .qc-marker { background: transparent; border: 1.5px solid rgba(48,51,54,0.25); }
+  .qc-row.is-done .qc-marker { background: #FF891C; }
+  .qc-row.is-streak .qc-marker { background: #FF891C; }
+  .qc-row.is-streak .meta { color: #4F91FB; font-weight: 600; }
+  .qc-row.is-missed .qc-marker { background: #ECEEF0; border: 1.5px dashed #EB5757; }
+  .qc-row.is-missed .meta { color: #EB5757; }
+
+  /* QC components */
+  .qc-components { display: grid; grid-template-columns: 1fr 1fr 380px; gap: 24px; }
+  .qc-comp-card {
+    background: #FFFFFF;
+    border-radius: 14px;
+    border: 1px solid rgba(0,15,36,0.06);
+    padding: 28px;
+  }
+  .qc-comp-card h4 { font-size: 14px; margin: 0 0 18px; font-weight: 600; color: #1F2421; }
+
+  /* QC habit row stack (component 1) */
+  .qc-list { display: flex; flex-direction: column; gap: 10px; }
+
+  /* QC detail card (component 2) */
+  .qc-detail-screen {
+    background: #FFFFFF;
+    border-radius: 14px;
+    border: 1px solid rgba(0,15,36,0.06);
+    padding: 20px;
+  }
+  .qc-detail-screen .title { font-size: 22px; letter-spacing: -0.018em; font-weight: 600; color: #1F2421; margin-bottom: 4px; }
+  .qc-detail-screen .sub { font-size: 13px; color: rgba(48,51,54,0.55); margin-bottom: 22px; }
+  .qc-detail-big { display: flex; align-items: baseline; gap: 8px; margin-bottom: 28px; }
+  .qc-detail-big .num { font-size: 56px; font-weight: 600; letter-spacing: -0.03em; color: #FF891C; line-height: 1; }
+  .qc-detail-big .word { font-size: 14px; color: rgba(48,51,54,0.5); }
+  .qc-detail-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 8px; }
+  .qc-detail-strip > div { aspect-ratio: 1; border-radius: 5px; }
+  .qc-detail-strip .on { background: #FF891C; }
+  .qc-detail-strip .off { background: #ECEEF0; }
+  .qc-detail-strip .today { background: #FFFFFF; border: 1.5px solid #FF891C; }
+  .qc-detail-strip-labels { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 6px; font-family: "JetBrains Mono", monospace; font-size: 10px; color: rgba(48,51,54,0.4); text-align: center; }
+
+  /* phone frame shared */
+  .phone-frame {
+    aspect-ratio: 360 / 720;
+    border-radius: 38px;
+    background: var(--phone-bg, #fff);
+    box-shadow: 0 24px 56px rgba(0,15,36,0.16), 0 2px 6px rgba(0,15,36,0.06);
+    padding: 14px 12px 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .phone-statusbar {
+    height: 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 14px 0 18px;
+    font-family: -apple-system, "SF Pro Text", system-ui, sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--phone-fg, #111);
+    margin-bottom: 4px;
+  }
+  .phone-statusbar .dot-trio { display: inline-flex; gap: 4px; }
+  .phone-statusbar .dot-trio i { width: 3px; height: 3px; border-radius: 50%; background: currentColor; display: inline-block; }
+
+  /* QC today screen */
+  .qc-today {
+    --phone-bg: #F6F5F1;
+    --phone-fg: #1F2421;
+  }
+  .qc-today .qc-screen-eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(48,51,54,0.5);
+    margin: 6px 4px 2px;
+  }
+  .qc-today h2 {
+    font-size: 28px;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    margin: 0 4px 18px;
+    line-height: 1.05;
+    color: #1F2421;
+  }
+  .qc-today-list { padding: 0 4px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden; }
+  .qc-today .qc-row { padding: 12px 14px; }
+  .qc-today .qc-row .title { font-size: 14px; }
+  .qc-today .qc-row .meta { font-size: 11px; }
+  .qc-tab {
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 12px 14px 4px;
+    border-top: 1px solid rgba(0,15,36,0.06);
+    margin-top: 12px;
+  }
+  .qc-tab .item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 10px; color: rgba(48,51,54,0.5); }
+  .qc-tab .item.is-active { color: #FF891C; }
+  .qc-tab .icon { width: 18px; height: 18px; border-radius: 4px; background: currentColor; opacity: 0.7; }
+  .qc-fab {
+    position: absolute;
+    bottom: 78px; right: 22px;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #FF891C;
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(255,137,28,0.36);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    font-weight: 300;
+  }
+
+  /* ============================================================== */
+  /*           DIRECTION B — CONSOLE (Linear-anchored)               */
+  /* ============================================================== */
+  .cs {
+    background: #08090A;
+    color: #F7F8F8;
+    padding: 96px 0 112px;
+    border-top: 1px solid #1A1B1E;
+    font-family: "Inter", sans-serif;
+  }
+  .cs .dir-eyebrow { color: #F7F8F8; font-family: "Geist Mono", monospace; }
+  .cs .dir-eyebrow .dot { background: #8B5CF6; }
+  .cs .dir-h2 { color: #F7F8F8; font-weight: 600; }
+  .cs .dir-concept { color: rgba(247,248,248,0.65); }
+  .cs .dir-section-tag { color: rgba(247,248,248,0.55); font-family: "Geist Mono", monospace; }
+
+  .cs-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin: 40px 0 56px; }
+  .cs-sw {
+    border-radius: 6px;
+    padding: 12px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .cs-sw .role { font-family: "Geist Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.10em; font-weight: 500; }
+  .cs-sw .hex { font-family: "Geist Mono", monospace; font-size: 11px; opacity: 0.6; }
+
+  .cs-type { background: #0F1011; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); padding: 24px 32px; margin-bottom: 56px; }
+  .cs-type-row { display: grid; grid-template-columns: 240px 1fr; gap: 24px; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .cs-type-row:last-child { border-bottom: none; }
+  .cs-type-meta { font-family: "Geist Mono", monospace; font-size: 11px; color: rgba(247,248,248,0.45); padding-top: 6px; line-height: 1.5; }
+  .cs-tp-display { font-size: 30px; letter-spacing: -0.025em; font-weight: 600; color: #F7F8F8; }
+  .cs-tp-h2 { font-size: 20px; letter-spacing: -0.02em; font-weight: 600; }
+  .cs-tp-h3 { font-size: 15px; letter-spacing: -0.01em; font-weight: 600; }
+  .cs-tp-body { font-size: 15px; line-height: 1.5; color: rgba(247,248,248,0.85); }
+  .cs-tp-eyebrow { font-family: "Geist Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(247,248,248,0.55); }
+  .cs-tp-label { font-family: "Geist Mono", monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.10em; color: rgba(247,248,248,0.7); }
+
+  .cs-status { background: #0F1011; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 32px; margin-bottom: 56px; }
+  .cs-status .stack { display: flex; flex-direction: column; max-width: 460px; }
+  .cs-row {
+    display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .cs-row:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+  .cs-row .title { font-size: 15px; font-weight: 500; color: #F7F8F8; }
+  .cs-row .flag {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+  }
+  .cs-row.is-pending .flag { color: rgba(247,248,248,0.45); }
+  .cs-row.is-done .flag { color: #8B5CF6; }
+  .cs-row.is-streak .flag { color: #FFB224; }
+  .cs-row.is-missed .flag { color: #EB5757; }
+  .cs-row.is-info .flag { color: #6366F1; }
+
+  .cs-components { display: grid; grid-template-columns: 1fr 1fr 380px; gap: 24px; }
+  .cs-comp-card {
+    background: #0F1011;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 24px;
+  }
+  .cs-comp-card h4 {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 0 0 18px;
+    color: rgba(247,248,248,0.6);
+    font-weight: 500;
+  }
+  .cs-list { display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,0.06); }
+  .cs-list .cs-row { padding: 12px 14px; }
+  .cs-list .cs-row .title { font-size: 14px; }
+
+  /* CS detail screen */
+  .cs-detail-screen { background: #0F1011; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 22px; }
+  .cs-detail-screen .breadcrumb {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(247,248,248,0.5);
+    margin-bottom: 14px;
+  }
+  .cs-detail-screen h3 { font-size: 22px; letter-spacing: -0.02em; margin: 0 0 18px; font-weight: 600; }
+  .cs-detail-big { display: flex; align-items: baseline; gap: 10px; margin: 0 0 24px; }
+  .cs-detail-big .num { font-family: "Geist Mono", monospace; font-size: 54px; font-weight: 500; color: #8B5CF6; letter-spacing: -0.04em; line-height: 1; }
+  .cs-detail-big .word { font-family: "Geist Mono", monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.14em; color: rgba(247,248,248,0.5); }
+  .cs-ascii-strip {
+    font-family: "Geist Mono", monospace;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    color: #8B5CF6;
+    background: rgba(139,92,246,0.06);
+    border: 1px solid rgba(139,92,246,0.18);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .cs-ascii-strip .miss { color: #EB5757; }
+  .cs-ascii-strip .empty { color: rgba(247,248,248,0.25); }
+  .cs-ascii-strip-labels {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(247,248,248,0.4);
+    padding: 0 16px;
+    display: flex; justify-content: space-between;
+  }
+
+  /* CS today screen */
+  .cs-today {
+    --phone-bg: #08090A;
+    --phone-fg: #F7F8F8;
+    border-color: rgba(255,255,255,0.08);
+  }
+  .cs-today .phone-statusbar { color: rgba(247,248,248,0.7); }
+  .cs-today .header {
+    padding: 6px 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .cs-today .header .meta {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(247,248,248,0.5);
+    margin-bottom: 8px;
+  }
+  .cs-today .header h2 {
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    margin: 0;
+    font-weight: 600;
+    color: #F7F8F8;
+  }
+  .cs-today .header .count {
+    font-family: "Geist Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: #8B5CF6;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .cs-today-list {
+    flex: 1;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .cs-today-list .cs-row { padding: 12px 14px; }
+  .cs-today-list .cs-row .title { font-size: 13px; }
+  .cs-today-list .cs-row .flag { font-size: 9px; padding: 3px 6px; }
+  .cs-tab {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    background: #0F1011;
+    padding: 0;
+  }
+  .cs-tab .item {
+    padding: 10px 0 12px;
+    text-align: center;
+    font-family: "Geist Mono", monospace;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(247,248,248,0.4);
+    border-right: 1px solid rgba(255,255,255,0.06);
+  }
+  .cs-tab .item:last-child { border-right: none; }
+  .cs-tab .item.is-active { color: #8B5CF6; background: rgba(139,92,246,0.06); }
+
+  /* ============================================================== */
+  /*           DIRECTION C — LOOM (Reflect + HabitKit)               */
+  /* ============================================================== */
+  .lm {
+    background: #030014;
+    color: #FFFFFF;
+    padding: 96px 0 112px;
+    border-top: 1px solid #0D0824;
+    font-family: "Inter", sans-serif;
+  }
+  .lm .dir-eyebrow { color: #FFFFFF; font-family: "DM Sans", sans-serif; font-weight: 500; }
+  .lm .dir-eyebrow .dot { background: #6D48FF; }
+  .lm .dir-h2 { color: #FFFFFF; font-family: "Fraunces", "Inter", serif; font-weight: 500; font-size: 44px; letter-spacing: -0.02em; }
+  .lm .dir-concept { color: rgba(255,255,255,0.65); }
+  .lm .dir-section-tag { color: rgba(255,255,255,0.55); font-family: "DM Sans", sans-serif; }
+
+  .lm-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; margin: 40px 0 56px; }
+  .lm-sw {
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 110px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .lm-sw .role { font-family: "DM Sans", sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.10em; font-weight: 500; }
+  .lm-sw .hex { font-family: "Geist Mono", monospace; font-size: 11px; opacity: 0.6; }
+
+  .lm-type {
+    background: #060317;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 32px 40px;
+    margin-bottom: 56px;
+  }
+  .lm-type-row { display: grid; grid-template-columns: 240px 1fr; gap: 24px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .lm-type-row:last-child { border-bottom: none; }
+  .lm-type-meta { font-family: "Geist Mono", monospace; font-size: 11px; color: rgba(255,255,255,0.5); padding-top: 6px; line-height: 1.5; }
+  .lm-tp-display { font-family: "Fraunces", serif; font-size: 36px; letter-spacing: -0.022em; font-weight: 500; color: #FFFFFF; line-height: 1.05; }
+  .lm-tp-h2 { font-family: "Fraunces", serif; font-size: 22px; letter-spacing: -0.012em; font-weight: 500; }
+  .lm-tp-h3 { font-family: "Fraunces", serif; font-size: 17px; font-weight: 500; }
+  .lm-tp-body { font-family: "Inter", sans-serif; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,0.85); }
+  .lm-tp-label { font-family: "DM Sans", sans-serif; font-size: 11px; letter-spacing: 0.10em; text-transform: uppercase; color: rgba(255,255,255,0.65); font-weight: 500; }
+  .lm-tp-mono { font-family: "Geist Mono", monospace; font-size: 13px; color: #6D48FF; }
+
+  /* LM status — the weave strip is the status indicator */
+  .lm-status {
+    background: #060317;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 56px;
+  }
+  .lm-status .stack { display: flex; flex-direction: column; gap: 14px; max-width: 480px; }
+  .lm-row {
+    background: #0B0823;
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    padding: 14px 16px 16px;
+  }
+  .lm-row .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .lm-row .title { font-family: "Fraunces", serif; font-size: 16px; font-weight: 500; color: #fff; }
+  .lm-row .streak {
+    font-family: "Geist Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .lm-row.is-strong .streak { background: rgba(109,72,255,0.16); color: #B8A6FF; }
+  .lm-row.is-warm .streak { background: rgba(221,252,250,0.10); color: #DDFCFA; }
+  .lm-row.is-broken .streak { background: rgba(255,123,245,0.10); color: #FF7BF5; }
+  .lm-row.is-fresh .streak { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.55); }
+  .lm-weave { display: grid; grid-template-columns: repeat(14, 1fr); gap: 4px; }
+  .lm-cell { aspect-ratio: 1; border-radius: 3px; }
+  .lm-cell.c-empty { background: rgba(255,255,255,0.06); }
+  .lm-cell.c-30 { background: rgba(109,72,255,0.30); }
+  .lm-cell.c-50 { background: rgba(109,72,255,0.50); }
+  .lm-cell.c-70 { background: rgba(109,72,255,0.75); }
+  .lm-cell.c-100 { background: #6D48FF; }
+  .lm-cell.c-peak { background: #DDFCFA; }
+  .lm-cell.c-broken { background: rgba(255,123,245,0.4); }
+
+  .lm-components { display: grid; grid-template-columns: 1fr 1fr 380px; gap: 24px; }
+  .lm-comp-card { background: #060317; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; }
+  .lm-comp-card h4 {
+    font-family: "DM Sans", sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin: 0 0 18px;
+    color: rgba(255,255,255,0.6);
+    font-weight: 500;
+  }
+
+  /* LM detail */
+  .lm-detail-screen { background: #060317; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px; }
+  .lm-detail-screen .breadcrumb {
+    font-family: "DM Sans", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 12px;
+  }
+  .lm-detail-screen h3 { font-family: "Fraunces", serif; font-size: 26px; letter-spacing: -0.015em; margin: 0 0 4px; font-weight: 500; }
+  .lm-detail-screen .sub { font-family: "Inter", sans-serif; font-size: 13px; color: rgba(255,255,255,0.55); margin-bottom: 24px; }
+  .lm-detail-big {
+    display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 14px;
+    margin-bottom: 22px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .lm-detail-big .num { font-family: "Fraunces", serif; font-size: 56px; font-weight: 500; color: #DDFCFA; line-height: 1; letter-spacing: -0.03em; }
+  .lm-detail-big .word {
+    font-family: "DM Sans", sans-serif;
+    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+  .lm-detail-grid {
+    display: grid; grid-template-columns: repeat(14, 1fr); gap: 5px;
+    margin-bottom: 10px;
+  }
+  .lm-detail-grid > .lm-cell { aspect-ratio: 1; border-radius: 3px; }
+
+  /* LM today */
+  .lm-today {
+    --phone-bg: #030014;
+    --phone-fg: #FFFFFF;
+    border-color: rgba(255,255,255,0.08);
+  }
+  .lm-today .phone-statusbar { color: rgba(255,255,255,0.7); }
+  .lm-today .header { padding: 8px 14px 18px; }
+  .lm-today .header .meta {
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+  .lm-today .header h2 {
+    font-family: "Fraunces", serif;
+    font-size: 30px;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: #fff;
+  }
+  .lm-today-list { padding: 0 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; overflow: hidden; }
+  .lm-today-list .lm-row { padding: 12px 12px 12px; }
+  .lm-today-list .lm-row .title { font-size: 13px; }
+  .lm-today-list .lm-row .streak { font-size: 9px; padding: 2px 6px; }
+  .lm-today-list .lm-weave { grid-template-columns: repeat(14, 1fr); gap: 3px; }
+  .lm-tab {
+    display: flex; justify-content: space-around;
+    padding: 12px 0 6px;
+    margin: 14px 0 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .lm-tab .item {
+    font-family: "DM Sans", sans-serif;
+    font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+  .lm-tab .item.is-active { color: #DDFCFA; }
+  .lm-fab {
+    position: absolute;
+    bottom: 76px; right: 22px;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: #6D48FF;
+    box-shadow: 0 12px 28px rgba(109,72,255,0.45);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff;
+    font-size: 26px;
+    font-weight: 300;
+  }
+
+  /* ============ SOURCES ============ */
+  .sources {
+    background: #fafafa;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 64px 0 96px;
+  }
+  .sources-inner { max-width: 1280px; margin: 0 auto; padding: 0 32px; }
+  .sources h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.018em;
+  }
+  .sources .eyebrow {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 12px;
+  }
+  .sources p { font-size: 14px; line-height: 1.65; color: rgba(0,0,0,0.7); max-width: 80ch; margin: 0 0 24px; }
+  .sources ul { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.7; color: rgba(0,0,0,0.7); }
+  .sources ul li { margin-bottom: 4px; }
+  .sources a { color: #4F91FB; text-decoration: none; }
+  .sources a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="brand">Notch <small>· three UI-kit directions · expo-habit-tracker · W5D4</small></div>
+    <div class="jumps">
+      <a href="#dirA">A · Quiet Companion</a>
+      <a href="#dirB">B · Console</a>
+      <a href="#dirC">C · Loom</a>
+      <a href="#sources">Sources</a>
+    </div>
+  </div>
+</nav>
+
+<section class="intro">
+  <div class="eyebrow">W5D4 · Expo · Habit-tracker · UI-kit proposal</div>
+  <h1>Notch — three directions for the same mobile habit tracker.</h1>
+  <p>
+    The C2 Week 5 Day 4 demo is an Expo habit tracker built across six progressive states (<code>v0</code> through
+    <code>v5</code>): scaffold, tabs, FlatList + form, swipe gesture, AsyncStorage, push notification. This proposal
+    locks the visual language for <em>Notch</em> — the codename — before any v0 code is written. Tagline: "small
+    marks, day after day."
+  </p>
+  <p>
+    The three directions below are <em>structurally</em> different, not palette variants. Each anchors on a distinct
+    real reference (Things 3 + Sunsama; Linear; Reflect + HabitKit) and makes a different argument about what
+    a habit tracker is. The most diagnostic artifact is the <strong>status indicator</strong> — three rows,
+    three completely different shapes (filled square / bracketed flag / fourteen-cell weave). If those three
+    shapes feel like the same idea, the proposal is wrong; if they feel like three different products, the
+    proposal is doing its job.
+  </p>
+  <div class="note">
+    <strong>How to read this.</strong> Don't compare colors. Compare structures. Direction A is a row with a
+    swatch; B is a row with a bracketed flag; C is a row whose body is a 14-cell weave (the chart is the row).
+    The typography differences are real (sans / mono-spec / serif) but secondary. Pick the direction whose
+    status row best argues for the kind of mobile app you want students to ship — coach, console, or loom.
+    Live <code>--chrome</code> inspection of all five reference web apps and six App Store listings is logged
+    at the bottom of this file.
+  </div>
+
+  <div class="pivots">
+    <div class="pivot">
+      <div class="tag">A · Quiet Companion</div>
+      <h3>The phone is a journal, not a dashboard.</h3>
+      <p>Warm paper canvas, one warm accent for "done today," small filled-square markers in the Things 3
+        tradition. Calm by default. Nothing competes with the habit titles.</p>
+      <div class="anchor">Anchors: Things 3, Sunsama, Stoic</div>
+    </div>
+    <div class="pivot">
+      <div class="tag">B · Console</div>
+      <h3>A habit tracker that doesn't apologize.</h3>
+      <p>Linear-grade dark surface, mono labels, bracketed status flags. Reads like a system log. For people
+        who find pastels and rings patronizing. None of the six reference trackers do this — that's the
+        point.</p>
+      <div class="anchor">Anchors: Linear (mobile-equivalent), spec-sheet conventions</div>
+    </div>
+    <div class="pivot">
+      <div class="tag">C · Loom</div>
+      <h3>Each row is the chart.</h3>
+      <p>Deep indigo canvas, per-habit accent threads, 14-day weave embedded in every habit row. The status
+        indicator is the whole row body. Anchored on HabitKit's tile-grid pattern (4.9 / 2.1K ratings) plus
+        Reflect's system polish.</p>
+      <div class="anchor">Anchors: HabitKit, Reflect, Notion Calendar swatches</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                  DIRECTION A — QUIET COMPANION                  -->
+<!-- ============================================================== -->
+<section class="qc" id="dirA">
+  <div class="dir-wrap">
+    <div class="dir-head">
+      <div class="dir-eyebrow"><span class="dot"></span>A · Quiet Companion</div>
+      <h2 class="dir-h2">The phone is a journal, not a dashboard.</h2>
+      <p class="dir-concept">
+        Direction A argues that a habit tracker should disappear into the day. Warm paper canvas borrowed from
+        Sunsama, the small filled-square indicator from Things 3, and editorial restraint borrowed from Stoic's
+        lowercase serif confidence. A single warm accent — Sunsama's signature orange #FF891C — is reserved for
+        the only thing that matters: did you show up today. Streak counts live in a Things-3 blue as quiet
+        metadata, not celebration. Missed days get a dashed brick outline that feels disappointed, not punitive.
+      </p>
+    </div>
+
+    <div class="dir-section-tag">01 · Palette</div>
+    <div class="qc-palette">
+      <div class="qc-sw" style="background:#F6F5F1;color:#1F2421;"><div class="role">Canvas</div><div class="hex">#F6F5F1</div></div>
+      <div class="qc-sw" style="background:#FFFFFF;color:#1F2421;"><div class="role">Surface</div><div class="hex">#FFFFFF</div></div>
+      <div class="qc-sw" style="background:#ECEEF0;color:#1F2421;"><div class="role">Inset</div><div class="hex">#ECEEF0</div></div>
+      <div class="qc-sw" style="background:#1F2421;color:#F6F5F1;"><div class="role">Ink</div><div class="hex">#1F2421</div></div>
+      <div class="qc-sw" style="background:#8E9196;color:#fff;"><div class="role">Muted</div><div class="hex">#8E9196</div></div>
+      <div class="qc-sw" style="background:#FF891C;color:#fff;"><div class="role">Done (reserved)</div><div class="hex">#FF891C</div></div>
+      <div class="qc-sw" style="background:#4F91FB;color:#fff;"><div class="role">Streak meta</div><div class="hex">#4F91FB</div></div>
+      <div class="qc-sw" style="background:#EB5757;color:#fff;"><div class="role">Missed</div><div class="hex">#EB5757</div></div>
+    </div>
+
+    <div class="dir-section-tag">02 · Typography</div>
+    <div class="qc-type">
+      <div class="qc-type-row">
+        <div class="qc-type-meta">Display<br>Inter / 32px / -0.022em / 600</div>
+        <div class="qc-tp-display qc-type-sample">Showing up today.</div>
+      </div>
+      <div class="qc-type-row">
+        <div class="qc-type-meta">H2<br>Inter / 22px / -0.018em / 600</div>
+        <div class="qc-tp-h2 qc-type-sample">Yesterday counted.</div>
+      </div>
+      <div class="qc-type-row">
+        <div class="qc-type-meta">H3<br>Inter / 17px / -0.012em / 600</div>
+        <div class="qc-tp-h3 qc-type-sample">Drink water · 12 days</div>
+      </div>
+      <div class="qc-type-row">
+        <div class="qc-type-meta">Body<br>Inter / 16px / 1.55 / 400</div>
+        <div class="qc-tp-body qc-type-sample">A small mark, every day. The streak is not the point — the next day is.</div>
+      </div>
+      <div class="qc-type-row">
+        <div class="qc-type-meta">Label<br>Inter / 11px / 0.10em / 600 uppercase</div>
+        <div class="qc-tp-label qc-type-sample">TODAY · TUES 21 MAY</div>
+      </div>
+      <div class="qc-type-row">
+        <div class="qc-type-meta">Mono (streak only)<br>JetBrains Mono / 13px / 500</div>
+        <div class="qc-tp-mono qc-type-sample" style="color:#4F91FB;">12 days</div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">03 · Status indicator (diagnostic)</div>
+    <div class="qc-status">
+      <p style="margin:0 0 18px;color:rgba(48,51,54,0.65);font-size:14px;max-width:60ch;">
+        The diagnostic artifact. A filled square left of the title is the entire status language. Color = state.
+        Streak counts read in a small blue mono, like the dewpoint reading on a weather card.
+      </p>
+      <div class="stack">
+        <div class="qc-row is-pending"><div class="qc-marker"></div><div class="title">Walk after lunch</div><div class="meta">—</div></div>
+        <div class="qc-row is-done"><div class="qc-marker"></div><div class="title">Drink water</div><div class="meta">done</div></div>
+        <div class="qc-row is-streak"><div class="qc-marker"></div><div class="title">Sketch one page</div><div class="meta">12 days</div></div>
+        <div class="qc-row is-missed"><div class="qc-marker"></div><div class="title">Read 20 pages</div><div class="meta">missed yesterday</div></div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">04 · Components</div>
+    <div class="qc-components">
+      <!-- Component 1: habit-row stack -->
+      <div class="qc-comp-card">
+        <h4>Habit list — primary surface</h4>
+        <div class="qc-list">
+          <div class="qc-row is-done"><div class="qc-marker"></div><div class="title">Drink water</div><div class="meta">done</div></div>
+          <div class="qc-row is-streak"><div class="qc-marker"></div><div class="title">Walk after lunch</div><div class="meta">7 days</div></div>
+          <div class="qc-row is-pending"><div class="qc-marker"></div><div class="title">Sketch one page</div><div class="meta">—</div></div>
+          <div class="qc-row is-pending"><div class="qc-marker"></div><div class="title">Read 20 pages</div><div class="meta">—</div></div>
+          <div class="qc-row is-missed"><div class="qc-marker"></div><div class="title">No phone after 10pm</div><div class="meta">missed</div></div>
+        </div>
+      </div>
+
+      <!-- Component 2: detail card -->
+      <div class="qc-comp-card">
+        <h4>Habit detail — last 7 days</h4>
+        <div class="qc-detail-screen">
+          <div class="title">Walk after lunch</div>
+          <div class="sub">tended 12 of the last 14 days</div>
+          <div class="qc-detail-big">
+            <div class="num">12</div>
+            <div class="word">days in a row</div>
+          </div>
+          <div class="qc-detail-strip">
+            <div class="on"></div><div class="on"></div><div class="off"></div><div class="on"></div><div class="on"></div><div class="on"></div><div class="today"></div>
+          </div>
+          <div class="qc-detail-strip-labels">
+            <div>W</div><div>T</div><div>F</div><div>S</div><div>S</div><div>M</div><div>T</div>
+          </div>
+          <div style="font-size:13px;color:rgba(48,51,54,0.55);margin-top:24px;line-height:1.5;">
+            Tap the empty square to mark today complete. Long-press for notes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Component 3: today screen mockup -->
+      <div class="qc-comp-card">
+        <h4>Today screen — page composition</h4>
+        <div class="phone-frame qc-today">
+          <div class="phone-statusbar"><span>9:41</span><span class="dot-trio"><i></i><i></i><i></i></span></div>
+          <div class="qc-screen-eyebrow">TODAY · TUES 21 MAY</div>
+          <h2>Showing up.</h2>
+          <div class="qc-today-list">
+            <div class="qc-row is-done"><div class="qc-marker"></div><div class="title">Drink water</div><div class="meta">done</div></div>
+            <div class="qc-row is-streak"><div class="qc-marker"></div><div class="title">Walk after lunch</div><div class="meta">12 days</div></div>
+            <div class="qc-row is-pending"><div class="qc-marker"></div><div class="title">Sketch one page</div><div class="meta">—</div></div>
+            <div class="qc-row is-pending"><div class="qc-marker"></div><div class="title">Read 20 pages</div><div class="meta">—</div></div>
+            <div class="qc-row is-missed"><div class="qc-marker"></div><div class="title">No phone after 10pm</div><div class="meta">missed</div></div>
+          </div>
+          <div class="qc-tab">
+            <div class="item is-active"><div class="icon"></div>Today</div>
+            <div class="item"><div class="icon"></div>Streaks</div>
+            <div class="item"><div class="icon"></div>Settings</div>
+          </div>
+          <div class="qc-fab">+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                       DIRECTION B — CONSOLE                     -->
+<!-- ============================================================== -->
+<section class="cs" id="dirB">
+  <div class="dir-wrap">
+    <div class="dir-head">
+      <div class="dir-eyebrow"><span class="dot"></span>B · CONSOLE</div>
+      <h2 class="dir-h2">A habit tracker that doesn't apologize.</h2>
+      <p class="dir-concept">
+        Direction B argues that the dominant aesthetic in this category — pastels, illustrations, ring animations,
+        cheerful tab bars — gets in the way for people who already think in systems. Console borrows Linear's
+        exact canvas (#08090A) and its restraint, runs all labels in Geist Mono, and replaces the cute checkbox
+        with a bracketed flag: <code>[ DONE ]</code>, <code>[ STREAK 12 ]</code>, <code>[ MISSED ]</code>. Status
+        reads like a system log. The violet is reserved for completion; amber for streaks ≥ 3; red for missed
+        days; indigo for "scheduled today, not yet acted on." Nothing else gets a color. None of the six habit
+        trackers surveyed do this — that's the differentiator.
+      </p>
+    </div>
+
+    <div class="dir-section-tag">01 · Palette</div>
+    <div class="cs-palette">
+      <div class="cs-sw" style="background:#08090A;color:#F7F8F8;"><div class="role">Canvas</div><div class="hex">#08090A</div></div>
+      <div class="cs-sw" style="background:#0F1011;color:#F7F8F8;"><div class="role">Surface</div><div class="hex">#0F1011</div></div>
+      <div class="cs-sw" style="background:#23252A;color:#F7F8F8;"><div class="role">Elevated</div><div class="hex">#23252A</div></div>
+      <div class="cs-sw" style="background:#F7F8F8;color:#08090A;"><div class="role">Text</div><div class="hex">#F7F8F8</div></div>
+      <div class="cs-sw" style="background:#8B5CF6;color:#fff;"><div class="role">Done (reserved)</div><div class="hex">#8B5CF6</div></div>
+      <div class="cs-sw" style="background:#FFB224;color:#08090A;"><div class="role">Streak ≥ 3</div><div class="hex">#FFB224</div></div>
+      <div class="cs-sw" style="background:#EB5757;color:#fff;"><div class="role">Missed</div><div class="hex">#EB5757</div></div>
+      <div class="cs-sw" style="background:#6366F1;color:#fff;"><div class="role">Scheduled</div><div class="hex">#6366F1</div></div>
+    </div>
+
+    <div class="dir-section-tag">02 · Typography</div>
+    <div class="cs-type">
+      <div class="cs-type-row">
+        <div class="cs-type-meta">Display<br>Inter / 30px / -0.025em / 600</div>
+        <div class="cs-tp-display">Today, 04 of 06.</div>
+      </div>
+      <div class="cs-type-row">
+        <div class="cs-type-meta">H2<br>Inter / 20px / -0.02em / 600</div>
+        <div class="cs-tp-h2">Streak ledger</div>
+      </div>
+      <div class="cs-type-row">
+        <div class="cs-type-meta">H3<br>Inter / 15px / -0.01em / 600</div>
+        <div class="cs-tp-h3">drink_water</div>
+      </div>
+      <div class="cs-type-row">
+        <div class="cs-type-meta">Body<br>Inter / 15px / 1.5 / 400</div>
+        <div class="cs-tp-body">Habit entries are logged as append-only events. Yesterday's record is closed.</div>
+      </div>
+      <div class="cs-type-row">
+        <div class="cs-type-meta">Eyebrow / mono<br>Geist Mono / 11px / 0.14em uppercase</div>
+        <div class="cs-tp-eyebrow">WED 21 MAY · 04 / 06 HABITS</div>
+      </div>
+      <div class="cs-type-row">
+        <div class="cs-type-meta">Status flag<br>Geist Mono / 11px / 0.10em uppercase</div>
+        <div class="cs-tp-label">[ STREAK 12 ]</div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">03 · Status indicator (diagnostic)</div>
+    <div class="cs-status">
+      <p style="margin:0 0 18px;color:rgba(247,248,248,0.65);font-size:14px;max-width:60ch;">
+        The diagnostic artifact. Status is a bracketed mono flag pinned right. The flag's text and color carry
+        the entire signal. No icons, no rings, no swatches. A row reads like a line in <code>git log</code>.
+      </p>
+      <div class="stack">
+        <div class="cs-row is-pending"><div class="title">walk_after_lunch</div><div class="flag">[ PENDING ]</div></div>
+        <div class="cs-row is-done"><div class="title">drink_water</div><div class="flag">[ DONE ]</div></div>
+        <div class="cs-row is-streak"><div class="title">sketch_one_page</div><div class="flag">[ STREAK 12 ]</div></div>
+        <div class="cs-row is-missed"><div class="title">read_20_pages</div><div class="flag">[ MISSED ]</div></div>
+        <div class="cs-row is-info"><div class="title">no_phone_after_10</div><div class="flag">[ SCHEDULED 22:00 ]</div></div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">04 · Components</div>
+    <div class="cs-components">
+      <div class="cs-comp-card">
+        <h4>Habit list — primary surface</h4>
+        <div class="cs-list">
+          <div class="cs-row is-done"><div class="title">drink_water</div><div class="flag">[ DONE ]</div></div>
+          <div class="cs-row is-streak"><div class="title">walk_after_lunch</div><div class="flag">[ STREAK 7 ]</div></div>
+          <div class="cs-row is-pending"><div class="title">sketch_one_page</div><div class="flag">[ PENDING ]</div></div>
+          <div class="cs-row is-pending"><div class="title">read_20_pages</div><div class="flag">[ PENDING ]</div></div>
+          <div class="cs-row is-missed"><div class="title">no_phone_after_10</div><div class="flag">[ MISSED ]</div></div>
+          <div class="cs-row is-info"><div class="title">stretch_5min</div><div class="flag">[ 22:00 ]</div></div>
+        </div>
+      </div>
+
+      <div class="cs-comp-card">
+        <h4>Habit detail — log view</h4>
+        <div class="cs-detail-screen">
+          <div class="breadcrumb">notch / habits / walk_after_lunch</div>
+          <h3>walk_after_lunch</h3>
+          <div class="cs-detail-big">
+            <div class="num">12</div>
+            <div class="word">streak · days</div>
+          </div>
+          <div class="cs-ascii-strip">
+            ■ ■ <span class="miss">·</span> ■ ■ ■ ■ ■ ■ ■ <span class="empty">·</span> ■ ■ <span class="empty">□</span>
+          </div>
+          <div class="cs-ascii-strip-labels">
+            <span>14d</span><span>7d</span><span>today</span>
+          </div>
+          <div style="font-family:'Geist Mono',monospace;font-size:11px;color:rgba(247,248,248,0.5);margin-top:22px;line-height:1.7;letter-spacing:0.08em;">
+            <div>21 MAY 12:34 · marked done</div>
+            <div>20 MAY 13:02 · marked done</div>
+            <div>19 MAY ·· no entry</div>
+            <div>18 MAY 12:48 · marked done</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cs-comp-card">
+        <h4>Today screen — page composition</h4>
+        <div class="phone-frame cs-today">
+          <div class="phone-statusbar"><span>9:41</span><span class="dot-trio"><i></i><i></i><i></i></span></div>
+          <div class="header">
+            <div class="meta">WED 21 MAY</div>
+            <h2>Today, 04 / 06.</h2>
+            <div class="count">[ STREAK LEDGER · 6 ACTIVE ]</div>
+          </div>
+          <div class="cs-today-list">
+            <div class="cs-row is-done"><div class="title">drink_water</div><div class="flag">[ DONE ]</div></div>
+            <div class="cs-row is-streak"><div class="title">walk_after_lunch</div><div class="flag">[ STREAK 12 ]</div></div>
+            <div class="cs-row is-pending"><div class="title">sketch_one_page</div><div class="flag">[ PENDING ]</div></div>
+            <div class="cs-row is-pending"><div class="title">read_20_pages</div><div class="flag">[ PENDING ]</div></div>
+            <div class="cs-row is-missed"><div class="title">no_phone_after_10</div><div class="flag">[ MISSED ]</div></div>
+            <div class="cs-row is-info"><div class="title">stretch_5min</div><div class="flag">[ 22:00 ]</div></div>
+          </div>
+          <div class="cs-tab">
+            <div class="item is-active">Today</div>
+            <div class="item">Ledger</div>
+            <div class="item">Conf</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                        DIRECTION C — LOOM                       -->
+<!-- ============================================================== -->
+<section class="lm" id="dirC">
+  <div class="dir-wrap">
+    <div class="dir-head">
+      <div class="dir-eyebrow"><span class="dot"></span>C · Loom</div>
+      <h2 class="dir-h2">Each row is the chart.</h2>
+      <p class="dir-concept">
+        Direction C argues that you shouldn't have to tap into a detail screen to see how a habit is doing.
+        Anchored on HabitKit (4.9 / 2.1K App Store ratings — the strongest validated tile-grid pattern in the
+        category) and Reflect's deep-indigo system polish: the habit row's body is a 14-cell weave that fills as
+        you keep showing up. Purple is the dominant accent; mint marks the peak day in a streak (#DDFCFA from
+        Notion Calendar's swatch language); a soft pink signals a broken streak without making it punitive.
+        Display copy in Fraunces gives the surface a journal-like, almost domestic feel — the opposite of B's
+        spec-sheet, the opposite of A's quiet paper.
+      </p>
+    </div>
+
+    <div class="dir-section-tag">01 · Palette</div>
+    <div class="lm-palette">
+      <div class="lm-sw" style="background:#030014;color:#fff;"><div class="role">Canvas</div><div class="hex">#030014</div></div>
+      <div class="lm-sw" style="background:#060317;color:#fff;"><div class="role">Surface</div><div class="hex">#060317</div></div>
+      <div class="lm-sw" style="background:#0B0823;color:#fff;"><div class="role">Row</div><div class="hex">#0B0823</div></div>
+      <div class="lm-sw" style="background:#fff;color:#030014;"><div class="role">Text</div><div class="hex">#FFFFFF</div></div>
+      <div class="lm-sw" style="background:#6D48FF;color:#fff;"><div class="role">Tended (reserved)</div><div class="hex">#6D48FF</div></div>
+      <div class="lm-sw" style="background:#DDFCFA;color:#030014;"><div class="role">Peak day</div><div class="hex">#DDFCFA</div></div>
+      <div class="lm-sw" style="background:#FF7BF5;color:#fff;"><div class="role">Broken streak</div><div class="hex">#FF7BF5</div></div>
+      <div class="lm-sw" style="background:rgba(255,255,255,0.06);color:#fff;border:1px dashed rgba(255,255,255,0.2);"><div class="role">Empty cell</div><div class="hex">rgba 6%</div></div>
+    </div>
+
+    <div class="dir-section-tag">02 · Typography</div>
+    <div class="lm-type">
+      <div class="lm-type-row">
+        <div class="lm-type-meta">Display<br>Fraunces / 36px / -0.022em / 500</div>
+        <div class="lm-tp-display">Today.</div>
+      </div>
+      <div class="lm-type-row">
+        <div class="lm-type-meta">H2<br>Fraunces / 22px / -0.012em / 500</div>
+        <div class="lm-tp-h2">Last two weeks</div>
+      </div>
+      <div class="lm-type-row">
+        <div class="lm-type-meta">H3<br>Fraunces / 17px / 500</div>
+        <div class="lm-tp-h3">Walk after lunch</div>
+      </div>
+      <div class="lm-type-row">
+        <div class="lm-type-meta">Body<br>Inter / 16px / 1.55 / 400</div>
+        <div class="lm-tp-body">Every cell you fill in is a notch in the loom. Walk away for a week and the empty squares are still here when you return.</div>
+      </div>
+      <div class="lm-type-row">
+        <div class="lm-type-meta">Label<br>DM Sans / 11px / 0.10em / 500 uppercase</div>
+        <div class="lm-tp-label">TUES 21 MAY · LAST 14 DAYS</div>
+      </div>
+      <div class="lm-type-row">
+        <div class="lm-type-meta">Mono (streak data)<br>Geist Mono / 13px / 500</div>
+        <div class="lm-tp-mono">streak 12 · best 18</div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">03 · Status indicator (diagnostic)</div>
+    <div class="lm-status">
+      <p style="margin:0 0 22px;color:rgba(255,255,255,0.7);font-size:14px;max-width:60ch;">
+        The diagnostic artifact, and Loom's strongest argument. Status is a 14-cell weave embedded in every
+        row — purple intensity tracks the rolling streak; mint marks a peak day; pink marks a broken streak.
+        The row body <em>is</em> the chart. No tap-to-drill needed for at-a-glance state.
+      </p>
+      <div class="stack">
+        <div class="lm-row is-strong">
+          <div class="head"><div class="title">Walk after lunch</div><div class="streak">streak 12</div></div>
+          <div class="lm-weave">
+            <div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-peak"></div><div class="lm-cell c-empty"></div>
+          </div>
+        </div>
+        <div class="lm-row is-warm">
+          <div class="head"><div class="title">Drink water</div><div class="streak">streak 4</div></div>
+          <div class="lm-weave">
+            <div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-50"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-empty"></div>
+          </div>
+        </div>
+        <div class="lm-row is-broken">
+          <div class="head"><div class="title">Read 20 pages</div><div class="streak">broken yesterday</div></div>
+          <div class="lm-weave">
+            <div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-broken"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div>
+          </div>
+        </div>
+        <div class="lm-row is-fresh">
+          <div class="head"><div class="title">Sketch one page</div><div class="streak">new · 2 days</div></div>
+          <div class="lm-weave">
+            <div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-30"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dir-section-tag">04 · Components</div>
+    <div class="lm-components">
+      <div class="lm-comp-card">
+        <h4>Habit list — primary surface</h4>
+        <div class="stack" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="lm-row is-strong">
+            <div class="head"><div class="title">Walk after lunch</div><div class="streak">12</div></div>
+            <div class="lm-weave">
+              <div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-peak"></div><div class="lm-cell c-empty"></div>
+            </div>
+          </div>
+          <div class="lm-row is-warm">
+            <div class="head"><div class="title">Drink water</div><div class="streak">4</div></div>
+            <div class="lm-weave">
+              <div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-50"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-empty"></div>
+            </div>
+          </div>
+          <div class="lm-row is-broken">
+            <div class="head"><div class="title">Read 20 pages</div><div class="streak">broken</div></div>
+            <div class="lm-weave">
+              <div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-broken"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lm-comp-card">
+        <h4>Habit detail — the loom up close</h4>
+        <div class="lm-detail-screen">
+          <div class="breadcrumb">Today · Walk after lunch</div>
+          <h3>Walk after lunch</h3>
+          <div class="sub">tended 12 of the last 14 days · best run 18</div>
+          <div class="lm-detail-big">
+            <div class="num">12</div>
+            <div class="word">days in the loom</div>
+          </div>
+          <div class="lm-detail-grid">
+            <div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-peak"></div><div class="lm-cell c-empty"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(14,1fr);gap:5px;font-family:'Geist Mono',monospace;font-size:9px;color:rgba(255,255,255,0.3);text-align:center;letter-spacing:0.06em;">
+            <div>8</div><div>9</div><div>10</div><div>11</div><div>12</div><div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div><div>20</div><div>21</div>
+          </div>
+          <div style="font-family:'Inter',sans-serif;font-size:13px;color:rgba(255,255,255,0.6);margin-top:22px;line-height:1.55;">
+            Tap any cell to add a note. Pull down to see the previous fortnight.
+          </div>
+        </div>
+      </div>
+
+      <div class="lm-comp-card">
+        <h4>Today screen — page composition</h4>
+        <div class="phone-frame lm-today">
+          <div class="phone-statusbar"><span>9:41</span><span class="dot-trio"><i></i><i></i><i></i></span></div>
+          <div class="header">
+            <div class="meta">TUES 21 MAY · LAST 14 DAYS</div>
+            <h2>Today.</h2>
+          </div>
+          <div class="lm-today-list">
+            <div class="lm-row is-strong">
+              <div class="head"><div class="title">Walk after lunch</div><div class="streak">12</div></div>
+              <div class="lm-weave">
+                <div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-peak"></div><div class="lm-cell c-empty"></div>
+              </div>
+            </div>
+            <div class="lm-row is-warm">
+              <div class="head"><div class="title">Drink water</div><div class="streak">4</div></div>
+              <div class="lm-weave">
+                <div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-50"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-30"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-empty"></div>
+              </div>
+            </div>
+            <div class="lm-row is-broken">
+              <div class="head"><div class="title">Read 20 pages</div><div class="streak">broken</div></div>
+              <div class="lm-weave">
+                <div class="lm-cell c-30"></div><div class="lm-cell c-50"></div><div class="lm-cell c-50"></div><div class="lm-cell c-70"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-100"></div><div class="lm-cell c-broken"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div><div class="lm-cell c-empty"></div>
+              </div>
+            </div>
+          </div>
+          <div class="lm-tab">
+            <div class="item is-active">Today</div>
+            <div class="item">Streaks</div>
+            <div class="item">Settings</div>
+          </div>
+          <div class="lm-fab">+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================== -->
+<!--                            SOURCES                              -->
+<!-- ============================================================== -->
+<section class="sources" id="sources">
+  <div class="sources-inner">
+    <div class="eyebrow">Sources sampled live</div>
+    <h2>Reference sites and App Store listings inspected via <code>--chrome</code>.</h2>
+    <p>
+      Palettes, typography, and structural conventions below were extracted from live computed-style inspection
+      in Chrome — not approximated from training data. Each web app was inspected with a sampler that walked the
+      DOM and aggregated computed background-color, color, and font-family across the first ~2,000 elements,
+      ranked by frequency. App Store listings were screenshotted with the phone-screenshot gallery in view.
+    </p>
+    <p style="margin-bottom:8px;font-weight:600;color:#111;">Web app inspection (palette + typography tokens extracted live)</p>
+    <ul>
+      <li><a href="https://linear.app/">linear.app</a> — canvas <code>#08090A</code>; surface <code>#0F1011</code>; elevated <code>#23252A</code>; indigo <code>#6366F1</code>; violet <code>#8B5CF6</code>; danger <code>#EB5757</code>; body font Inter Variable. Anchors Direction B's whole language.</li>
+      <li><a href="https://culturedcode.com/things/">culturedcode.com/things/</a> — cool-paper canvas <code>#F2F5F7</code>; surface <code>#FFFFFF</code>; ink <code>#303336</code>; brand blue <code>#4F91FB</code>; system sans (SF / ui-sans). Anchors Direction A's row composition and streak-meta color.</li>
+      <li><a href="https://www.sunsama.com/">sunsama.com</a> — warm paper <code>#F6F5F1</code>; signature orange <code>#FF891C</code>; DM Sans body. Anchors Direction A's canvas and reserved-accent choice.</li>
+      <li><a href="https://reflect.app/">reflect.app</a> — deep-indigo canvas <code>#030014</code>; surface <code>#060317</code>; signature purple <code>#6D48FF</code>; Inter V body + AeonikPro display. Anchors Direction C's canvas and accent.</li>
+      <li><a href="https://www.notion.com/product/calendar">notion.com/product/calendar</a> — soft swatch language <code>#DDFCFA</code> mint, <code>#FFEBE3</code> peach, <code>#F6F5F4</code> paper. Donated Direction C's peak-day mint.</li>
+    </ul>
+
+    <p style="margin-top:24px;margin-bottom:8px;font-weight:600;color:#111;">App Store habit-tracker survey (structural conventions observed live)</p>
+    <ul>
+      <li><a href="https://apps.apple.com/us/app/streaks/id963034692">Streaks</a> — large circular gradient tiles in a 2×N grid; red-line stat charts. Validated that tile-grid is well-trodden; informed the choice to <em>not</em> compete on tiles.</li>
+      <li><a href="https://apps.apple.com/us/app/things-3/id904237743">Things 3</a> — small-icon list rows, filled-square checkbox, blue-accent restraint. Direct anchor for Direction A's row + marker pattern.</li>
+      <li><a href="https://apps.apple.com/us/app/habitify-habit-tracker/id1111447047">Habitify</a> — white surface, blue pill segments, orange weekly heatmap on stats. Modern productivity flavor; informed Direction A's heatmap-as-detail-strip choice.</li>
+      <li><a href="https://apps.apple.com/us/app/habit-tracker-habitkit/id6443918070">HabitKit</a> — tile-grid charts where each habit is a horizontal swath of small colored cells (per-habit color, ~5×30 grid). 4.9 / 2.1K ratings — strongest validated structural analog for Direction C's "the row is the chart" argument.</li>
+      <li><a href="https://apps.apple.com/us/app/productive-habit-tracker/id983826477">Productive</a> — dark teal canvas with friendly illustrations, central + FAB, day-strip header. Informed our decision against illustration-heavy "lifestyle" framing for a build-coach demo.</li>
+      <li><a href="https://apps.apple.com/us/app/strides-habit-tracker-goals/id672401817">Strides</a> — bright-blue brand, multi-color progress bars, calendar-day-circle stats. Classic charts-and-progress-bars; informed our move <em>toward</em> denser per-row state in Direction C.</li>
+      <li><a href="https://apps.apple.com/us/app/stoic-journal-mental-health/id1312926037">Stoic</a> — strict black-and-white palette, illustrated mark icons, lowercase serif display, editorial restraint. Reinforced Direction A's confidence to lean editorial instead of friendly-cartoony.</li>
+    </ul>
+
+    <p style="margin-top:32px;font-size:13px;color:rgba(0,0,0,0.55);">
+      Sampled 2026-05-21. Palette and typography choices in each direction trace back to one or more of the
+      sources above. The codename <em>Notch</em>, the tagline "small marks, day after day," and the structural
+      arguments (row + swatch · row + bracketed flag · row-is-the-chart) are original to this proposal — informed
+      by the survey, not derived from any single source.
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
