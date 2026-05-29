@@ -93,8 +93,8 @@ export default function About() {
           <Section tag="The seven states">
             <Progression current={6} />
             <Text style={{ fontFamily: FONTS.sans, fontSize: 12.5, lineHeight: 19, color: theme.textMuted }}>
-              Scaffold → tabs → list + form → swipe → storage → push + coach → dynamic-route detail. v6 is the
-              detail screen you reach by tapping a channel.
+              Scaffold → tabs → list + form → swipe → storage → dynamic-route detail → push + coach. v6 adds
+              push notifications + a Coach tone on top of v5's detail screen.
             </Text>
           </Section>
 

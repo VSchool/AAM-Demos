@@ -12,8 +12,8 @@ const STEPS = [
   { v: 2, label: "list + form" },
   { v: 3, label: "the throw" },
   { v: 4, label: "storage" },
-  { v: 5, label: "push + coach" },
-  { v: 6, label: "detail · dynamic routes" },
+  { v: 5, label: "detail · dynamic routes" },
+  { v: 6, label: "push + coach" },
 ];
 
 const BASE = "https://vschool.github.io/AAM-Demos/expo-habit-tracker-";

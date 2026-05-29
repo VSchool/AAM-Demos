@@ -1,5 +1,5 @@
 /* ============================================================
-   Pulse — habit detail (v6's beat: dynamic routes).
+   Pulse — habit detail (v5's beat: dynamic routes; inherited by v6).
 
    File-based dynamic route. The bracketed segment in the filename
    (`[id]`) is what makes Expo Router treat any URL like
@@ -10,7 +10,7 @@
    Why headerShown: false here — the visual back bar is rendered
    inside <HabitDetail/> itself so it can use the instrument's own
    typography + tokens. The per-route <Stack.Screen options>
-   override is also where v6's motion primitive lives: the screen
+   override is also where v5's motion primitive lives: the screen
    slides in from the right (or 'none' under reduced-motion) instead
    of inheriting the root Stack's 'fade' default.
    ============================================================ */
@@ -35,7 +35,7 @@ export default function HabitDetailScreen() {
   const { habits } = useHabitStore();
   const habit = habits.find((h) => h.id === id);
 
-  // Reduced-motion gate (v6 motion primitive is the screen transition itself).
+  // Reduced-motion gate (v5 motion primitive is the screen transition itself).
   const reduce = useReducedMotion();
   const animation: "slide_from_right" | "none" = reduce ? "none" : "slide_from_right";
 
@@ -47,7 +47,7 @@ export default function HabitDetailScreen() {
       <Stack.Screen
         options={{
           headerShown: false,
-          // v6 motion primitive: customize the route transition via
+          // v5 motion primitive: customize the route transition via
           // Stack.Screen options. slide_from_right is the canonical
           // iOS-native push feel, so the new screen reads unambiguously
           // as "a fresh route on top of the previous one."

@@ -1,10 +1,10 @@
-/* ThrowRow — v3's hero "Throw", v4 BIDIRECTIONAL, now v6: the TAP
+/* ThrowRow — v3's hero "Throw", v4 BIDIRECTIONAL, v5: the TAP
    path opens the per-habit detail screen instead of toggling done.
    Swipes are unchanged.
      • swipe RIGHT → complete (today/rest→done, +1; done stays done)
      • swipe LEFT  → park on rest (today→rest, streak HOLDS) or un-throw
                      a completion (done→today, −1)
-     • TAP         → push '/habit/{id}' (v6 — was toggle done in v4/v5)
+     • TAP         → push '/habit/{id}' (v5 — was toggle done in v4)
 
    The reason for the swap: tapping a row in a list-of-things is the
    universal "open detail" affordance on iOS/Android. Throwing the
@@ -52,7 +52,7 @@ export default function ThrowRow({
   onSwipeLeft,
   onTap,
 }: {
-  /** v6: the habit id. Used to build the detail-route URL on tap. */
+  /** v5: the habit id. Used to build the detail-route URL on tap. */
   id: string;
   status: ReservedRole;
   name: string;
@@ -63,7 +63,7 @@ export default function ThrowRow({
   /** swipe left: park on rest / un-throw a completion. */
   onSwipeLeft: () => void;
   /** Optional tap override. When absent (the production /today case) tap
-      pushes the detail route — the v6 default. The motion-tour demo passes
+      pushes the detail route — the v5 default. The motion-tour demo passes
       its own toggle handler so it can run in isolation without navigating. */
   onTap?: () => void;
 }) {
@@ -111,7 +111,7 @@ export default function ThrowRow({
       }
     });
 
-  // v6: tap now opens the detail screen — the universal list affordance.
+  // v5: tap now opens the detail screen — the universal list affordance.
   // Throwing the switch by swipe stays the deliberate, satisfying commit.
   // An onTap override is honored for in-page demos (motion tour) that can't
   // navigate away.

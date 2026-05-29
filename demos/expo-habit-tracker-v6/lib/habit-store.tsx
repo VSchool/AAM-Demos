@@ -61,7 +61,7 @@ interface HabitStoreValue {
   markRest: (id: string) => void;
   /** wipe persisted state and restore the seed roster (Settings affordance). */
   resetToSeed: () => void;
-  /** v6: drop a channel from the roster (the Delete action on the detail
+  /** v5: drop a channel from the roster (the Delete action on the detail
       screen). No re-channel-numbering — the gap stays so older entries keep
       their CH 0N identity. The reflow runs first so the list animates closed. */
   removeHabit: (id: string) => void;
@@ -204,7 +204,7 @@ export function HabitStoreProvider({ children }: { children: ReactNode }) {
     AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
   }, []);
 
-  // Delete a channel (v6 — the Delete action on the detail screen). Fires
+  // Delete a channel (v5 — the Delete action on the detail screen). Fires
   // layoutReflow() first so the Today list animates the gap closed when the
   // user navigates back. Persist effect picks up the change automatically.
   const removeHabit = useCallback((id: string) => {

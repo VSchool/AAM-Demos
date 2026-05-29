@@ -79,7 +79,7 @@ export default function CalloutRail() {
   return (
     <View style={{ gap: 14 }}>
       {/* 1 · what this is */}
-      <Note tag="Pulse · v6 · detail" pointer="◂ this is the app">
+      <Note tag="Pulse · v6 · final" pointer="◂ this is the app">
         <Text style={{ fontFamily: FONTS.sansBold, fontSize: 20, lineHeight: 25, color: HELPER.text }}>
           A habit tracker, built like a pocket instrument.
         </Text>

@@ -4,11 +4,11 @@
    theme), hardware toggles, the v4 "reset to seed" affordance, and the
    honest fine print. No fake tab bar — the live navigator draws it.
 
-   v5 brings the Coach tone + daily reminder LIVE (the push beat): the dial
+   v6 brings the Coach tone + daily reminder LIVE (the push beat): the dial
    now drives real notification copy, and the reminder console requests
    permission and schedules a daily local notification on a device. On the
    web build there's no OS scheduler, so it shows an in-app preview banner
-   instead — landing with the v5 SequenceIn (withSequence) arrival. */
+   instead — landing with the SequenceIn (withSequence) arrival. */
 
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
@@ -370,7 +370,7 @@ export default function SettingsInstrument() {
               color: theme.textMuted,
             }}
           >
-            Your channels + Coach tone persist on this device (no account, no cloud sync). v5's daily
+            Your channels + Coach tone persist on this device (no account, no cloud sync). v6's daily
             reminder is a real local notification — but it only fires on a phone (Expo Go or a native
             build). This deployed web build has no OS scheduler, so Enable just shows the in-app
             preview above. Reset to seed clears saved channels.

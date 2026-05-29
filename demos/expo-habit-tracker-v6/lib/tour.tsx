@@ -37,28 +37,27 @@ export type TourStep = {
   target?: string;
 };
 
-/* v6's steps. Only the "tap a channel" beat is visibly new on Today, so
-   it's the only ringed step; the others explain what carried over and the
-   route concept (not visible to ring). */
+/* v6's steps. v6's new feature — push notifications + a Coach tone — lives
+   in Settings, not on the Today screen, so these steps are explanatory (no
+   spotlight ring); they explain the new beat and point you to Settings. */
 export const V6_TOUR: TourStep[] = [
   {
     tag: "v6 · what's new",
-    title: "Pulse can drill in now",
+    title: "Pulse can nudge you now",
     body:
-      "This is the final build state. Since the last version, Pulse gained one new thing — a detail screen for each habit. Everything else carried over: swipe right to complete, swipe left for a kind rest day.",
+      "This is the final build state. Since v5, Pulse gained push notifications — a daily reminder with a Coach tone you dial. Everything else carried over: the per-habit detail screen, swipe to complete or rest.",
   },
   {
-    tag: "tap to open",
-    title: "Tap a channel",
+    tag: "in Settings",
+    title: "A daily reminder, your way",
     body:
-      "Tapping a row now opens its own screen — a 30-day history, the streak, and the “why” you wrote. (Swipes still complete and rest.)",
-    target: "first-channel",
+      "Open Settings to set the reminder time and pick a Coach tone — Chill, Firm, or Elite. It's a real local notification on your phone, scheduled with expo-notifications.",
   },
   {
-    tag: "a real route",
-    title: "It's a real screen, not a popup",
+    tag: "on-device, honest",
+    title: "No server, still real",
     body:
-      "The detail screen has its own address (/habit/<id>) and slides in like a native push; Back returns here. That's Expo Router dynamic routes — the v6 lesson.",
+      "On this web build there's no OS scheduler, so Enable shows an in-app preview. On a real phone (Expo Go or a native build) it fires for real — and it's all on-device: no account, no cloud.",
   },
 ];
 

@@ -7,7 +7,7 @@
    the channel on a kind rest day (the streak HOLDS). All commits persist
    to AsyncStorage, and a swipe-to-rest REFLOWS the row via the v4
    LayoutAnimation primitive.
-   v6: TAPPING a row now opens the detail screen (the deliberate UX
+   v5: TAPPING a row now opens the detail screen (the deliberate UX
    evolution that comes with the dynamic-routes beat) — swipes still
    complete/rest. The tap-to-complete affordance migrates into Log on
    the detail screen.
