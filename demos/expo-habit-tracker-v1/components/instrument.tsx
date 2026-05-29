@@ -4,12 +4,21 @@
    channel rows, the app bar, and the phone DeviceFrame. These ARE
    the product look; they re-skin automatically from theme tokens
    (glowing-on-black in dark, positive-LCD-on-silver in light).
-   Still static channels in v1 — the hero "Throw" lands at v3 — but
-   rows now carry the v1 touch-feedback primitive (PressFade).
+   Channels are still completed by tapping for now — the hero "Throw"
+   swipe lands at v3 — but rows carry the v1 touch-feedback primitive
+   (PressFade), and v2 adds the themed TextField the add-channel form
+   types into plus the segment controls it reuses.
    ============================================================ */
 
 import { type ReactNode } from "react";
-import { Platform, Text, View, type ViewStyle } from "react-native";
+import {
+  Platform,
+  Text,
+  TextInput,
+  View,
+  type TextInputProps,
+  type ViewStyle,
+} from "react-native";
 import { FONTS, type ReservedRole } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import { PressFade } from "./motion";
@@ -355,14 +364,18 @@ function StatusBar() {
 export function DeviceFrame({
   children,
   width = 286,
+  aspect = 2.1,
   caption,
 }: {
   children: ReactNode;
   width?: number;
+  /** screen height : width ratio — lets the device selector switch
+      between phone proportions (SE ~1.78, modern ~2.16). */
+  aspect?: number;
   caption?: ReactNode;
 }) {
   const { theme } = useTheme();
-  const screenH = Math.round(width * 2.1);
+  const screenH = Math.round(width * aspect);
   return (
     <View style={{ width, gap: 12 }}>
       <View
@@ -664,5 +677,51 @@ export function BigClock({ time }: { time: string }) {
     >
       {time}
     </Text>
+  );
+}
+
+/* ============================================================
+   Form primitives — added in v2 (the FlatList + TextInput beat).
+   ============================================================ */
+
+/* A themed text input dressed as a screen-printed label field. The web
+   defaults (black-on-white, blue autofill) are wrong on the silver/black
+   instrument faces, so the text + placeholder colors are set explicitly
+   from theme tokens and native autofill styling is suppressed. */
+export function TextField({
+  style,
+  ...rest
+}: TextInputProps & { style?: ViewStyle }) {
+  const { theme } = useTheme();
+  return (
+    <TextInput
+      placeholderTextColor={theme.aluDk}
+      autoCapitalize="sentences"
+      autoCorrect={false}
+      autoComplete="off"
+      // RN-web maps these onto the underlying <input>, killing the
+      // blue autofill wash that would otherwise fight the LCD face.
+      {...(Platform.OS === "web" ? ({ spellCheck: false } as object) : {})}
+      selectionColor={theme.today}
+      {...rest}
+      style={[
+        {
+          fontFamily: FONTS.sansSemi,
+          fontSize: 15,
+          color: theme.print,
+          padding: 0,
+          margin: 0,
+          // strip the web input's default chrome so it reads as etched text
+          ...(Platform.OS === "web"
+            ? ({
+                outlineStyle: "none",
+                backgroundColor: "transparent",
+                borderWidth: 0,
+              } as unknown as ViewStyle)
+            : {}),
+        },
+        style,
+      ]}
+    />
   );
 }

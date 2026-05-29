@@ -13,20 +13,25 @@
 import { type ComponentProps } from "react";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
-import Nav from "@/components/Nav";
 import InstrumentTabBar from "@/components/InstrumentTabBar";
+import TourTarget from "@/components/TourTarget";
 import { useTheme } from "@/theme/ThemeProvider";
 
 export default function TabsLayout() {
   const { theme } = useTheme();
+  // The web Nav was removed: the app now lives inside the DeviceShell phone
+  // bezel, so the only navigation inside the phone is the app's own tab bar.
+  // The tab bar is v1's new beat — wrap it in a TourTarget so the what's-new
+  // tour can ring it ("three tabs now").
   return (
     <View style={{ flex: 1, backgroundColor: theme.canvas }}>
-      <Nav />
       <Tabs
         tabBar={(props) => (
-          <InstrumentTabBar
-            {...(props as unknown as ComponentProps<typeof InstrumentTabBar>)}
-          />
+          <TourTarget id="tab-bar">
+            <InstrumentTabBar
+              {...(props as unknown as ComponentProps<typeof InstrumentTabBar>)}
+            />
+          </TourTarget>
         )}
         screenOptions={{ headerShown: false }}
       >
