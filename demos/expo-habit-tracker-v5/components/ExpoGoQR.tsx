@@ -1,7 +1,7 @@
 /* ExpoGoQR (guideline §9) — scan-to-open card for the home page.
    Pulse ships as a web export on GitHub Pages, so the QR points at the
-   deployed web build — scan it to open Pulse in a phone browser. v5's real
-   push needs a NATIVE build (Expo Go / dev / EAS), which the card calls out. */
+   deployed web build — scan it to open Pulse in a phone browser. v5 adds
+   dynamic routes — tap any channel on Today to drill into its detail screen. */
 
 import QRCode from "react-native-qrcode-svg";
 import { Text, View } from "react-native";
@@ -50,9 +50,9 @@ export default function ExpoGoQR() {
           Scan to open Pulse
         </Text>
         <Text style={{ fontFamily: FONTS.sans, fontSize: 12.5, lineHeight: 19, color: theme.textMuted }}>
-          Opens the deployed web build in your phone's browser — great for the UI and motion. To
-          feel v5's real daily reminder, run it as a native build (Expo Go, a dev build, or an EAS
-          preview), since OS notifications can't fire from the web.
+          Opens the deployed web build in your phone's browser. v5's beat is dynamic routes — tap
+          any channel on Today to push the per-habit detail screen (URL changes to /habit/&lt;id&gt;).
+          The same JS bundle runs natively in Expo Go on your own phone.
         </Text>
       </View>
     </View>

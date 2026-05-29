@@ -1,5 +1,5 @@
 /* Sticky top nav (guideline §3.1) — brand "Pulse" + the
-   `v5 · push` state indicator + primary route links. The brand
+   `v6 · detail` state indicator + primary route links. The brand
    glyph uses the reserved streak accent. */
 
 import { Link, usePathname } from "expo-router";
@@ -72,7 +72,7 @@ export default function Nav() {
                 marginLeft: 4,
               }}
             >
-              v5 · push
+              v6 · detail
             </Text>
           </Pressable>
         </Link>

@@ -13,15 +13,16 @@
 import { type ComponentProps } from "react";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
-import Nav from "@/components/Nav";
 import InstrumentTabBar from "@/components/InstrumentTabBar";
 import { useTheme } from "@/theme/ThemeProvider";
 
 export default function TabsLayout() {
   const { theme } = useTheme();
+  // The web Nav was removed: the app now lives inside the DeviceShell phone
+  // bezel, so the only navigation inside the phone is the app's own tab bar.
+  // Teaching / "back to home" affordances ride the external CalloutRail.
   return (
     <View style={{ flex: 1, backgroundColor: theme.canvas }}>
-      <Nav />
       <Tabs
         tabBar={(props) => (
           <InstrumentTabBar

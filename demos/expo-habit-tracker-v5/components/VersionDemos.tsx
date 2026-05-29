@@ -1,4 +1,4 @@
-/* VersionDemos (guideline §3.9) — the v0…v5 mini-demo registry.
+/* VersionDemos (guideline §3.9) — the v0…v6 mini-demo registry.
    Each export is a self-contained "fake screen" illustrating that
    version's concept without real navigation. Used by the About page
    bento and home-page progression deep-dives. State is local/static. */
@@ -236,6 +236,59 @@ export function DemoV5() {
   );
 }
 
+/* v6 mini-demo: a tiny route diagram + a 30-cell echo of the LED matrix. */
+export function DemoV6() {
+  const { theme } = useTheme();
+  return (
+    <MiniFrame label="dynamic route · /habit/[id]">
+      <View style={{ padding: 12, gap: 10 }}>
+        <View
+          style={{
+            backgroundColor: theme.lcd,
+            borderRadius: 9,
+            padding: 11,
+            borderWidth: 1,
+            borderColor: theme.hairlineStrong,
+            gap: 4,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: FONTS.mono,
+              fontSize: 9,
+              letterSpacing: 1.6,
+              textTransform: "uppercase",
+              color: theme.aluDk,
+            }}
+          >
+            URL
+          </Text>
+          <Text style={{ fontFamily: FONTS.monoBold, fontSize: 13, color: theme.today }}>
+            /habit/morning-walk
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 3 }}>
+          {Array.from({ length: 30 }).map((_, i) => (
+            <View
+              key={i}
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: 2,
+                backgroundColor: i === 7 || i === 18 ? theme.rest : theme.done,
+                opacity: i === 7 || i === 18 ? 1 : 0.9,
+              }}
+            />
+          ))}
+        </View>
+        <Text style={{ fontFamily: FONTS.mono, fontSize: 10, color: theme.aluDk }}>
+          tap any channel → push to detail · back to pop
+        </Text>
+      </View>
+    </MiniFrame>
+  );
+}
+
 export const VERSIONS: {
   v: number;
   title: string;
@@ -285,5 +338,13 @@ export const VERSIONS: {
     concept: "EAS push notifications",
     blurb: "A daily reminder with a Coach tone you dial — Chill, Firm, or Elite.",
     Demo: DemoV5,
+  },
+  {
+    v: 6,
+    title: "Detail",
+    concept: "Dynamic routes + push navigation",
+    blurb:
+      "app/habit/[id].tsx — tap a channel to push its detail screen (30-day LED history, the why, action bar). Stack slide_from_right is the v6 motion primitive.",
+    Demo: DemoV6,
   },
 ];

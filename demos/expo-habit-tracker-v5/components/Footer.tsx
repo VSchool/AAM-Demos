@@ -7,7 +7,7 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { MAX_WIDTH } from "./ui";
 
 const SOURCE =
-  "https://github.com/VSchool/AAM-Demos/tree/main/demos/expo-habit-tracker-v5";
+  "https://github.com/VSchool/AAM-Demos/tree/main/demos/expo-habit-tracker-v6";
 
 export default function Footer() {
   const { theme } = useTheme();
@@ -43,7 +43,7 @@ export default function Footer() {
             color: theme.aluDk,
           }}
         >
-          Pulse · expo-habit-tracker · v5 of 6
+          Pulse · expo-habit-tracker · v6 · final
         </Text>
         <Pressable onPress={() => Linking.openURL(SOURCE)}>
           <Text

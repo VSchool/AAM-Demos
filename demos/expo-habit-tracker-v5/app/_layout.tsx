@@ -16,23 +16,29 @@ import {
 
 import { ThemeProvider, useTheme } from "@/theme/ThemeProvider";
 import { HabitStoreProvider, useHabitStore } from "@/lib/habit-store";
-import { ReminderProvider } from "@/lib/reminder";
-import ThemeToggle from "@/components/ThemeToggle";
+import { SessionProvider } from "@/lib/session";
+import { TourProvider, V5_TOUR } from "@/lib/tour";
+import DeviceShell from "@/components/DeviceShell";
 
 function Routes() {
   const { theme } = useTheme();
   return (
     <View style={{ flex: 1, backgroundColor: theme.canvas }}>
       <StatusBar style={theme.name === "dark" ? "light" : "dark"} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.canvas },
-          animation: "fade",
-        }}
-      />
-      {/* Day-mode switch + palette panel — present on every screen. */}
-      <ThemeToggle />
+      {/* DeviceShell frames the whole app in a phone bezel on a wide browser
+          (full-screen on a real phone / narrow), runs the mock-auth gate
+          (login → welcome → app), and keeps the app's own navigation (tabs +
+          the v5 detail route + the what's-new tour) INSIDE the phone. The
+          day-mode toggle now lives in Settings — there's no floating chrome. */}
+      <DeviceShell>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: theme.canvas },
+            animation: "fade",
+          }}
+        />
+      </DeviceShell>
     </View>
   );
 }
@@ -52,14 +58,17 @@ export default function RootLayout() {
     // (react-native-gesture-handler) to receive touches — it wraps everything.
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
-        {/* The persistent store wraps the whole app. v4: it hydrates from
-            AsyncStorage on launch, so the splash also waits for that read.
-            v5: the reminder store (Coach tone + daily reminder) sits inside it. */}
-        <HabitStoreProvider>
-          <ReminderProvider>
-            <AppGate fontsLoaded={loaded} />
-          </ReminderProvider>
-        </HabitStoreProvider>
+        {/* SessionProvider = the mock-auth gate (login → welcome → app).
+            The persistent store wraps the app (v4 hydrates from AsyncStorage).
+            TourProvider drives the what's-new walkthrough + its spotlight
+            targets. */}
+        <SessionProvider>
+          <HabitStoreProvider>
+            <TourProvider steps={V5_TOUR}>
+              <AppGate fontsLoaded={loaded} />
+            </TourProvider>
+          </HabitStoreProvider>
+        </SessionProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

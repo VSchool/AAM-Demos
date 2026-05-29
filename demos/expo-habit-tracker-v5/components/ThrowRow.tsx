@@ -1,19 +1,20 @@
-/* ThrowRow — v3's hero "Throw", now BIDIRECTIONAL (v4). The same
-   Gesture.Pan() switch, but it reads direction:
+/* ThrowRow — v3's hero "Throw", v4 BIDIRECTIONAL, now v5: the TAP
+   path opens the per-habit detail screen instead of toggling done.
+   Swipes are unchanged.
      • swipe RIGHT → complete (today/rest→done, +1; done stays done)
      • swipe LEFT  → park on rest (today→rest, streak HOLDS) or un-throw
                      a completion (done→today, −1)
-     • TAP         → the quick-complete / accessible path (toggle done)
-   Plus an a11y "Mark rest" action, since a tap can only complete.
+     • TAP         → push '/habit/{id}' (v5 — was toggle done in v4)
 
-   The knob travels only on done transitions (p=1 only when done, else 0);
-   committing a rest snaps the LED amber→slate with the knob staying off,
-   and the row REFLOWS via the v4 LayoutAnimation primitive (fired in the
-   store) the instant it's parked. The heavy haptic fires only when a throw
-   newly completes — gated by useReducedMotion(), which makes the whole
-   thing an instant placement. */
+   The reason for the swap: tapping a row in a list-of-things is the
+   universal "open detail" affordance on iOS/Android. Throwing the
+   switch by gesture stays the deliberate, satisfying commit. The
+   v3 a11y "activate" action label is renamed "Open detail" to match.
+   The heavy haptic still fires only when a swipe newly completes —
+   the tap is a navigation, not a commitment. */
 
 import { Text, View } from "react-native";
+import { router } from "expo-router";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolateColor,
@@ -28,6 +29,11 @@ import { useTheme } from "@/theme/ThemeProvider";
 import { throwHaptic } from "@/lib/haptics";
 import { Led, Segment } from "./instrument";
 
+// Module-scope so the Reanimated worklet can call it via runOnJS.
+function openDetail(id: string) {
+  router.push(`/habit/${id}`);
+}
+
 const TRACK_W = 46;
 const TRACK_H = 26;
 const KNOB = TRACK_H - 6;
@@ -37,24 +43,29 @@ const COMMIT_PX = FINGER_TRAVEL * 0.5; // how far you must drag to commit
 const SPRING = { damping: 12, stiffness: 220 }; // the mechanical snap
 
 export default function ThrowRow({
+  id,
   status,
   name,
   meta,
   streak,
-  onTap,
   onSwipeRight,
   onSwipeLeft,
+  onTap,
 }: {
+  /** v5: the habit id. Used to build the detail-route URL on tap. */
+  id: string;
   status: ReservedRole;
   name: string;
   meta: string;
   streak: string;
-  /** tap: not-done→done · done→today. */
-  onTap: () => void;
   /** swipe right: complete (idempotent toward done). */
   onSwipeRight: () => void;
   /** swipe left: park on rest / un-throw a completion. */
   onSwipeLeft: () => void;
+  /** Optional tap override. When absent (the production /today case) tap
+      pushes the detail route — the v5 default. The motion-tour demo passes
+      its own toggle handler so it can run in isolation without navigating. */
+  onTap?: () => void;
 }) {
   const { theme } = useTheme();
   const done = status === "done";
@@ -100,14 +111,15 @@ export default function ThrowRow({
       }
     });
 
-  // tap — the accessible quick path, and an alternative to swiping right.
+  // v5: tap now opens the detail screen — the universal list affordance.
+  // Throwing the switch by swipe stays the deliberate, satisfying commit.
+  // An onTap override is honored for in-page demos (motion tour) that can't
+  // navigate away.
   const tap = Gesture.Tap()
     .maxDuration(260)
     .onEnd(() => {
-      const target = done ? 0 : 1;
-      p.value = reduce ? target : withSpring(target, SPRING);
-      if (target === 1) runOnJS(throwHaptic)();
-      runOnJS(onTap)();
+      if (onTap) runOnJS(onTap)();
+      else runOnJS(openDetail)(id);
     });
 
   const gesture = Gesture.Exclusive(pan, tap);
@@ -124,17 +136,20 @@ export default function ThrowRow({
   return (
     <GestureDetector gesture={gesture}>
       <View
-        accessibilityRole="switch"
+        accessibilityRole="button"
         accessibilityState={{ checked: done }}
         accessibilityLabel={`${name} — ${done ? "done" : dim ? "resting" : "due today"}`}
-        accessibilityHint="Swipe right or tap to complete; swipe left to rest"
+        accessibilityHint="Tap to open detail; swipe right to complete; swipe left to rest"
         accessibilityActions={[
-          { name: "activate", label: "Complete" },
+          { name: "activate", label: "Open detail" },
+          { name: "complete", label: "Mark done" },
           { name: "rest", label: "Mark rest" },
         ]}
         onAccessibilityAction={(e) => {
           if (e.nativeEvent.actionName === "rest") onSwipeLeft();
-          else onTap();
+          else if (e.nativeEvent.actionName === "complete") onSwipeRight();
+          else if (onTap) onTap();
+          else openDetail(id);
         }}
         style={{
           flexDirection: "row",
