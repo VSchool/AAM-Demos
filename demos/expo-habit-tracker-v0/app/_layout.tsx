@@ -14,22 +14,28 @@ import {
 } from "@expo-google-fonts/space-mono";
 
 import { ThemeProvider, useTheme } from "@/theme/ThemeProvider";
-import ThemeToggle from "@/components/ThemeToggle";
+import { SessionProvider } from "@/lib/session";
+import { TourProvider, V0_TOUR } from "@/lib/tour";
+import DeviceShell from "@/components/DeviceShell";
 
 function Routes() {
   const { theme } = useTheme();
   return (
     <View style={{ flex: 1, backgroundColor: theme.canvas }}>
       <StatusBar style={theme.name === "dark" ? "light" : "dark"} />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: theme.canvas },
-          animation: "fade",
-        }}
-      />
-      {/* Day-mode switch + palette panel — present on every screen. */}
-      <ThemeToggle />
+      {/* DeviceShell frames the scaffold in a phone bezel on a wide browser
+          (fullscreen on a real phone / narrow), runs the mock-auth gate
+          (login → welcome → app), and keeps the what's-new tour INSIDE the
+          phone. v0 has no tabs yet — the single Today screen is the app. */}
+      <DeviceShell>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: theme.canvas },
+            animation: "fade",
+          }}
+        />
+      </DeviceShell>
     </View>
   );
 }
@@ -46,7 +52,14 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      {loaded ? <Routes /> : <Splash />}
+      {/* SessionProvider = the mock-auth gate (login → welcome → app). v0 has
+          no store yet — Today reads the static seed roster. TourProvider
+          drives the what's-new tour. */}
+      <SessionProvider>
+        <TourProvider steps={V0_TOUR}>
+          {loaded ? <Routes /> : <Splash />}
+        </TourProvider>
+      </SessionProvider>
     </ThemeProvider>
   );
 }
