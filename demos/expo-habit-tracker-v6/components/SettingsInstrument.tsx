@@ -11,11 +11,13 @@
    instead — landing with the v5 SequenceIn (withSequence) arrival. */
 
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useHabitStore } from "@/lib/habit-store";
 import { useReminder } from "@/lib/reminder";
+import { useSession } from "@/lib/session";
 import { COACH_ORDER, COACH_COPY } from "@/lib/notifications";
 import { PressFade } from "./motion";
 import ReminderPreview from "./ReminderPreview";
@@ -136,6 +138,7 @@ export default function SettingsInstrument() {
   const { theme, themeName, toggleTheme } = useTheme();
   const { resetToSeed } = useHabitStore();
   const reminder = useReminder();
+  const session = useSession();
   const [wiped, setWiped] = useState(false);
   // bump to remount the preview banner so the SequenceIn arrival replays.
   const [previewNonce, setPreviewNonce] = useState(0);
@@ -273,6 +276,64 @@ export default function SettingsInstrument() {
             </View>
             <Text style={{ fontFamily: FONTS.monoBold, fontSize: 13, color: theme.streak }}>
               {wiped ? "✓" : "⟲"}
+            </Text>
+          </View>
+        </PressFade>
+
+        {/* About — opens the in-app About screen (the build-info home). */}
+        <Pressable
+          onPress={() => router.push("/about")}
+          accessibilityRole="button"
+          accessibilityLabel="About Pulse"
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: theme.lcd,
+            borderWidth: 1,
+            borderColor: theme.hairlineStrong,
+            borderRadius: 9,
+            paddingVertical: 13,
+            paddingHorizontal: 13,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: FONTS.mono,
+              fontSize: 10,
+              letterSpacing: 1.4,
+              textTransform: "uppercase",
+              color: theme.aluDk,
+            }}
+          >
+            About Pulse
+          </Text>
+          <Text style={{ fontFamily: FONTS.mono, fontSize: 13, color: theme.aluDk }}>›</Text>
+        </Pressable>
+
+        {/* Log out — returns to the mock login (clears the session only). */}
+        <PressFade onPress={session.signOut} accessibilityRole="button" accessibilityLabel="Log out">
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: theme.lcd,
+              borderWidth: 1,
+              borderColor: theme.hairlineStrong,
+              borderRadius: 9,
+              paddingVertical: 13,
+              paddingHorizontal: 13,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: FONTS.mono,
+                fontSize: 10,
+                letterSpacing: 1.4,
+                textTransform: "uppercase",
+                color: theme.streak,
+              }}
+            >
+              Log out
             </Text>
           </View>
         </PressFade>

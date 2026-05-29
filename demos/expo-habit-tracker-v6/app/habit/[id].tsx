@@ -20,7 +20,6 @@ import { Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
 import HabitDetail from "@/components/HabitDetail";
-import Nav from "@/components/Nav";
 import { useHabitStore } from "@/lib/habit-store";
 import { useTheme } from "@/theme/ThemeProvider";
 import { FONTS } from "@/theme/tokens";
@@ -40,10 +39,9 @@ export default function HabitDetailScreen() {
   const reduce = useReducedMotion();
   const animation: "slide_from_right" | "none" = reduce ? "none" : "slide_from_right";
 
-  // Web shell: pin Nav above + centre the detail in a phone-width column so
-  // the screen reads like a device on a wide desktop viewport (matching the
-  // TabScreen pattern the (tabs) routes already use). Without this the
-  // 30-cell LED dot-matrix stretches to whatever the browser is wide.
+  // The detail screen fills the DeviceShell phone bezel — no web Nav, no
+  // centred desktop column (the bezel is the frame now). The slide_from_right
+  // push therefore happens INSIDE the phone, over the Today screen.
   return (
     <>
       <Stack.Screen
@@ -57,21 +55,7 @@ export default function HabitDetailScreen() {
         }}
       />
       <View style={{ flex: 1, backgroundColor: theme.canvas }}>
-        <Nav />
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              maxWidth: 560,
-              borderLeftWidth: 1,
-              borderRightWidth: 1,
-              borderColor: theme.hairline,
-            }}
-          >
-            {habit ? <HabitDetail habit={habit} /> : <ChannelNotFound />}
-          </View>
-        </View>
+        {habit ? <HabitDetail habit={habit} /> : <ChannelNotFound />}
       </View>
     </>
   );
