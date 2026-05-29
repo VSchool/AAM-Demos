@@ -154,10 +154,10 @@ Each version is its own dir; the SHELL is shared presentation, the TOUR is versi
 - Chrome verify: symlink `dist` → `/tmp/pulse-preview/AAM-Demos/expo-habit-tracker-vN`; `python3 -m http.server 8099` from `/tmp/pulse-preview`; open `http://localhost:8099/AAM-Demos/expo-habit-tracker-vN/`. Confirm: login→welcome→app + auto-tour with spotlight ring → "What's new" pill; exactly 3 modals; device selector resizes the bezel; **narrow (<980px) → fullscreen, no bezel/modals**; theme toggle in Settings re-skins; (v6) tap→detail. No console errors.
 - Chrome tool gotchas: needs `--chrome`; permission is **per-action** (single calls get approved; `browser_batch` re-triggers and is often denied — prefer single calls); `left_click_drag` mis-scales (verify gestures via tap); window can rescale between shots (use `find`→click-by-ref, or coords from the CURRENT screenshot). Don't commit `dist/`.
 
-## 11. OPEN QUESTIONS for Emily (resolve at propagation start)
-- **Does v0 (and v1) get the full login + welcome shell**, or is login introduced only from a later version? (Lean: all versions get it for consistency — confirm.)
-- **Commit/deploy cadence:** commit each version as built, or all at once after audit? Deploy (push main) only after all 7 audited (per "build → audit → deploy → then curriculum").
-- **v3/v4 tour steps** are explanatory (swipe/persistence aren't static elements) — confirm that's acceptable vs. trying to ring a transient affordance.
+## 11. OPEN QUESTIONS for Emily — RESOLVED 2026-05-29 (see §13)
+- ~~**Does v0 (and v1) get the full login + welcome shell**~~ → **RESOLVED: YES, all v0–v6 get the full shell** (Decision A, §13). Login is presentation chrome, not a per-version feature.
+- ~~**Commit/deploy cadence**~~ → **RESOLVED: commit each version as built + verified**; push-to-main/deploy only after all 7 are built + audited.
+- ~~**v3/v4 tour steps**~~ → **RESOLVED:** v3 = spotlight-ring the first row **and** explain the swipe in the card; v4 = card-only (no ring). Behavioral beats use explanatory text; ring only a genuinely-fixed element.
 
 ## 12. CURRICULUM REFACTOR — Strand B (AAM-Course, ONLY after all versions built + audited + deployed)
 Target: `content/html/week5/day4/` (+ possibly `week5-architecture.md`). Scope:
@@ -166,3 +166,39 @@ Target: `content/html/week5/day4/` (+ possibly `week5-architecture.md`). Scope:
 - Add a **mock login** worked example (rides D4S2 forms + D4S3 auth pattern; W6-silence-safe — never "wire a backend next week").
 - Optionally ship an Expo-flavored `CLAUDE.md` starter for students.
 - Honor: W6 silence rule, Marcus voice, architecture-spec authority. Re-verify demo GH-Pages URLs after redeploy. Commit AAM-Course separately from AAM-Demos. The shared Medium article (`xcrun mcpbridge`) is native-Swift, OUT OF LANE — only the workflow philosophy transfers, via Expo.
+
+---
+
+## 13. AMENDMENTS — LOCKED 2026-05-29 (Emily). These OVERRIDE the sections noted; everything else in this plan stands.
+
+### Decision A — Login/welcome/tour/bezel = UNIVERSAL shell on ALL versions (v0–v6)
+- Resolves §11 Q1 → **YES, every version v0–v6 gets the full shell.** Login is **presentation** (the demo's mobile-app front door), NOT a per-version feature. The tour narrates each version's real new feature; login is constant chrome like the bezel.
+- **NO v7.** The login already in v6 becomes universal shell, not a standalone version. The arc stays **v0–v6**.
+- **No demo ever has real auth — mock login only** (any input signs in, no server, non-persistent replay), on every version. Hard rule. No "build your own login" / "make it real" path anywhere in the demos (that's a post-backend, self-directed student door, never in the demos).
+
+### Decision B — Re-sequence: detail route = v5, push notifications = v6 (OVERRIDES §9.4 + §9.6 for v5/v6 ONLY)
+Reason: curriculum teaches the detail route in session 2 (S2-06) and push notifications in session 3 (S3-02); the old numbering (push=v5, detail=v6) crossed that order. **Version number = lesson order = cumulative stack.**
+
+Target arc (shell on every row; tour narrates the delta):
+`v0` scaffold · `v1` tab nav · `v2` list+form · `v3` swipe · `v4` persist · **`v5` = dynamic detail route (+ slide_from_right push/pop NAVIGATION)** · **`v6` = push NOTIFICATIONS (COMPLETE/final)**
+
+> ⚠️ "push" is overloaded: **push/pop *navigation* + `slide_from_right`** is inseparable from the detail route → travels **with detail to v5**. **push *notifications*** (the `notifications.ts`/`reminder.tsx` reminder feature) is v6's headline delta. The strip list below = push *notifications*.
+
+Transforms:
+1. **new v6 = current v6, KEPT** (already has persist+detail+push+shell pilot). Re-point its tour to narrate **push notifications** as the new-in-v6 delta (detail demoted to "inherited from v5"); move the `slide_from_right`/"Stack push" navigation framing OFF v6's headline; label `v6 · final` / Complete in Nav/Footer/Progression/About/QR/etc. Keep slug/baseUrl/storage key = v6.
+2. **new v5 = copy of current v6 MINUS push notifications.** Strip ONLY push: `lib/notifications.ts`, `lib/reminder.tsx`, `ReminderProvider`, reminder rows in `SettingsInstrument.tsx`/`settings.tsx` + `ReminderPreview` and demo refs. KEEP the detail route + slide_from_right + full shell. Tour narrates the **detail route** (= the current `V6_TOUR` content, moved). slug/baseUrl → v5, storage key → `pulse.habits.v5`. **Verified low-risk: detail screen / habit-store / AddChannelPanel have ZERO push coupling.**
+3. **Retire current v5** (push-only, no detail) — subsumed by new v6. Replace its directory with new v5 from step 2. Do NOT propagate shell onto the old push-only v5.
+4. **v0–v4:** unchanged feature deltas; propagate the shell per §9 as normal.
+
+Directory names stay `v0–v6` and slugs/baseUrls/storage keys stay aligned → `deploy.yml` + `landing.html` need NO change. v3/v4 tour: v3 spotlight-rings the first row AND explains the swipe in the card; v4 is card-only. Commit each version as built + verified; push-to-main/deploy only after all 7 audited.
+
+### Decision C — §6 feature-freeze LIFTED for ONE addition: functional Edit on the habit detail screen
+Overrides §6 ("don't re-architect features") for this single addition only — recorded here so it is not silent feature creep.
+- **Edit = inline, pre-populated form**, reusing the v2 add-form pattern (`AddChannelPanel`), pre-filled with the habit's current `name`/`cadence`/`window`/`why` (the `NewHabit` fields). NOT a route — `app/habit/[id]/edit.tsx` stays out of scope; Edit is an inline panel/modal like the add form.
+- **Save → new `updateHabit(id, partial)` store action** (sibling to `addHabit`/`removeHabit`); persists via the existing AsyncStorage layer. **PARTIAL update** — only edited fields change; MUST NOT reset/overwrite `streak`, `bestStreak`, `history`, `status`, `channel`, or `id` (id stays stable on rename so the `/habit/<id>` route + history survive).
+- **Lands in v5** (detail-screen introduction); **inherits to v6**. v0–v4 have no detail screen → no Edit there.
+- **Remove the stub entirely** — no "v7 stretch" / "deferred" copy; the action is real. Update the action-bar copy.
+- **Own discrete commit**, separate from presentation/shell commits.
+- **Verify BOTH themes:** Edit opens pre-populated → save updates detail + list → persists across reload AND streak/history survive the edit unchanged; Log + Delete still work; no console errors.
+- **Curriculum-neutral:** no new teaching beat; v5 tour still narrates "dynamic detail route." No s2-06/s3-02/s3-06 link changes. Do NOT touch AAM-Course's `demo-registry.json` (curriculum-side, later session).
+- **Docs:** re-annotate the UI kit "Edit shipped at v5" (not deferred). (Recorded here + in memory.)
