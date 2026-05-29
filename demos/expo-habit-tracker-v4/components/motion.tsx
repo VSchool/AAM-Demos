@@ -8,6 +8,10 @@
    you patch in a channel the new row settles into place with
    withSpring, the physical, mechanical feel a switch deserves.
 
+   v5's beat: withSequence entrance choreography (SequenceIn). The daily
+   reminder preview banner doesn't just fade in — it overshoots, settles,
+   and lands, a multi-step arrival composed from withTiming → withSpring.
+
    v4's beat: LayoutAnimation (layoutReflow). A single, web-safe call
    that tells RN to TWEEN the next layout change instead of jumping to
    it. We fire it right before the store mutates so two moments animate:
@@ -35,6 +39,7 @@ import Animated, {
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
+  withSequence,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -170,6 +175,47 @@ export function SpringIn({
       { translateY: (1 - progress.value) * 14 },
       { scale: 0.97 + progress.value * 0.03 },
     ],
+  }));
+
+  return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;
+}
+
+/**
+ * SequenceIn — the v5 motion primitive. A multi-step entrance: the wrapped
+ * view fades in while its scale OVERSHOOTS past 1 (withTiming) and then
+ * SETTLES back with a spring (withSequence chains the two). Used for the
+ * daily-reminder preview banner so a notification feels like it lands, not
+ * just appears. Remount it (change `key`) to replay. Reduced-motion users
+ * get the instant, at-rest placement.
+ */
+export function SequenceIn({
+  children,
+  style,
+}: {
+  children: ReactNode;
+  style?: ViewStyle;
+}) {
+  const reduce = useReducedMotion();
+  const scale = useSharedValue(reduce ? 1 : 0.9);
+  const opacity = useSharedValue(reduce ? 1 : 0);
+
+  useEffect(() => {
+    if (reduce) {
+      scale.value = 1;
+      opacity.value = 1;
+      return;
+    }
+    opacity.value = withTiming(1, { duration: 160 });
+    // overshoot, then settle — the signature multi-step arrival
+    scale.value = withSequence(
+      withTiming(1.06, { duration: 180 }),
+      withSpring(1, { damping: 10, stiffness: 200 }),
+    );
+  }, [reduce, scale, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
   }));
 
   return <Animated.View style={[style, animatedStyle]}>{children}</Animated.View>;

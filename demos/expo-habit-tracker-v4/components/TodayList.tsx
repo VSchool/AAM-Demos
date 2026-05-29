@@ -17,15 +17,56 @@
    static TodayInstrument instead — this interactive list is only /today. */
 
 import { useRef } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
+import { router } from "expo-router";
 import { channelCode } from "@/lib/habits";
 import { useHabitStore } from "@/lib/habit-store";
+import { FONTS } from "@/theme/tokens";
+import { useTheme } from "@/theme/ThemeProvider";
 import { AppBar } from "./instrument";
 import { SpringIn } from "./motion";
 import AddChannelPanel from "./AddChannelPanel";
 import ThrowRow from "./ThrowRow";
 
 const pad = (n: number) => String(n).padStart(2, "0");
+
+/* The in-app entry to the build info — always reachable so device + browser
+   stay identical (on a wide browser the same info also rides the rail). */
+function MoreAboutRow() {
+  const { theme } = useTheme();
+  return (
+    <Pressable
+      onPress={() => router.push("/about")}
+      accessibilityRole="button"
+      accessibilityLabel="More about this version"
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginTop: 4,
+        paddingVertical: 12,
+        paddingHorizontal: 13,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: theme.hairline,
+        backgroundColor: theme.canvasRaised,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: FONTS.mono,
+          fontSize: 10.5,
+          letterSpacing: 1.4,
+          textTransform: "uppercase",
+          color: theme.aluDk,
+        }}
+      >
+        ⓘ  More about this version
+      </Text>
+      <Text style={{ fontFamily: FONTS.mono, fontSize: 13, color: theme.aluDk }}>›</Text>
+    </Pressable>
+  );
+}
 
 export default function TodayList() {
   const { habits, addHabit, toggleDone, markDone, markRest, progress } = useHabitStore();
@@ -48,6 +89,7 @@ export default function TodayList() {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ padding: 14, gap: 10 }}
         ListHeaderComponent={<AddChannelPanel nextChannel={nextChannel} onAdd={addHabit} />}
+        ListFooterComponent={<MoreAboutRow />}
         renderItem={({ item }) => (
           <SpringIn animate={!seedIds.has(item.id)}>
             <ThrowRow

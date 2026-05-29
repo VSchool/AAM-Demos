@@ -1,29 +1,22 @@
 /* SettingsInstrument — the Settings tab.
-   The device's control panel: the net-new Coach-tone dial (Chill /
-   Firm / Elite — a static-but-tappable PREVIEW; it drives real reminder
-   copy at the v5 push beat), the daily-reminder segment clock, the
-   day-mode switch (wired live to the theme), hardware toggles for
-   haptics + LED brightness, the v4 "reset to seed" affordance, and the
-   honest fine print as an etched label. No fake tab bar — the live
+   The device's control panel: the day-mode switch (wired live to the
+   theme), hardware toggles, the v4 "reset to seed" affordance, About,
+   Log out, and the honest fine print. No fake tab bar — the live
    navigator draws it.
 
-   v4 rewrites the fine print: state now PERSISTS locally (AsyncStorage =
-   localStorage on web), so a refresh no longer resets — which is exactly
-   why a manual reset-to-seed now exists. */
+   (Coach tone + the daily-reminder console arrive in v6 — the push beat.
+   v5 stops at the detail route, so Settings here is the v4 control panel
+   plus the universal shell's About + Log out rows.) */
 
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useHabitStore } from "@/lib/habit-store";
+import { useSession } from "@/lib/session";
 import { PressFade } from "./motion";
-import {
-  AppBar,
-  BigClock,
-  Field,
-  HardwareSwitch,
-  SegmentedControl,
-} from "./instrument";
+import { AppBar, HardwareSwitch } from "./instrument";
 
 /* label + sub-label on the left, a hardware switch on the right. */
 function SwitchRow({
@@ -92,7 +85,7 @@ function SwitchRow({
 export default function SettingsInstrument() {
   const { theme, themeName, toggleTheme } = useTheme();
   const { resetToSeed } = useHabitStore();
-  const [coach, setCoach] = useState(1); // preview default: Firm
+  const session = useSession();
   const [wiped, setWiped] = useState(false);
 
   const onReset = () => {
@@ -105,24 +98,6 @@ export default function SettingsInstrument() {
     <View style={{ flex: 1 }}>
       <AppBar title="Settings · device" />
       <ScrollView contentContainerStyle={{ padding: 14, gap: 12 }}>
-        <Field label="Coach tone" hint="reminder personality">
-          <SegmentedControl options={["Chill", "Firm", "Elite"]} active={coach} onChange={setCoach} />
-          <Text
-            style={{
-              fontFamily: FONTS.sans,
-              fontSize: 11.5,
-              color: theme.textMuted,
-              marginTop: 2,
-            }}
-          >
-            Preview — sets how the daily nudge talks to you. Wires into real notifications at v5.
-          </Text>
-        </Field>
-
-        <Field label="Daily reminder">
-          <BigClock time="09:00" />
-        </Field>
-
         <SwitchRow
           label="Day mode"
           sub={themeName === "dark" ? "dark — glowing LCD on black" : "light — positive LCD on silver"}
@@ -182,8 +157,65 @@ export default function SettingsInstrument() {
           </View>
         </PressFade>
 
-        {/* Honest fine print — the etched label (guideline §2.3), now flipped
-            by persistence. */}
+        {/* About — opens the in-app About screen (the build-info home). */}
+        <Pressable
+          onPress={() => router.push("/about")}
+          accessibilityRole="button"
+          accessibilityLabel="About Pulse"
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: theme.lcd,
+            borderWidth: 1,
+            borderColor: theme.hairlineStrong,
+            borderRadius: 9,
+            paddingVertical: 13,
+            paddingHorizontal: 13,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: FONTS.mono,
+              fontSize: 10,
+              letterSpacing: 1.4,
+              textTransform: "uppercase",
+              color: theme.aluDk,
+            }}
+          >
+            About Pulse
+          </Text>
+          <Text style={{ fontFamily: FONTS.mono, fontSize: 13, color: theme.aluDk }}>›</Text>
+        </Pressable>
+
+        {/* Log out — returns to the mock login (clears the session only). */}
+        <PressFade onPress={session.signOut} accessibilityRole="button" accessibilityLabel="Log out">
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: theme.lcd,
+              borderWidth: 1,
+              borderColor: theme.hairlineStrong,
+              borderRadius: 9,
+              paddingVertical: 13,
+              paddingHorizontal: 13,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: FONTS.mono,
+                fontSize: 10,
+                letterSpacing: 1.4,
+                textTransform: "uppercase",
+                color: theme.streak,
+              }}
+            >
+              Log out
+            </Text>
+          </View>
+        </PressFade>
+
+        {/* Honest fine print — the etched label (guideline §2.3). */}
         <View
           style={{
             backgroundColor: theme.lcd,
@@ -215,9 +247,8 @@ export default function SettingsInstrument() {
               color: theme.textMuted,
             }}
           >
-            As of v4 your channels PERSIST on this device (AsyncStorage — localStorage in the web
-            build), so a refresh no longer resets. There's still no account and no cloud sync — it
-            lives only here. Use “Reset to seed” to start over. Daily reminders land in v5.
+            Your channels persist on this device with AsyncStorage — no account, no cloud sync. The
+            login is a mock; your profile lives on this device. Reset to seed clears saved channels.
           </Text>
         </View>
       </ScrollView>
