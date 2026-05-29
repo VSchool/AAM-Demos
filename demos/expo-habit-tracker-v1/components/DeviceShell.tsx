@@ -152,9 +152,18 @@ export default function DeviceShell({ children }: { children: ReactNode }) {
   const app = <AppArea>{children}</AppArea>;
 
   // NATIVE or NARROW web (a real phone): full-screen app, no bezel, no rail.
+  // A real phone (<~430) fills the screen. In the in-between range (a tablet
+  // or a resized desktop, ~430–980) we cap the column to a phone-ish width and
+  // centre it, so the app never stretches edge-to-edge. The cap is wider than
+  // any phone, so portrait phones are unaffected; native is always a real
+  // phone, so it's inert there too.
   const wide = width >= 980;
   if (Platform.OS !== "web" || !wide) {
-    return <View style={{ flex: 1, backgroundColor: theme.canvas }}>{app}</View>;
+    return (
+      <View style={{ flex: 1, backgroundColor: theme.canvas, alignItems: "center" }}>
+        <View style={{ flex: 1, width: "100%", maxWidth: 600 }}>{app}</View>
+      </View>
+    );
   }
 
   // WIDE WEB: phone bezel + device selector + the 3 external annotation modals.
