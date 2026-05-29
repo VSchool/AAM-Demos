@@ -1,8 +1,9 @@
 /* ============================================================
-   HabitDetail — what the v6 dynamic route renders inside.
+   HabitDetail — what the dynamic detail route renders inside
+   (introduced at v5).
 
-   This screen is the "vessel" for v6's teaching beat (dynamic
-   routes + push). The features on it are real but secondary:
+   This screen is the "vessel" for v5's teaching beat (dynamic
+   routes). The features on it are real but secondary:
    they're data the model already carries (history, why,
    bestStreak) that was previously invisible in the app.
 
@@ -35,6 +36,7 @@ import { useHabitStore } from "@/lib/habit-store";
 import { channelCode, type Cadence, type Habit, type Window } from "@/lib/habits";
 import { useTheme } from "@/theme/ThemeProvider";
 import { FONTS } from "@/theme/tokens";
+import EditHabitForm from "./EditHabitForm";
 
 const CADENCE_LABEL: Record<Cadence, string> = {
   daily: "Daily",
@@ -52,11 +54,11 @@ const MATRIX_LEN = 30;
 
 export default function HabitDetail({ habit }: { habit: Habit }) {
   const { theme } = useTheme();
-  const { toggleDone, removeHabit } = useHabitStore();
+  const { toggleDone, removeHabit, updateHabit } = useHabitStore();
 
-  // Edit is intentionally a stub (out-of-scope per the v6 plan); tapping it
-  // surfaces a small inline pill instead of routing anywhere.
-  const [editHint, setEditHint] = useState(false);
+  // Edit opens an inline, pre-filled form (NOT a route) — the v2 add-form
+  // pattern, reused. Save writes a partial update; streak/history survive.
+  const [editing, setEditing] = useState(false);
 
   // The last 30 cells of history, newest last, padded with empty cells if the
   // channel hasn't been around for 30 days yet.
@@ -65,6 +67,21 @@ export default function HabitDetail({ habit }: { habit: Habit }) {
     const padding = Math.max(0, MATRIX_LEN - tail.length);
     return [...Array.from({ length: padding }, () => "empty" as const), ...tail];
   }, [habit.history]);
+
+  // Edit mode swaps the whole screen for the pre-filled form (still inside
+  // the bezel — no route change). Save commits a partial update and returns.
+  if (editing) {
+    return (
+      <EditHabitForm
+        habit={habit}
+        onCancel={() => setEditing(false)}
+        onSave={(patch) => {
+          updateHabit(habit.id, patch);
+          setEditing(false);
+        }}
+      />
+    );
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.canvas }}>
@@ -100,30 +117,14 @@ export default function HabitDetail({ habit }: { habit: Habit }) {
         <MetaRow label="CADENCE" value={CADENCE_LABEL[habit.cadence]} />
         <MetaRow label="WINDOW" value={WINDOW_LABEL[habit.window]} />
 
-        {/* the "why" — surfaced for the first time in v6. Streak-orange
+        {/* the "why" — surfaced on the detail screen (v5). Streak-orange
             left rule, italic so it reads as a quote rather than UI. */}
         {habit.why ? <WhyQuote text={habit.why} /> : null}
-
-        {editHint ? (
-          <Text
-            style={{
-              fontFamily: FONTS.mono,
-              fontSize: 10,
-              letterSpacing: 1.4,
-              textTransform: "uppercase",
-              color: theme.aluDk,
-              textAlign: "center",
-              marginTop: 6,
-            }}
-          >
-            Edit · deferred to a v7 stretch
-          </Text>
-        ) : null}
       </ScrollView>
 
       {/* bottom action bar — dressed like the k-tabs strip from the kit */}
       <ActionBar
-        onEdit={() => setEditHint(true)}
+        onEdit={() => setEditing(true)}
         onLog={() => toggleDone(habit.id)}
         onDelete={() => {
           removeHabit(habit.id);
