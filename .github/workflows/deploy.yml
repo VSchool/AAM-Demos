@@ -178,6 +178,12 @@ jobs:
         working-directory: demos/nextjs-task-board-v6
         run: npm ci && npm run build
 
+      # W6 Cadence comparison pair — V7 frontend-only "before".
+      # (V8 is full-stack and deploys on Vercel, not in this Pages workflow.)
+      - name: Build Next.js Task Board v7
+        working-directory: demos/nextjs-task-board-v7
+        run: npm ci && npm run build
+
       # W5D4 Expo habit-tracker (Pulse) progressive series
       - name: Build Pulse (expo-habit-tracker v0)
         working-directory: demos/expo-habit-tracker-v0
@@ -260,6 +266,7 @@ jobs:
           cp -r demos/nextjs-task-board-v4/out _site/nextjs-task-board-v4
           cp -r demos/nextjs-task-board-v5/out _site/nextjs-task-board-v5
           cp -r demos/nextjs-task-board-v6/out _site/nextjs-task-board-v6
+          cp -r demos/nextjs-task-board-v7/out _site/nextjs-task-board-v7
           # W5D4 Expo habit-tracker (Pulse) — expo web export lands in dist/
           cp -r demos/expo-habit-tracker-v0/dist _site/expo-habit-tracker-v0
           cp -r demos/expo-habit-tracker-v1/dist _site/expo-habit-tracker-v1
