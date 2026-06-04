@@ -4,3 +4,7 @@ out/
 .next/
 _site/
 .DS_Store
+
+# secrets (never commit live credentials)
+.env*
+!.env*.example
