@@ -48,7 +48,9 @@ export default function TaskCard({
           <span className={FLAG_CLASS[task.status]}>{STATUS_LABEL[task.status]}</span>
         </header>
         <h3 className="cn-task-title">{task.title}</h3>
-        <p className="cn-task-desc">{task.description}</p>
+        {task.description ? (
+          <p className="cn-task-desc">{task.description}</p>
+        ) : null}
         <footer className="cn-task-foot">
           <div className="cn-task-foot-left">
             <span className="cn-prio">

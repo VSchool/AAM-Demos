@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-store";
-import { getToken } from "@/lib/api-client";
 
-const V7_URL = "https://vschool.github.io/AAM-Demos/nextjs-task-board-v7/";
+// Where the Fullstack ("after") app lives. Swap this for the deployed Fullstack
+// URL when it's online; locally the Fullstack app runs on :3000.
+const FULLSTACK_URL = "http://localhost:3000/";
 
-// A small live "see it" panel: runs a fetch and shows the raw result, so the
-// backend difference is demonstrated, not just described.
-function LiveFetch({
+// A small live "see it" panel: runs some code and shows the raw result. On the
+// Frontend app the interesting beat is that NOTHING hits the network — the data
+// was already in your browser.
+function LiveLocal({
   label,
   run,
 }: {
@@ -45,58 +46,66 @@ function LiveFetch({
 }
 
 export default function ComparePage() {
-  const { user, ready } = useAuth();
-  const signedIn = ready && !!user;
-
-  async function fetchTaskList(): Promise<string> {
-    const token = getToken();
-    if (!token) {
-      return "You're not logged in. Log in first, then run this — the request needs your token.";
-    }
-    const res = await fetch("/api/tasks", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const data = await res.json();
-    const tasks = (data.tasks ?? []) as Array<{ id: string; title: string; status: string }>;
+  async function readTasks(): Promise<string> {
+    const raw =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("cadence:tasks:v7")
+        : null;
+    const tasks = (raw ? JSON.parse(raw) : []) as Array<{
+      id: string;
+      title: string;
+      status: string;
+    }>;
     const preview = tasks.slice(0, 4).map((t) => ({
       id: t.id,
       title: t.title,
       status: t.status,
     }));
     return [
-      `GET /api/tasks  →  ${res.status} ${res.statusText}`,
-      `${tasks.length} task(s) returned for your account. First few:`,
+      `localStorage.getItem("cadence:tasks:v7")`,
+      `${tasks.length} task(s) found — in THIS browser. First few:`,
       JSON.stringify(preview, null, 2),
       "",
-      "↳ Open DevTools → Network and run this again: you'll see this exact",
-      "  request and JSON response. In the Frontend app there was no request",
-      "  — the data was just sitting in your browser's localStorage.",
+      "↳ Open DevTools → Network and run this again: nothing fires. There's",
+      "  no server to call — the board was already sitting in localStorage.",
+      "  The catch: it only exists here. Another device sees an empty board.",
     ].join("\n");
   }
 
-  async function fetchWeather(): Promise<string> {
-    const res = await fetch("/api/weather?city=Provo");
-    const data = await res.json();
+  async function readBoards(): Promise<string> {
+    const raw =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("cadence:boards:v7")
+        : null;
+    const boards = (raw ? JSON.parse(raw) : []) as Array<{
+      id: string;
+      name: string;
+    }>;
     return [
-      `GET /api/weather?city=Provo  →  ${res.status} ${res.statusText}`,
-      JSON.stringify(data, null, 2),
+      `localStorage.getItem("cadence:boards:v7")`,
+      `${boards.length} board(s) stored in this browser:`,
+      JSON.stringify(
+        boards.map((b) => ({ id: b.id, name: b.name })),
+        null,
+        2,
+      ),
       "",
-      "↳ Notice what's NOT here: the OpenWeatherMap API key. The browser",
-      "  called OUR route; OUR server called OpenWeatherMap with the secret",
-      "  key. Search the whole Network tab — the key never appears.",
+      "↳ Create or delete a board, then run this again — it updates instantly,",
+      "  no request, no database. Just a JSON string in your browser.",
     ].join("\n");
   }
 
   return (
     <main className="cn-page">
       <div className="cn-eyebrow">Frontend → Fullstack walkthrough</div>
-      <h1 className="cn-h1">What a backend actually adds.</h1>
+      <h1 className="cn-h1">Everything here runs in your browser.</h1>
       <p className="cn-lede">
         The Frontend app and the Fullstack app are the <strong>same app</strong>.
-        Same board, same UI kit, same drag-and-drop. The only difference is that
-        the Fullstack app has a backend — and that one difference is the whole of
-        what changed below. Open the Frontend app in another tab and compare as you
-        go.
+        Same board, same UI kit, same drag-and-drop. This is the{" "}
+        <strong>Frontend</strong> version: no server, no sign-in — it runs
+        entirely in your browser, which makes it dead simple to ship and instant
+        to use. What it <em>can&apos;t</em> do is exactly what a backend adds.
+        Open the Fullstack app in another tab and compare as you go.
       </p>
 
       <div className="cn-banner cn-banner-info" style={{ marginTop: 8 }}>
@@ -104,20 +113,20 @@ export default function ComparePage() {
         <p>
           Each row shows the <strong>Frontend app “before”</strong> on the left
           and the <strong>Fullstack app “after”</strong> on the right. Where you
-          see a{" "}
-          <strong>Run</strong> button, click it — it makes a real request so you
-          can watch the backend work in your browser&apos;s Network tab.
+          see a <strong>Run</strong> button, click it — on this app it reads
+          straight from your browser, so you can confirm in DevTools → Network
+          that <em>nothing</em> is fetched.
         </p>
       </div>
 
       <p style={{ margin: "18px 0 0" }}>
         <a
           className="cn-back-link"
-          href={V7_URL}
+          href={FULLSTACK_URL}
           target="_blank"
           rel="noopener"
         >
-          Open the Frontend app (the “before”) in a new tab ↗
+          Open the Fullstack app (the “after”) in a new tab ↗
         </a>
       </p>
 
@@ -142,8 +151,8 @@ export default function ComparePage() {
           <thead>
             <tr>
               <th className="cn-cap-corner">Capability</th>
-              <th className="cn-cap-col">Frontend app</th>
-              <th className="cn-cap-col cn-cap-col-after">Fullstack app</th>
+              <th className="cn-cap-col cn-cap-col-after">Frontend app</th>
+              <th className="cn-cap-col">Fullstack app</th>
             </tr>
           </thead>
           <tbody>
@@ -155,13 +164,14 @@ export default function ComparePage() {
               "Drag to reorder tasks",
               "Fast filters & search",
               "A detail page per task",
+              "Multiple boards",
             ].map((cap) => (
               <tr key={cap}>
                 <th scope="row" className="cn-cap-rowhead">{cap}</th>
-                <td className="cn-cap-cell">
+                <td className="cn-cap-cell cn-cap-after">
                   <span className="cn-cap-pill cn-cap-pill-yes">✓</span>
                 </td>
-                <td className="cn-cap-cell cn-cap-after">
+                <td className="cn-cap-cell">
                   <span className="cn-cap-pill cn-cap-pill-yes">✓</span>
                 </td>
               </tr>
@@ -178,10 +188,10 @@ export default function ComparePage() {
             ].map((cap) => (
               <tr key={cap}>
                 <th scope="row" className="cn-cap-rowhead">{cap}</th>
-                <td className="cn-cap-cell">
+                <td className="cn-cap-cell cn-cap-after">
                   <span className="cn-cap-pill cn-cap-pill-no">✕</span>
                 </td>
-                <td className="cn-cap-cell cn-cap-after cn-cap-new">
+                <td className="cn-cap-cell cn-cap-new">
                   <span className="cn-cap-pill cn-cap-pill-yes">✓</span>
                   <span className="cn-cap-newtag">NEW</span>
                 </td>
@@ -191,36 +201,36 @@ export default function ComparePage() {
         </table>
 
         <p className="cn-compare-try">
-          Try it: {signedIn ? "you're logged in" : "log in"}, add a task, then open{" "}
-          <Link href="/login">this site in a second browser</Link> and log in as
-          the same user — the task is waiting.
+          Try it: add a task, then close this tab and reopen it — your board is
+          still here, saved in this browser. Open the same app on another device,
+          though, and it&apos;s empty. That&apos;s the line a backend crosses.
         </p>
       </section>
 
-      {/* See the backend respond, live */}
+      {/* See where the data lives, live */}
       <section className="cn-section">
         <div className="cn-section-tag">see it live</div>
-        <h2 className="cn-section-h">Watch the backend respond.</h2>
+        <h2 className="cn-section-h">See where your data lives.</h2>
         <p className="cn-aside" style={{ marginBottom: 16 }}>
-          These buttons make real requests. Run them, then open DevTools →
-          Network to watch the request and JSON response.
+          These buttons read straight from your browser — no request goes out.
+          Run them, then open DevTools → Network and confirm the tab stays empty.
         </p>
         <div className="cn-compare-live-grid">
-          <LiveFetch label="Run GET /api/tasks" run={fetchTaskList} />
-          <LiveFetch label="Run GET /api/weather" run={fetchWeather} />
+          <LiveLocal label="Read tasks from localStorage" run={readTasks} />
+          <LiveLocal label="Read boards from localStorage" run={readBoards} />
         </div>
       </section>
 
       <section className="cn-section">
         <h2 className="cn-section-h">That&apos;s the whole difference.</h2>
         <p className="cn-aside" style={{ marginBottom: 18 }}>
-          Persistence, accounts, data over an API, and a protected secret. Four
-          capabilities, one cause: the Fullstack app has a server and a database.
-          Everything else — the board, the cards, the filters — is identical to
-          the Frontend app.
+          The board, the cards, the filters, the drag-and-drop — all of it is
+          real and runs with zero backend. The moment you need tasks on another
+          device, accounts, a real API, or a hidden key, that&apos;s when you add
+          a server. That&apos;s the Fullstack app — same screens, one new layer.
         </p>
-        <Link href="/tasks" className="cn-back-link">
-          Go to your board →
+        <Link href="/" className="cn-back-link">
+          Go to your boards →
         </Link>
       </section>
     </main>

@@ -7,6 +7,7 @@ import type { Task } from "@/lib/tasks";
 export function serializeTask(doc: TaskDoc): Task {
   return {
     id: doc.key,
+    boardId: doc.boardId ? String(doc.boardId) : null,
     title: doc.title,
     description: doc.description,
     status: doc.status,

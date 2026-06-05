@@ -3,23 +3,20 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import AuthGate from "@/components/AuthGate";
 import TaskBoard from "@/components/TaskBoard";
 import TaskListSkeleton from "@/components/TaskListSkeleton";
-import WeatherStrip from "@/components/WeatherStrip";
 import { useTaskStore } from "@/lib/task-store";
 import { useBoards } from "@/lib/board-store";
 import { BOARD_COLORS } from "@/lib/boards";
 
-function Board() {
-  const { loading, hydrated, error, setActiveBoard, activeBoardId } =
-    useTaskStore();
+export default function TasksView() {
+  const { hydrated, setActiveBoard, activeBoardId } = useTaskStore();
   const { boards, hydrated: boardsHydrated } = useBoards();
   const params = useSearchParams();
   const boardParam = params.get("board");
 
-  // Resolve which board to show: the ?board= id if the user owns it, else their
-  // first/default board. Falls back to null until boards have loaded.
+  // Resolve which board to show: the ?board= id if it exists, else the first
+  // board. Falls back to null until boards have loaded.
   const resolvedBoardId =
     (boardParam && boards.find((b) => b.id === boardParam)?.id) ||
     boards[0]?.id ||
@@ -31,11 +28,17 @@ function Board() {
     setActiveBoard(resolvedBoardId);
   }, [resolvedBoardId, setActiveBoard]);
 
-  const activeBoard = boards.find((b) => b.id === (activeBoardId ?? resolvedBoardId));
+  const activeBoard = boards.find(
+    (b) => b.id === (activeBoardId ?? resolvedBoardId),
+  );
 
   return (
     <main className="cn-page">
-      <Link href="/" className="cn-back-link" style={{ marginBottom: 14, display: "inline-flex" }}>
+      <Link
+        href="/"
+        className="cn-back-link"
+        style={{ marginBottom: 14, display: "inline-flex" }}
+      >
         ← All boards
       </Link>
       <div className="cn-eyebrow">
@@ -55,37 +58,16 @@ function Board() {
       <h1 className="cn-h1">{activeBoard ? activeBoard.name : "All tasks."}</h1>
       <p className="cn-lede">
         Create a task, filter by status, and sort by priority, due date, or
-        recent activity. Click into any ticket to edit it. Everything here is
-        saved to your account — it loads from the API and follows you to any
-        device.
+        recent activity. Click into any ticket to edit it. Your board is saved
+        in this browser.
       </p>
-
-      <WeatherStrip />
 
       <section className="cn-section">
         <div className="cn-section-tag">your board</div>
         <h2 className="cn-section-h">Create, filter, click into detail to edit</h2>
 
-        {error ? (
-          <div className="cn-auth-error" role="alert" style={{ marginBottom: 16 }}>
-            {error}
-          </div>
-        ) : null}
-
-        {(loading && !hydrated) || !boardsHydrated ? (
-          <TaskListSkeleton />
-        ) : (
-          <TaskBoard />
-        )}
+        {!hydrated || !boardsHydrated ? <TaskListSkeleton /> : <TaskBoard />}
       </section>
     </main>
-  );
-}
-
-export default function TasksView() {
-  return (
-    <AuthGate>
-      <Board />
-    </AuthGate>
   );
 }

@@ -153,6 +153,15 @@ a { color: inherit; text-decoration: none; }
   margin: 0 0 16px;
   color: var(--cream);
 }
+.cn-subtitle {
+  font-family: var(--font-sans);
+  font-size: clamp(20px, 2.6vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--on-canvas-muted);
+  margin: 0 0 24px;
+}
 .cn-lede {
   font-size: 18px;
   line-height: 1.55;
@@ -1461,6 +1470,330 @@ code, .cn-mono {
   cursor: pointer;
 }
 .cn-newtask-cancel:hover { background: rgba(10, 10, 10, 0.04); }
+
+/* ============================================================
+   Quick-add: type a name, Enter to create. Used as a row in list
+   view and a card at the bottom of each board column. Lives on the
+   purple canvas, so the resting state is a ghost/dashed affordance.
+   ============================================================ */
+.cn-quickadd-trigger-card,
+.cn-quickadd-trigger-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--on-canvas-muted);
+  background: transparent;
+  border: 1px dashed var(--hairline-strong);
+  border-radius: 6px;
+  padding: 10px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 120ms, color 120ms, background 120ms;
+}
+.cn-quickadd-trigger-card:hover,
+.cn-quickadd-trigger-row:hover {
+  color: var(--on-canvas);
+  border-color: var(--neon);
+  background: rgba(0, 255, 178, 0.06);
+}
+.cn-quickadd-trigger-row { grid-column: 1 / -1; }
+.cn-quickadd-trigger-card { margin-top: 2px; }
+
+.cn-quickadd-plus { font-size: 15px; line-height: 1; opacity: 0.8; }
+
+/* Active input state — flips to a solid cream field with a neon edge */
+.cn-quickadd-card,
+.cn-quickadd-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--neon);
+  border-radius: 6px;
+  padding: 9px 12px;
+  box-shadow: 0 0 0 3px rgba(0, 255, 178, 0.18);
+}
+.cn-quickadd-row { grid-column: 1 / -1; }
+.cn-quickadd-card { margin-top: 2px; }
+.cn-quickadd-card .cn-quickadd-plus,
+.cn-quickadd-row .cn-quickadd-plus { color: var(--ink); opacity: 0.5; }
+
+.cn-quickadd-input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  outline: none;
+}
+.cn-quickadd-input::placeholder { color: rgba(10, 10, 10, 0.4); }
+.cn-quickadd-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(10, 10, 10, 0.4);
+  white-space: nowrap;
+}
+
+/* ============================================================
+   "Expand from the side": the full create-task editor as a
+   right-hand slide-in panel.
+   ============================================================ */
+.cn-sidepanel-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.5);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  animation: cn-scrim-in 140ms ease-out;
+}
+@keyframes cn-scrim-in { from { opacity: 0; } to { opacity: 1; } }
+
+.cn-sidepanel {
+  width: min(460px, 100%);
+  height: 100%;
+  background: var(--cream);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.3);
+  animation: cn-panel-in 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+@keyframes cn-panel-in {
+  from { transform: translateX(28px); opacity: 0.5; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.cn-sidepanel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--card-hairline);
+}
+.cn-sidepanel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cn-sidepanel .cn-newtask-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cn-sidepanel-title { font-size: 16px; font-weight: 600; }
+.cn-sidepanel-actions {
+  display: flex;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--card-hairline);
+}
+@media (max-width: 520px) { .cn-sidepanel { width: 100%; } }
+
+/* ============================================================
+   Boards home — a grid of board tiles + a "new board" affordance.
+   ============================================================ */
+.cn-boards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+@media (max-width: 820px) { .cn-boards-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .cn-boards-grid { grid-template-columns: 1fr; } }
+
+.cn-board-tile {
+  --board-accent: var(--neon);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 132px;
+  padding: 20px 20px 18px;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  overflow: hidden;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 120ms, box-shadow 120ms;
+}
+a.cn-board-tile { text-decoration: none; }
+.cn-board-tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 0 -4px var(--board-accent), 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+.cn-board-tile-stripe {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--board-accent);
+}
+.cn-board-tile-name {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  padding-left: 6px;
+}
+.cn-board-tile-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(10, 10, 10, 0.5);
+  padding-left: 6px;
+}
+.cn-board-tile-open {
+  margin-top: auto;
+  padding-left: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(10, 10, 10, 0.45);
+  transition: color 120ms;
+}
+.cn-board-tile:hover .cn-board-tile-open { color: var(--ink); }
+
+/* Board tile wrapper holds the link plus the delete affordance as siblings
+   (a <button> can't legally nest inside the tile's <a>). */
+.cn-board-tile-wrap { position: relative; }
+
+.cn-board-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+  color: rgba(10, 10, 10, 0.4);
+  background: var(--cream);
+  border: 1px solid var(--card-hairline);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms, color 120ms, border-color 120ms;
+}
+.cn-board-tile-wrap:hover .cn-board-delete,
+.cn-board-delete:focus-visible { opacity: 1; }
+.cn-board-delete:hover {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+/* Confirmation overlay, covering the tile while a delete is pending */
+.cn-board-confirm {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  text-align: center;
+  background: var(--cream);
+  border: 1px solid var(--ink);
+}
+.cn-board-confirm-text {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.cn-board-confirm-actions { display: flex; gap: 8px; }
+.cn-board-confirm-yes {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 7px 12px;
+  color: #fff;
+  background: #c0392b;
+  border: 1px solid #c0392b;
+  cursor: pointer;
+}
+.cn-board-confirm-yes:disabled { opacity: 0.6; cursor: default; }
+.cn-board-confirm-no {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 7px 12px;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--card-hairline);
+  cursor: pointer;
+}
+
+/* "New board" tile — a dashed ghost affordance on the canvas */
+.cn-board-tile-add {
+  background: transparent;
+  color: var(--on-canvas-muted);
+  border: 1px dashed var(--hairline-strong);
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.cn-board-tile-add:hover {
+  transform: translateY(-2px);
+  box-shadow: none;
+  border-color: var(--neon);
+  color: var(--on-canvas);
+}
+.cn-board-tile-add-plus { font-size: 26px; line-height: 1; }
+.cn-board-tile-add-label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* Inline create form, occupying a tile slot */
+.cn-board-tile-new {
+  cursor: default;
+  gap: 12px;
+  justify-content: center;
+}
+.cn-board-tile-new:hover { transform: none; box-shadow: none; }
+.cn-board-new-input {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  padding: 9px 11px;
+  border: 1px solid var(--card-hairline);
+  background: rgba(10, 10, 10, 0.03);
+  color: var(--ink);
+}
+.cn-board-new-input:focus {
+  outline: 2px solid var(--canvas);
+  outline-offset: 1px;
+  border-color: var(--canvas);
+}
+.cn-board-new-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.cn-board-tile-skel { cursor: default; background: var(--cream); }
+.cn-board-tile-skel:hover { transform: none; box-shadow: none; }
+
+/* Board name dot in the /tasks eyebrow */
+.cn-board-eyebrow-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 2px;
+}
 .cn-newtask-danger {
   font-family: var(--font-sans);
   font-size: 13px;
@@ -2671,3 +3004,376 @@ code, .cn-mono {
 @media (max-width: 760px) {
   .cn-bento-expandable.has-open { max-height: 920px; }
 }
+
+/* ============================================================
+   V8 additions — auth, profile, weather strip, /compare.
+   New full-stack surfaces. Reuse the Inverted Studio tokens so V8 stays
+   visually identical to V7 (the /compare page depends on that honesty).
+   ============================================================ */
+
+/* ---- Nav: auth tail ---- */
+.cn-nav-link-btn {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+.cn-nav-link-cta { color: var(--neon); }
+.cn-nav-link-cta:hover { color: var(--cream); }
+
+.cn-nav-link-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--neon);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  padding: 6px 12px;
+}
+.cn-nav-link-badge:hover {
+  color: var(--neon);
+  border-color: var(--neon);
+}
+.cn-nav-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--neon);
+  box-shadow: 0 0 6px var(--neon);
+}
+
+/* ---- Auth (login / signup) ---- */
+.cn-auth-page { max-width: 760px; }
+.cn-auth-card {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--hairline-strong);
+  padding: 28px 30px;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.cn-auth-error {
+  background: var(--pink);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.45;
+  padding: 11px 14px;
+}
+.cn-auth-submit {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 18px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 0;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.cn-auth-submit:hover { opacity: 0.9; }
+.cn-auth-submit:disabled { opacity: 0.55; cursor: default; }
+.cn-auth-switch {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink-muted);
+  margin: 2px 0 0;
+}
+.cn-auth-switch a {
+  color: var(--canvas-2);
+  font-weight: 600;
+  border-bottom: 1px solid currentColor;
+}
+.cn-auth-switch a:hover { opacity: 0.8; }
+.cn-auth-hint {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-dim);
+}
+
+/* ---- Profile ---- */
+.cn-profile-card {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--hairline-strong);
+  padding: 26px 28px;
+  flex-wrap: wrap;
+}
+.cn-profile-avatar {
+  width: 64px;
+  height: 64px;
+  display: inline-grid;
+  place-content: center;
+  background: var(--canvas);
+  color: var(--cream);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.cn-profile-meta { flex: 1; min-width: 220px; }
+.cn-profile-list { margin: 0; }
+.cn-profile-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--card-hairline);
+  align-items: center;
+}
+.cn-profile-row:last-child { border-bottom: none; }
+.cn-profile-row dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+}
+.cn-profile-row dd {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+/* ---- Weather strip ---- */
+.cn-weather {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: rgba(255, 253, 245, 0.05);
+  border: 1px solid var(--hairline);
+  padding: 12px 16px;
+  margin: 8px 0 4px;
+}
+.cn-weather-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--on-canvas-muted);
+}
+.cn-weather-body {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.cn-weather-icon {
+  width: 36px;
+  height: 36px;
+  margin: -6px 0;
+}
+.cn-weather-temp {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cream);
+}
+.cn-weather-city {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--on-canvas);
+}
+.cn-weather-desc {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--on-canvas-muted);
+  text-transform: capitalize;
+}
+.cn-weather-fallback {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--on-canvas-muted);
+}
+
+/* ---- /compare walkthrough ---- */
+/* One consistent before/after comparison table. No per-row colors:
+   the "before" column reads muted, the "after" column carries a single
+   neon accent so the upgrade is legible at a glance. */
+/* Capability matrix on a cream card: shared rows read calm, backend-only
+   rows light up the Fullstack column in neon green with a NEW flag. */
+.cn-cap-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 16px 0 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--on-canvas-muted);
+}
+.cn-cap-legend-item { display: inline-flex; align-items: center; gap: 7px; }
+
+.cn-cap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  table-layout: fixed;
+  overflow: hidden;
+}
+.cn-cap-table th,
+.cn-cap-table td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.12);
+}
+.cn-cap-table tbody tr:last-child th,
+.cn-cap-table tbody tr:last-child td { border-bottom: none; }
+
+/* Header */
+.cn-cap-table thead th {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: rgba(10, 10, 10, 0.65);
+  border-bottom: 1px solid rgba(10, 10, 10, 0.3);
+}
+.cn-cap-corner { width: 46%; }
+.cn-cap-col { width: 27%; text-align: center; }
+.cn-cap-col-after { color: var(--ink); }
+
+/* The whole Fullstack column carries a faint neon wash */
+.cn-cap-col-after,
+.cn-cap-after {
+  background: rgba(0, 255, 178, 0.1);
+  border-left: 1px solid rgba(10, 10, 10, 0.16);
+}
+
+/* Section band rows */
+.cn-cap-band td {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(10, 10, 10, 0.55);
+  background: rgba(10, 10, 10, 0.05);
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+.cn-cap-band-accent td {
+  color: #066b4d;
+  background: rgba(0, 255, 178, 0.18);
+}
+
+.cn-cap-rowhead {
+  font-size: 15px;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+/* Yes/No cells centered */
+.cn-cap-cell { text-align: center; }
+.cn-cap-after {
+  display: table-cell;
+  text-align: center;
+}
+.cn-cap-after .cn-cap-pill { vertical-align: middle; }
+
+/* The check / x pills */
+.cn-cap-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+.cn-cap-pill-yes { background: #00c98d; color: #04130d; }
+.cn-cap-pill-no { background: rgba(10, 10, 10, 0.08); color: rgba(10, 10, 10, 0.4); }
+
+/* Backend-only winning cell: brighter pill + glow + NEW flag */
+.cn-cap-new .cn-cap-pill-yes {
+  background: var(--neon);
+  box-shadow: 0 0 0 3px rgba(0, 255, 178, 0.3);
+}
+.cn-cap-newtag {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--neon);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .cn-cap-corner { width: 52%; }
+  .cn-cap-table th,
+  .cn-cap-table td { padding: 11px 12px; }
+  .cn-cap-newtag { display: none; }
+}
+
+.cn-compare-live-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+@media (max-width: 640px) {
+  .cn-compare-live-grid { grid-template-columns: 1fr; }
+}
+.cn-compare-try {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--on-canvas-muted);
+  margin: 14px 0 0;
+}
+.cn-compare-try a { color: var(--neon); border-bottom: 1px solid currentColor; }
+.cn-compare-live { margin-top: 16px; }
+.cn-compare-run {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  background: var(--neon);
+  color: var(--ink);
+  border: 0;
+  cursor: pointer;
+}
+.cn-compare-run:hover { opacity: 0.88; }
+.cn-compare-run:disabled { opacity: 0.55; cursor: default; }
+.cn-compare-output {
+  margin: 14px 0 0;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 16px 18px;
+  border: 1px solid var(--hairline-strong);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.cn-compare-output code { background: transparent; padding: 0; color: inherit; font-size: inherit; }

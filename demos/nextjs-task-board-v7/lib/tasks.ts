@@ -6,6 +6,8 @@
 // Real persistence (database, API routes, auth) is Week 6 territory.
 // ============================================================
 
+import { DEFAULT_BOARD_ID } from "@/lib/boards";
+
 export type TaskStatus =
   | "backlog"
   | "todo"
@@ -18,6 +20,7 @@ export type TaskPriority = "P0" | "P1" | "P2" | "P3";
 
 export interface Task {
   id: string;
+  boardId: string | null; // which board this task belongs to
   title: string;
   description: string;
   status: TaskStatus;
@@ -28,7 +31,9 @@ export interface Task {
   updated: string; // relative time, e.g. "2 min ago"
 }
 
-const TASKS: Task[] = [
+// Static seed tasks. boardId is injected in getTasks() so all seed tasks land
+// on the default board — see DEFAULT_BOARD_ID.
+const TASKS: Omit<Task, "boardId">[] = [
   {
     id: "CDN-042",
     title: "Wire client-side filter to server-rendered task list",
@@ -177,11 +182,11 @@ const TASKS: Task[] = [
 // Read function — used by v1 from a client component via useEffect,
 // by v2 from a server component directly, by v4 inside generateStaticParams.
 export function getTasks(): Task[] {
-  return TASKS;
+  return TASKS.map((t) => ({ ...t, boardId: DEFAULT_BOARD_ID }));
 }
 
 export function getTaskById(id: string): Task | undefined {
-  return TASKS.find((t) => t.id === id);
+  return getTasks().find((t) => t.id === id);
 }
 
 // Convenience for chevron flag labels: maps internal status to display text.

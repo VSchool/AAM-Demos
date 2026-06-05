@@ -1,4 +1,6 @@
 import type { TaskStatus, TaskPriority } from "@/lib/tasks";
+import type { BoardColor } from "@/lib/boards";
+import { isBoardColor } from "@/lib/boards";
 
 // ============================================================
 // Server-side validation. NEVER trust the client (D2 lesson). Every write
@@ -62,6 +64,39 @@ export function validateLogin(body: unknown): ValidationResult<{
     return { ok: false, error: "Email and password are required." };
   }
   return { ok: true, value: { email, password } };
+}
+
+// ── Boards ──
+
+export interface BoardInput {
+  name: string;
+  color: BoardColor;
+}
+
+export function validateBoardInput(
+  body: unknown,
+  { partial = false }: { partial?: boolean } = {},
+): ValidationResult<Partial<BoardInput>> {
+  const b = (body ?? {}) as Record<string, unknown>;
+  const out: Partial<BoardInput> = {};
+
+  if (b.name !== undefined || !partial) {
+    const name = asString(b.name).trim();
+    if (!name) return { ok: false, error: "Board name is required." };
+    if (name.length > 60) {
+      return { ok: false, error: "Board name is too long (max 60)." };
+    }
+    out.name = name;
+  }
+
+  if (b.color !== undefined) {
+    if (!isBoardColor(b.color)) {
+      return { ok: false, error: "Invalid board color." };
+    }
+    out.color = b.color;
+  }
+
+  return { ok: true, value: out };
 }
 
 // ── Tasks ──

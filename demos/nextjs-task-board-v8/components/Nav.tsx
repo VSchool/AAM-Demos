@@ -22,8 +22,9 @@ export default function Nav() {
           <Link className="cn-nav-link" href="/tasks">
             Tasks
           </Link>
-          <Link className="cn-nav-link" href="/compare">
-            V7 → V8
+          <Link className="cn-nav-link cn-nav-link-badge" href="/compare">
+            <span className="cn-nav-badge-dot" aria-hidden="true" />
+            Full backend
           </Link>
           {/* Auth-aware tail. Stays empty until the initial session check
               resolves so we don't flash the wrong state. */}

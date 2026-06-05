@@ -10,7 +10,13 @@ interface Props {
 }
 
 export default function TaskBoard({ note }: Props) {
-  const { tasks } = useTaskStore();
+  const { tasks, activeBoardId } = useTaskStore();
+
+  // The store holds every task (so deep-linked detail pages work); the board
+  // view shows only the board currently being viewed.
+  const boardTasks = activeBoardId
+    ? tasks.filter((t) => t.boardId === activeBoardId)
+    : tasks;
 
   return (
     <>
@@ -18,7 +24,7 @@ export default function TaskBoard({ note }: Props) {
         {note ? <div className="cn-board-note-slot">{note}</div> : null}
         <NewTaskForm />
       </div>
-      <TaskFilter tasks={tasks} />
+      <TaskFilter tasks={boardTasks} />
     </>
   );
 }

@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/lib/auth-store";
+import { BoardStoreProvider } from "@/lib/board-store";
 import { TaskStoreProvider } from "@/lib/task-store";
 
 const spaceGrotesk = Space_Grotesk({
@@ -38,11 +39,13 @@ export default function RootLayout({
     <html lang="en" className={`${spaceGrotesk.variable} ${geistMono.variable}`}>
       <body>
         <AuthProvider>
-          <TaskStoreProvider>
-            <Nav />
-            {children}
-            <Footer />
-          </TaskStoreProvider>
+          <BoardStoreProvider>
+            <TaskStoreProvider>
+              <Nav />
+              {children}
+              <Footer />
+            </TaskStoreProvider>
+          </BoardStoreProvider>
         </AuthProvider>
       </body>
     </html>

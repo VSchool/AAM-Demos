@@ -19,6 +19,7 @@ const PRIORITY_VALUES: TaskPriority[] = ["P0", "P1", "P2", "P3"];
 
 export interface TaskDoc extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
+  boardId: mongoose.Types.ObjectId;
   key: string;
   title: string;
   description: string;
@@ -37,6 +38,14 @@ const TaskSchema = new Schema<TaskDoc>(
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
+    },
+    // Which board this task belongs to. Optional at the schema level so tasks
+    // created before boards existed still load; ensureUserBoards() backfills
+    // them into the user's default board.
+    boardId: {
+      type: Schema.Types.ObjectId,
+      ref: "Board",
       index: true,
     },
     key: { type: String, required: true },

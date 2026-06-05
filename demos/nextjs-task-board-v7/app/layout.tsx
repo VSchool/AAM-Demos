@@ -3,6 +3,7 @@ import { Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import { BoardStoreProvider } from "@/lib/board-store";
 import { TaskStoreProvider } from "@/lib/task-store";
 import { getTasks } from "@/lib/tasks";
 
@@ -35,11 +36,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${geistMono.variable}`}>
       <body>
-        <TaskStoreProvider initial={initialTasks}>
-          <Nav />
-          {children}
-          <Footer />
-        </TaskStoreProvider>
+        <BoardStoreProvider>
+          <TaskStoreProvider initial={initialTasks}>
+            <Nav />
+            {children}
+            <Footer />
+          </TaskStoreProvider>
+        </BoardStoreProvider>
       </body>
     </html>
   );

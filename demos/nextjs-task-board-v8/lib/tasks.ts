@@ -20,6 +20,7 @@ export type TaskPriority = "P0" | "P1" | "P2" | "P3";
 
 export interface Task {
   id: string;
+  boardId: string | null; // which board this task belongs to
   title: string;
   description: string;
   status: TaskStatus;

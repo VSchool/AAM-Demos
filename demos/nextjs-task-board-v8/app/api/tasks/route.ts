@@ -4,6 +4,7 @@ import { Task } from "@/lib/models/Task";
 import { getAuthFromRequest } from "@/lib/auth";
 import { validateTaskInput } from "@/lib/validation";
 import { serializeTask } from "@/lib/serialize";
+import { ensureUserBoards } from "@/lib/boards-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,9 +31,18 @@ export async function GET(req: Request) {
 
   try {
     await connectToDatabase();
-    const docs = await Task.find({ userId: auth.userId })
-      .sort({ createdAt: -1 })
-      .exec();
+    // Backfill any board-less tasks into a default board so every task we
+    // return carries a boardId the client can group by.
+    await ensureUserBoards(auth.userId);
+
+    // Optional ?board=<id> filter (the board view passes this); without it we
+    // return every task the user owns, across all boards.
+    const url = new URL(req.url);
+    const boardId = url.searchParams.get("board");
+    const query: Record<string, unknown> = { userId: auth.userId };
+    if (boardId) query.boardId = boardId;
+
+    const docs = await Task.find(query).sort({ createdAt: -1 }).exec();
     return NextResponse.json({ tasks: docs.map(serializeTask) });
   } catch (err) {
     console.error("[GET /api/tasks]", err);
@@ -61,10 +71,21 @@ export async function POST(req: Request) {
 
   try {
     await connectToDatabase();
+    // Resolve the target board: use the requested boardId if the user owns it,
+    // otherwise fall back to their default (first) board.
+    const boards = await ensureUserBoards(auth.userId);
+    const requested =
+      body && typeof body === "object" && "boardId" in body
+        ? String((body as { boardId: unknown }).boardId)
+        : null;
+    const match = boards.find((b) => String(b._id) === requested);
+    const boardId = match ? match._id : boards[0]._id;
+
     const key = await nextKeyForUser(auth.userId);
     const doc = await Task.create({
       ...result.value,
       userId: auth.userId,
+      boardId,
       key,
     });
     return NextResponse.json({ task: serializeTask(doc) }, { status: 201 });

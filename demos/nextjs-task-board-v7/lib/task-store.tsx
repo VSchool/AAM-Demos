@@ -10,14 +10,22 @@ import {
 } from "react";
 import type { ReactNode } from "react";
 import type { Task } from "@/lib/tasks";
+import { DEFAULT_BOARD_ID } from "@/lib/boards";
 
-type NewTaskInput = Omit<Task, "updated" | "id"> & { id?: string };
+type NewTaskInput = Omit<Task, "updated" | "id" | "boardId"> & {
+  id?: string;
+  boardId?: string | null;
+};
 
 interface TaskStore {
   tasks: Task[];
+  // The board the UI is currently viewing. createTask defaults new tasks to it.
+  activeBoardId: string | null;
+  setActiveBoard: (id: string | null) => void;
   createTask: (t: NewTaskInput) => Task;
   updateTask: (id: string, patch: Partial<Task>) => void;
   deleteTask: (id: string) => void;
+  deleteTasksForBoard: (boardId: string) => void;
   reorderTask: (
     id: string,
     targetStatus: Task["status"],
@@ -30,7 +38,7 @@ interface TaskStore {
 
 const Ctx = createContext<TaskStore | null>(null);
 
-const STORAGE_KEY = "cadence:tasks:v6";
+const STORAGE_KEY = "cadence:tasks:v7";
 
 function genId(existing: Task[]): string {
   let max = 0;
@@ -51,7 +59,11 @@ function loadFromStorage(): Task[] | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return null;
-    return parsed as Task[];
+    // Migrate any task missing a boardId onto the default board.
+    return (parsed as Task[]).map((t) => ({
+      ...t,
+      boardId: t.boardId ?? DEFAULT_BOARD_ID,
+    }));
   } catch {
     return null;
   }
@@ -77,6 +89,7 @@ export function TaskStoreProvider({
   // After mount we swap in localStorage data if present.
   const [tasks, setTasks] = useState<Task[]>(initial);
   const [hydrated, setHydrated] = useState(false);
+  const [activeBoardId, setActiveBoard] = useState<string | null>(null);
 
   useEffect(() => {
     const stored = loadFromStorage();
@@ -93,12 +106,21 @@ export function TaskStoreProvider({
     saveToStorage(tasks);
   }, [tasks, hydrated]);
 
-  const createTask = useCallback((input: NewTaskInput): Task => {
-    const id = input.id ?? genId(tasks);
-    const next: Task = { ...input, id, updated: "just now" };
-    setTasks((prev) => [next, ...prev]);
-    return next;
-  }, [tasks]);
+  const createTask = useCallback(
+    (input: NewTaskInput): Task => {
+      const id = input.id ?? genId(tasks);
+      const { boardId, ...rest } = input;
+      const next: Task = {
+        ...rest,
+        id,
+        boardId: boardId ?? activeBoardId,
+        updated: "just now",
+      };
+      setTasks((prev) => [next, ...prev]);
+      return next;
+    },
+    [tasks, activeBoardId],
+  );
 
   const updateTask = useCallback((id: string, patch: Partial<Task>) => {
     setTasks((prev) =>
@@ -108,6 +130,12 @@ export function TaskStoreProvider({
 
   const deleteTask = useCallback((id: string) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  // Cascade: when a board is deleted, drop the tasks that lived on it (mirrors
+  // V8's server-side delete-board-and-its-tasks).
+  const deleteTasksForBoard = useCallback((boardId: string) => {
+    setTasks((prev) => prev.filter((t) => t.boardId !== boardId));
   }, []);
 
   const reorderTask = useCallback(
@@ -156,9 +184,12 @@ export function TaskStoreProvider({
   const value = useMemo(
     () => ({
       tasks,
+      activeBoardId,
+      setActiveBoard,
       createTask,
       updateTask,
       deleteTask,
+      deleteTasksForBoard,
       reorderTask,
       getTask,
       resetToInitial,
@@ -166,9 +197,11 @@ export function TaskStoreProvider({
     }),
     [
       tasks,
+      activeBoardId,
       createTask,
       updateTask,
       deleteTask,
+      deleteTasksForBoard,
       reorderTask,
       getTask,
       resetToInitial,

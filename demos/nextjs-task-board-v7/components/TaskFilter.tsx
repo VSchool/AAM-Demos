@@ -6,6 +6,7 @@ import type { Task, TaskStatus } from "@/lib/tasks";
 import { STATUS_LABEL } from "@/lib/tasks";
 import { useTaskStore } from "@/lib/task-store";
 import TaskCard from "./TaskCard";
+import QuickAdd from "./QuickAdd";
 
 type StatusFilter = TaskStatus | "all";
 type SortKey = "priority" | "due" | "updated";
@@ -258,6 +259,10 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
           {visible.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))}
+          <QuickAdd
+            variant="row"
+            status={status === "all" ? "todo" : status}
+          />
         </div>
       ) : (
         <div className="cn-board">
@@ -325,6 +330,7 @@ export default function TaskFilter({ tasks }: { tasks: Task[] }) {
                       />
                     </>
                   )}
+                  <QuickAdd variant="card" status={col.key} />
                 </div>
               </section>
             );

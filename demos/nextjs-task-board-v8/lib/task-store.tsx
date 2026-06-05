@@ -21,13 +21,18 @@ import { useAuth } from "@/lib/auth-store";
 // delete hit the server.
 // ============================================================
 
-type NewTaskInput = Omit<Task, "updated" | "id">;
+type NewTaskInput = Omit<Task, "updated" | "id" | "boardId"> & {
+  boardId?: string | null;
+};
 
 interface TaskStore {
   tasks: Task[];
   loading: boolean;
   error: string | null;
   hydrated: boolean;
+  // The board the UI is currently viewing. createTask defaults new tasks to it.
+  activeBoardId: string | null;
+  setActiveBoard: (id: string | null) => void;
   createTask: (t: NewTaskInput) => Promise<Task | null>;
   updateTask: (id: string, patch: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
@@ -48,6 +53,7 @@ export function TaskStoreProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeBoardId, setActiveBoard] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -79,9 +85,11 @@ export function TaskStoreProvider({ children }: { children: ReactNode }) {
   const createTask = useCallback(
     async (input: NewTaskInput): Promise<Task | null> => {
       try {
+        // Default the task onto the board the UI is currently viewing.
+        const boardId = input.boardId ?? activeBoardId;
         const data = await apiFetch<{ task: Task }>("/api/tasks", {
           method: "POST",
-          body: JSON.stringify(input),
+          body: JSON.stringify({ ...input, boardId }),
         });
         setTasks((prev) => [data.task, ...prev]);
         return data.task;
@@ -90,7 +98,7 @@ export function TaskStoreProvider({ children }: { children: ReactNode }) {
         return null;
       }
     },
-    [],
+    [activeBoardId],
   );
 
   const updateTask = useCallback(async (id: string, patch: Partial<Task>) => {
@@ -166,6 +174,8 @@ export function TaskStoreProvider({ children }: { children: ReactNode }) {
       loading,
       error,
       hydrated,
+      activeBoardId,
+      setActiveBoard,
       createTask,
       updateTask,
       deleteTask,
@@ -178,6 +188,7 @@ export function TaskStoreProvider({ children }: { children: ReactNode }) {
       loading,
       error,
       hydrated,
+      activeBoardId,
       createTask,
       updateTask,
       deleteTask,
