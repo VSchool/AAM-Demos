@@ -364,14 +364,18 @@ function StatusBar() {
 export function DeviceFrame({
   children,
   width = 286,
+  aspect = 2.1,
   caption,
 }: {
   children: ReactNode;
   width?: number;
+  /** screen height : width ratio — lets the device selector switch
+      between phone proportions (SE ~1.78, modern ~2.16). */
+  aspect?: number;
   caption?: ReactNode;
 }) {
   const { theme } = useTheme();
-  const screenH = Math.round(width * 2.1);
+  const screenH = Math.round(width * aspect);
   return (
     <View style={{ width, gap: 12 }}>
       <View

@@ -4,18 +4,20 @@
    theme), hardware toggles, the v4 "reset to seed" affordance, and the
    honest fine print. No fake tab bar — the live navigator draws it.
 
-   v5 brings the Coach tone + daily reminder LIVE (the push beat): the dial
+   v6 brings the Coach tone + daily reminder LIVE (the push beat): the dial
    now drives real notification copy, and the reminder console requests
    permission and schedules a daily local notification on a device. On the
    web build there's no OS scheduler, so it shows an in-app preview banner
-   instead — landing with the v5 SequenceIn (withSequence) arrival. */
+   instead — landing with the SequenceIn (withSequence) arrival. */
 
 import { useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
 import { useHabitStore } from "@/lib/habit-store";
 import { useReminder } from "@/lib/reminder";
+import { useSession } from "@/lib/session";
 import { COACH_ORDER, COACH_COPY } from "@/lib/notifications";
 import { PressFade } from "./motion";
 import ReminderPreview from "./ReminderPreview";
@@ -136,6 +138,7 @@ export default function SettingsInstrument() {
   const { theme, themeName, toggleTheme } = useTheme();
   const { resetToSeed } = useHabitStore();
   const reminder = useReminder();
+  const session = useSession();
   const [wiped, setWiped] = useState(false);
   // bump to remount the preview banner so the SequenceIn arrival replays.
   const [previewNonce, setPreviewNonce] = useState(0);
@@ -277,6 +280,64 @@ export default function SettingsInstrument() {
           </View>
         </PressFade>
 
+        {/* About — opens the in-app About screen (the build-info home). */}
+        <Pressable
+          onPress={() => router.push("/about")}
+          accessibilityRole="button"
+          accessibilityLabel="About Pulse"
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: theme.lcd,
+            borderWidth: 1,
+            borderColor: theme.hairlineStrong,
+            borderRadius: 9,
+            paddingVertical: 13,
+            paddingHorizontal: 13,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: FONTS.mono,
+              fontSize: 10,
+              letterSpacing: 1.4,
+              textTransform: "uppercase",
+              color: theme.aluDk,
+            }}
+          >
+            About Pulse
+          </Text>
+          <Text style={{ fontFamily: FONTS.mono, fontSize: 13, color: theme.aluDk }}>›</Text>
+        </Pressable>
+
+        {/* Log out — returns to the mock login (clears the session only). */}
+        <PressFade onPress={session.signOut} accessibilityRole="button" accessibilityLabel="Log out">
+          <View
+            style={{
+              alignItems: "center",
+              backgroundColor: theme.lcd,
+              borderWidth: 1,
+              borderColor: theme.hairlineStrong,
+              borderRadius: 9,
+              paddingVertical: 13,
+              paddingHorizontal: 13,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: FONTS.mono,
+                fontSize: 10,
+                letterSpacing: 1.4,
+                textTransform: "uppercase",
+                color: theme.streak,
+              }}
+            >
+              Log out
+            </Text>
+          </View>
+        </PressFade>
+
         {/* Honest fine print — the etched label (guideline §2.3). */}
         <View
           style={{
@@ -309,7 +370,7 @@ export default function SettingsInstrument() {
               color: theme.textMuted,
             }}
           >
-            Your channels + Coach tone persist on this device (no account, no cloud sync). v5's daily
+            Your channels + Coach tone persist on this device (no account, no cloud sync). v6's daily
             reminder is a real local notification — but it only fires on a phone (Expo Go or a native
             build). This deployed web build has no OS scheduler, so Enable just shows the in-app
             preview above. Reset to seed clears saved channels.

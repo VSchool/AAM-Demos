@@ -1,7 +1,7 @@
 /* ExpoGoQR (guideline §9) — scan-to-open card for the home page.
    v0 ships as a web export on GitHub Pages, so the QR points at the
    deployed web build — scan it to open Pulse on a phone browser.
-   The native Expo Go / EAS preview lands at v5 (push can't run on web). */
+   The native Expo Go / EAS preview matters most at v6 (push can't run on web). */
 
 import QRCode from "react-native-qrcode-svg";
 import { Text, View } from "react-native";
@@ -50,8 +50,8 @@ export default function ExpoGoQR() {
           Scan to open Pulse
         </Text>
         <Text style={{ fontFamily: FONTS.sans, fontSize: 12.5, lineHeight: 19, color: theme.textMuted }}>
-          Opens the deployed web build in your phone's browser. The native Expo Go preview
-          arrives at v5, where push notifications need a real device.
+          Opens the deployed web build in your phone's browser. The same JS bundle runs natively
+          in Expo Go on your own phone — which matters most at v6, where push needs a real device.
         </Text>
       </View>
     </View>

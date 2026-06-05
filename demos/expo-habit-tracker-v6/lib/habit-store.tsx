@@ -61,10 +61,16 @@ interface HabitStoreValue {
   markRest: (id: string) => void;
   /** wipe persisted state and restore the seed roster (Settings affordance). */
   resetToSeed: () => void;
-  /** v6: drop a channel from the roster (the Delete action on the detail
+  /** v5: drop a channel from the roster (the Delete action on the detail
       screen). No re-channel-numbering — the gap stays so older entries keep
       their CH 0N identity. The reflow runs first so the list animates closed. */
   removeHabit: (id: string) => void;
+  /** v5: edit a channel's user-set fields (name/cadence/window/why) from the
+      detail screen's Edit action. PARTIAL — only the passed fields change;
+      streak, bestStreak, history, status, channel and id are preserved (a
+      rename never resets progress, and the id stays stable so the
+      /habit/<id> route + history survive). */
+  updateHabit: (id: string, patch: Partial<NewHabit>) => void;
   /** today's at-a-glance progress over the LIVE list (rest counts as kept). */
   progress: { done: number; total: number };
 }
@@ -204,12 +210,30 @@ export function HabitStoreProvider({ children }: { children: ReactNode }) {
     AsyncStorage.removeItem(STORAGE_KEY).catch(() => {});
   }, []);
 
-  // Delete a channel (v6 — the Delete action on the detail screen). Fires
+  // Delete a channel (v5 — the Delete action on the detail screen). Fires
   // layoutReflow() first so the Today list animates the gap closed when the
   // user navigates back. Persist effect picks up the change automatically.
   const removeHabit = useCallback((id: string) => {
     layoutReflow();
     setHabits((prev) => prev.filter((h) => h.id !== id));
+  }, []);
+
+  // Edit a channel from the detail screen (v5). A PARTIAL update: only the
+  // user-editable fields move; the id stays put (so the route + history hold)
+  // and streak/bestStreak/history/status/channel are never touched. A blank
+  // name falls back to the existing one — editing can't erase a channel's name.
+  const updateHabit = useCallback((id: string, patch: Partial<NewHabit>) => {
+    setHabits((prev) =>
+      prev.map((h) => {
+        if (h.id !== id) return h;
+        const next = { ...h };
+        if (patch.name !== undefined) next.name = patch.name.trim() || h.name;
+        if (patch.cadence !== undefined) next.cadence = patch.cadence;
+        if (patch.window !== undefined) next.window = patch.window;
+        if ("why" in patch) next.why = patch.why?.trim() || undefined;
+        return next;
+      }),
+    );
   }, []);
 
   const progress = useMemo(() => {
@@ -228,9 +252,10 @@ export function HabitStoreProvider({ children }: { children: ReactNode }) {
       markRest,
       resetToSeed,
       removeHabit,
+      updateHabit,
       progress,
     }),
-    [habits, ready, addHabit, toggleDone, markDone, markRest, resetToSeed, removeHabit, progress],
+    [habits, ready, addHabit, toggleDone, markDone, markRest, resetToSeed, removeHabit, updateHabit, progress],
   );
 
   return <HabitStoreContext.Provider value={value}>{children}</HabitStoreContext.Provider>;

@@ -4,13 +4,24 @@
    channel rows, the app bar, and the phone DeviceFrame. These ARE
    the product look; they re-skin automatically from theme tokens
    (glowing-on-black in dark, positive-LCD-on-silver in light).
-   v0 renders them statically — motion (the "Throw") lands at v3.
+   Channels are still completed by tapping for now — the hero "Throw"
+   swipe lands at v3 — but rows carry the v1 touch-feedback primitive
+   (PressFade), and v2 adds the themed TextField the add-channel form
+   types into plus the segment controls it reuses.
    ============================================================ */
 
 import { type ReactNode } from "react";
-import { Platform, Text, View, type ViewStyle } from "react-native";
+import {
+  Platform,
+  Text,
+  TextInput,
+  View,
+  type TextInputProps,
+  type ViewStyle,
+} from "react-native";
 import { FONTS, type ReservedRole } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
+import { PressFade } from "./motion";
 
 /* ---- indicator LED ---------------------------------------- */
 export function Led({
@@ -142,7 +153,11 @@ export function ChannelRow({
 }) {
   const { theme } = useTheme();
   return (
-    <View
+    // v1 motion: the whole channel dims under your finger via PressFade
+    // (useSharedValue opacity). Throwing the switch for real is the v3 lesson.
+    <PressFade
+      accessibilityRole="button"
+      accessibilityLabel={`${name} — ${on ? "on" : "off"}`}
       style={{
         flexDirection: "row",
         alignItems: "center",
@@ -187,7 +202,7 @@ export function ChannelRow({
         <Segment value={streak} />
       )}
       <HardwareSwitch on={on} />
-    </View>
+    </PressFade>
   );
 }
 
@@ -349,14 +364,18 @@ function StatusBar() {
 export function DeviceFrame({
   children,
   width = 286,
+  aspect = 2.1,
   caption,
 }: {
   children: ReactNode;
   width?: number;
+  /** screen height : width ratio — lets the device selector switch
+      between phone proportions (SE ~1.78, modern ~2.16). */
+  aspect?: number;
   caption?: ReactNode;
 }) {
   const { theme } = useTheme();
-  const screenH = Math.round(width * 2.1);
+  const screenH = Math.round(width * aspect);
   return (
     <View style={{ width, gap: 12 }}>
       <View
@@ -408,4 +427,301 @@ export function DeviceFrame({
 /* The "stage" — the scrollable middle of a screen. */
 export function Stage({ children, style }: { children: ReactNode; style?: ViewStyle }) {
   return <View style={[{ flex: 1, padding: 14, gap: 10 }, style]}>{children}</View>;
+}
+
+/* ============================================================
+   Streaks (the meter-bridge) primitives — added in v1.
+   ============================================================ */
+
+/* A 7-day LED bar cluster. "done" cells glow green, "rest" cells are a
+   calm grey (a rest never reads as a failure), "miss" cells sit short
+   and dim. Bar heights follow a fixed organic pattern so the bridge
+   reads lively rather than uniform. */
+const BAR_H = [9, 12, 8, 14, 11, 16, 13];
+
+export function Bars({ days }: { days: ("done" | "rest" | "miss")[] }) {
+  const { theme } = useTheme();
+  return (
+    <View style={{ flexDirection: "row", alignItems: "flex-end", gap: 2, height: 18 }}>
+      {days.map((d, i) => {
+        const h = d === "done" ? BAR_H[i % BAR_H.length] : d === "rest" ? 6 : 5;
+        const color = d === "rest" ? theme.rest : d === "miss" ? theme.aluDk : theme.done;
+        return (
+          <View
+            key={i}
+            style={{
+              width: 3,
+              height: h,
+              borderRadius: 1,
+              backgroundColor: color,
+              opacity: d === "miss" ? 0.5 : 1,
+              shadowColor: theme.glow && d === "done" ? theme.done : "transparent",
+              shadowOpacity: theme.glow && d === "done" ? 0.7 : 0,
+              shadowRadius: theme.glow && d === "done" ? 4 : 0,
+              shadowOffset: { width: 0, height: 0 },
+            }}
+          />
+        );
+      })}
+    </View>
+  );
+}
+
+/* The total-uptime gauge that crowns the meter-bridge. */
+export function UptimeGauge({ pct, unit }: { pct: number; unit: string }) {
+  const { theme } = useTheme();
+  return (
+    <View
+      style={{
+        backgroundColor: theme.lcd,
+        borderWidth: 1,
+        borderColor: theme.hairlineStrong,
+        borderRadius: 10,
+        paddingVertical: 14,
+        alignItems: "center",
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: FONTS.monoBold,
+          fontSize: 34,
+          lineHeight: 36,
+          color: theme.done,
+          textShadowColor: theme.glow ? theme.doneGlow : "transparent",
+          textShadowRadius: theme.glow ? 12 : 0,
+          textShadowOffset: { width: 0, height: 0 },
+        }}
+      >
+        {pct}%
+      </Text>
+      <Text
+        style={{
+          fontFamily: FONTS.mono,
+          fontSize: 9,
+          letterSpacing: 2,
+          textTransform: "uppercase",
+          color: theme.aluDk,
+          marginTop: 5,
+        }}
+      >
+        {unit}
+      </Text>
+    </View>
+  );
+}
+
+/* One meter-bridge row: LED + name + 7-day bars + streak readout. */
+export function MeterRow({
+  ledRole,
+  name,
+  days,
+  streak,
+}: {
+  ledRole: ReservedRole | "off";
+  name: string;
+  days: ("done" | "rest" | "miss")[];
+  streak: string;
+}) {
+  const { theme } = useTheme();
+  const rest = ledRole === "rest";
+  return (
+    <PressFade
+      accessibilityRole="button"
+      accessibilityLabel={`${name} — streak ${streak}`}
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 11,
+        backgroundColor: theme.panel,
+        borderWidth: 1,
+        borderColor: theme.hairline,
+        borderRadius: 10,
+        paddingVertical: 10,
+        paddingHorizontal: 12,
+      }}
+    >
+      <Led role={ledRole} size={9} />
+      <Text style={{ flex: 1, fontFamily: FONTS.sansSemi, fontSize: 13, color: theme.print }}>
+        {name}
+      </Text>
+      <Bars days={days} />
+      {rest ? (
+        <Text style={{ fontFamily: FONTS.monoBold, fontSize: 13, color: theme.rest }}>{streak}</Text>
+      ) : (
+        <Segment value={streak} />
+      )}
+    </PressFade>
+  );
+}
+
+/* ============================================================
+   Settings primitives — added in v1.
+   ============================================================ */
+
+/* An etched device field: a mono uppercase label over a value/children. */
+export function Field({
+  label,
+  hint,
+  children,
+  style,
+}: {
+  label: string;
+  hint?: string;
+  children?: ReactNode;
+  style?: ViewStyle;
+}) {
+  const { theme } = useTheme();
+  return (
+    <View
+      style={[
+        {
+          backgroundColor: theme.lcd,
+          borderWidth: 1,
+          borderColor: theme.hairlineStrong,
+          borderRadius: 9,
+          paddingVertical: 11,
+          paddingHorizontal: 13,
+          gap: 6,
+        },
+        style,
+      ]}
+    >
+      <Text
+        style={{
+          fontFamily: FONTS.mono,
+          fontSize: 9,
+          letterSpacing: 1.8,
+          textTransform: "uppercase",
+          color: theme.aluDk,
+        }}
+      >
+        {label}
+        {hint ? <Text style={{ color: theme.aluDk }}>{`  · ${hint}`}</Text> : null}
+      </Text>
+      {children}
+    </View>
+  );
+}
+
+/* The Coach-tone dial — a hardware mode selector (Chill / Firm / Elite).
+   v1 ships it as a static PREVIEW; it drives reminder copy/cadence for
+   real at the v5 push beat. `onChange` is optional so it can be live or
+   purely illustrative. */
+export function SegmentedControl({
+  options,
+  active,
+  onChange,
+}: {
+  options: string[];
+  active: number;
+  onChange?: (i: number) => void;
+}) {
+  const { theme } = useTheme();
+  return (
+    <View style={{ flexDirection: "row", gap: 6 }}>
+      {options.map((opt, i) => {
+        const on = i === active;
+        return (
+          <PressFade
+            key={opt}
+            disabled={!onChange}
+            onPress={() => onChange?.(i)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: on }}
+            style={{
+              flex: 1,
+              alignItems: "center",
+              paddingVertical: 8,
+              borderRadius: 6,
+              borderWidth: 1,
+              borderColor: on ? theme.hairlineStrong : theme.hairline,
+              backgroundColor: on
+                ? theme.name === "dark"
+                  ? "#1C1F23"
+                  : "#FFFFFF"
+                : "transparent",
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: FONTS.mono,
+                fontSize: 10,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                color: on ? theme.today : theme.aluDk,
+              }}
+            >
+              {opt}
+            </Text>
+          </PressFade>
+        );
+      })}
+    </View>
+  );
+}
+
+/* A large segment-LCD clock readout (the daily-reminder time). */
+export function BigClock({ time }: { time: string }) {
+  const { theme } = useTheme();
+  return (
+    <Text
+      style={{
+        fontFamily: FONTS.monoBold,
+        fontSize: 26,
+        letterSpacing: 2,
+        color: theme.today,
+        textShadowColor: theme.glow ? theme.todayGlow : "transparent",
+        textShadowRadius: theme.glow ? 8 : 0,
+        textShadowOffset: { width: 0, height: 0 },
+      }}
+    >
+      {time}
+    </Text>
+  );
+}
+
+/* ============================================================
+   Form primitives — added in v2 (the FlatList + TextInput beat).
+   ============================================================ */
+
+/* A themed text input dressed as a screen-printed label field. The web
+   defaults (black-on-white, blue autofill) are wrong on the silver/black
+   instrument faces, so the text + placeholder colors are set explicitly
+   from theme tokens and native autofill styling is suppressed. */
+export function TextField({
+  style,
+  ...rest
+}: TextInputProps & { style?: ViewStyle }) {
+  const { theme } = useTheme();
+  return (
+    <TextInput
+      placeholderTextColor={theme.aluDk}
+      autoCapitalize="sentences"
+      autoCorrect={false}
+      autoComplete="off"
+      // RN-web maps these onto the underlying <input>, killing the
+      // blue autofill wash that would otherwise fight the LCD face.
+      {...(Platform.OS === "web" ? ({ spellCheck: false } as object) : {})}
+      selectionColor={theme.today}
+      {...rest}
+      style={[
+        {
+          fontFamily: FONTS.sansSemi,
+          fontSize: 15,
+          color: theme.print,
+          padding: 0,
+          margin: 0,
+          // strip the web input's default chrome so it reads as etched text
+          ...(Platform.OS === "web"
+            ? ({
+                outlineStyle: "none",
+                backgroundColor: "transparent",
+                borderWidth: 0,
+              } as unknown as ViewStyle)
+            : {}),
+        },
+        style,
+      ]}
+    />
+  );
 }

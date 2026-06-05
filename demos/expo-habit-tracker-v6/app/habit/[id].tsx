@@ -1,5 +1,5 @@
 /* ============================================================
-   Pulse — habit detail (v6's beat: dynamic routes).
+   Pulse — habit detail (v5's beat: dynamic routes; inherited by v6).
 
    File-based dynamic route. The bracketed segment in the filename
    (`[id]`) is what makes Expo Router treat any URL like
@@ -10,7 +10,7 @@
    Why headerShown: false here — the visual back bar is rendered
    inside <HabitDetail/> itself so it can use the instrument's own
    typography + tokens. The per-route <Stack.Screen options>
-   override is also where v6's motion primitive lives: the screen
+   override is also where v5's motion primitive lives: the screen
    slides in from the right (or 'none' under reduced-motion) instead
    of inheriting the root Stack's 'fade' default.
    ============================================================ */
@@ -20,7 +20,6 @@ import { Pressable, Text, View } from "react-native";
 import { useReducedMotion } from "react-native-reanimated";
 
 import HabitDetail from "@/components/HabitDetail";
-import Nav from "@/components/Nav";
 import { useHabitStore } from "@/lib/habit-store";
 import { useTheme } from "@/theme/ThemeProvider";
 import { FONTS } from "@/theme/tokens";
@@ -36,20 +35,19 @@ export default function HabitDetailScreen() {
   const { habits } = useHabitStore();
   const habit = habits.find((h) => h.id === id);
 
-  // Reduced-motion gate (v6 motion primitive is the screen transition itself).
+  // Reduced-motion gate (v5 motion primitive is the screen transition itself).
   const reduce = useReducedMotion();
   const animation: "slide_from_right" | "none" = reduce ? "none" : "slide_from_right";
 
-  // Web shell: pin Nav above + centre the detail in a phone-width column so
-  // the screen reads like a device on a wide desktop viewport (matching the
-  // TabScreen pattern the (tabs) routes already use). Without this the
-  // 30-cell LED dot-matrix stretches to whatever the browser is wide.
+  // The detail screen fills the DeviceShell phone bezel — no web Nav, no
+  // centred desktop column (the bezel is the frame now). The slide_from_right
+  // push therefore happens INSIDE the phone, over the Today screen.
   return (
     <>
       <Stack.Screen
         options={{
           headerShown: false,
-          // v6 motion primitive: customize the route transition via
+          // v5 motion primitive: customize the route transition via
           // Stack.Screen options. slide_from_right is the canonical
           // iOS-native push feel, so the new screen reads unambiguously
           // as "a fresh route on top of the previous one."
@@ -57,21 +55,7 @@ export default function HabitDetailScreen() {
         }}
       />
       <View style={{ flex: 1, backgroundColor: theme.canvas }}>
-        <Nav />
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              maxWidth: 560,
-              borderLeftWidth: 1,
-              borderRightWidth: 1,
-              borderColor: theme.hairline,
-            }}
-          >
-            {habit ? <HabitDetail habit={habit} /> : <ChannelNotFound />}
-          </View>
-        </View>
+        {habit ? <HabitDetail habit={habit} /> : <ChannelNotFound />}
       </View>
     </>
   );

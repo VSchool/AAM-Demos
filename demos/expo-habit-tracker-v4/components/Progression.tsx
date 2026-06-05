@@ -1,4 +1,4 @@
-/* Progression (guideline §3.4) — the v0→v5 version timeline.
+/* Progression (guideline §3.4) — the v0→v6 version timeline.
    Current marked, past versions link to their deployed URL, future
    versions stay locked. The spine matches the locked teaching beats. */
 
@@ -12,7 +12,8 @@ const STEPS = [
   { v: 2, label: "list + form" },
   { v: 3, label: "the throw" },
   { v: 4, label: "storage" },
-  { v: 5, label: "push + coach" },
+  { v: 5, label: "detail · dynamic routes" },
+  { v: 6, label: "push + coach" },
 ];
 
 const BASE = "https://vschool.github.io/AAM-Demos/expo-habit-tracker-";

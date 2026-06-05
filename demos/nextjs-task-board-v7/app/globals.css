@@ -1,0 +1,2673 @@
+/* ============================================================
+   Cadence — Direction C · Inverted Studio
+   Violet IS the canvas. Cream cards sit on it.
+   ============================================================ */
+
+:root {
+  /* Canvas (the brand IS the surface) */
+  --canvas: #6B50FF;
+  --canvas-2: #5A3FE0;
+  --canvas-3: #4A33C8;
+
+  /* Card / paper */
+  --cream: #FFFDF5;
+  --cream-2: #F6F2E6;
+  --ink: #0A0A0A;
+  --ink-2: #2A2A2A;
+  --ink-muted: rgba(10, 10, 10, 0.55);
+  --ink-dim: rgba(10, 10, 10, 0.35);
+
+  /* On-canvas text */
+  --on-canvas: #FFFDF5;
+  --on-canvas-muted: rgba(255, 253, 245, 0.70);
+  --on-canvas-dim: rgba(255, 253, 245, 0.40);
+
+  /* Accent flashes */
+  --neon: #00FFB2;        /* done */
+  --pink: #FF7BF5;        /* blocked */
+  --yellow: #FFE066;      /* doing */
+  --sky: #7DD3FC;         /* info */
+
+  /* Borders (cream alpha on canvas) */
+  --hairline: rgba(255, 253, 245, 0.20);
+  --hairline-strong: rgba(255, 253, 245, 0.40);
+  --card-hairline: rgba(10, 10, 10, 0.10);
+
+  /* Type */
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "JetBrains Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--canvas);
+  color: var(--on-canvas);
+}
+body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ============== TOP NAV ============== */
+.cn-nav {
+  background: var(--canvas-2);
+  border-bottom: 1px solid var(--hairline);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.cn-nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 28px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.cn-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+.cn-brand-glyph {
+  color: var(--neon);
+  font-size: 18px;
+  line-height: 1;
+}
+.cn-brand-state {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--on-canvas-muted);
+  margin-left: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.cn-nav-links {
+  display: flex;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+.cn-nav-link {
+  color: var(--on-canvas-muted);
+  padding: 8px 12px;
+  transition: color 100ms;
+}
+.cn-nav-link:hover { color: var(--on-canvas); }
+.cn-nav-link[aria-current="page"] { color: var(--neon); }
+@media (max-width: 700px) {
+  .cn-nav-inner { padding: 0 18px; }
+  .cn-nav-links { gap: 0; }
+  .cn-nav-link { padding: 8px; font-size: 11px; }
+}
+
+/* ============== PAGE LAYOUT ============== */
+.cn-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 56px 28px 96px;
+}
+@media (max-width: 700px) { .cn-page { padding: 36px 18px 64px; } }
+
+.cn-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--neon);
+  margin-bottom: 18px;
+}
+.cn-eyebrow::before {
+  content: "▸";
+  color: var(--neon);
+  font-size: 14px;
+}
+
+.cn-h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.0;
+  margin: 0 0 16px;
+  color: var(--cream);
+}
+.cn-lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--on-canvas-muted);
+  max-width: 62ch;
+  margin: 0 0 36px;
+}
+.cn-lede strong { color: var(--cream); font-weight: 600; }
+
+.cn-section { margin-top: 48px; position: relative; }
+.cn-section-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--on-canvas-dim);
+  margin-bottom: 14px;
+}
+.cn-section-h {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 0 20px;
+  color: var(--cream);
+}
+
+/* ============== BENTO GRID ============== */
+.cn-bento {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(110px, auto);
+  gap: 12px;
+}
+@media (max-width: 800px) {
+  .cn-bento { grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(120px, auto); }
+}
+.cn-tile {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 20px 22px;
+  border: 1px solid var(--hairline-strong);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  position: relative;
+  min-height: 110px;
+}
+.cn-tile-violet { background: var(--canvas-3); color: var(--cream); border-color: var(--hairline-strong); }
+.cn-tile-green  { background: var(--neon);     color: var(--ink); }
+.cn-tile-pink   { background: var(--pink);     color: var(--ink); }
+.cn-tile-yellow { background: var(--yellow);   color: var(--ink); }
+.cn-tile-dark   { background: var(--ink);      color: var(--cream); border-color: var(--ink); }
+
+.cn-tile-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.65;
+}
+.cn-tile-title {
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.cn-tile-num {
+  font-family: var(--font-sans);
+  font-size: clamp(40px, 6vw, 56px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.cn-tile-sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.45;
+  opacity: 0.7;
+  margin-top: 6px;
+}
+.cn-tile.span-2  { grid-column: span 2; }
+.cn-tile.span-3  { grid-column: span 3; }
+.cn-tile.span-4  { grid-column: span 4; }
+.cn-tile.span-5  { grid-column: span 5; }
+.cn-tile.span-6  { grid-column: span 6; }
+.cn-tile.span-7  { grid-column: span 7; }
+.cn-tile.span-8  { grid-column: span 8; }
+.cn-tile.span-9  { grid-column: span 9; }
+.cn-tile.span-12 { grid-column: span 12; }
+.cn-tile.row-2   { grid-row: span 2; }
+.cn-tile.row-3   { grid-row: span 3; }
+@media (max-width: 800px) {
+  .cn-tile.span-2, .cn-tile.span-3, .cn-tile.span-4, .cn-tile.span-5,
+  .cn-tile.span-6, .cn-tile.span-7, .cn-tile.span-8, .cn-tile.span-9 { grid-column: span 4; }
+  .cn-tile.span-12 { grid-column: span 4; }
+  .cn-tile.row-3 { grid-row: span 2; }
+}
+
+/* Section header hint — small uppercase mono next to "click to expand" */
+.cn-section-h-hint {
+  display: inline-block;
+  margin-left: 12px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--on-canvas-muted);
+  vertical-align: middle;
+}
+
+/* ============== EXPANDABLE TILE (client-side, animated) ============== */
+.cn-tile-expandable {
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+.cn-tile-expandable.is-open {
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  z-index: 1;
+  position: relative;
+}
+/* Idle (no tile open): stretch every tile to fill its grid row so peers in
+   the same row have a uniform height. The bento's grid-auto-rows sizes the
+   row to the tallest tile's content, and the rest match it via stretch. */
+.cn-bento-expandable:not(.has-open) .cn-tile-expandable { align-self: stretch; }
+/* In has-open mode, closed tiles sit at the top of their sidebar cell so
+   each one is compact regardless of the open tile's height. */
+.cn-bento-expandable.has-open .cn-tile-expandable { align-self: start; }
+/* Preserve the visual height of row-2 tiles when nothing is open. */
+.cn-bento-expandable:not(.has-open) .cn-tile-expandable.row-2 { min-height: 232px; }
+
+.cn-tile-summary {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 56px 20px 22px;
+  min-height: 110px;
+  position: relative;
+}
+.cn-tile-summary:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: -3px;
+}
+
+/* Chevron — a + that becomes − by fading out the vertical bar, while the
+   circular wrapper rotates 180°. Single transitioning element, no content
+   swap, smooth open/close. */
+.cn-tile-chevron {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.08);
+  transition: transform 240ms cubic-bezier(0.4, 0, 0.2, 1), background 120ms;
+}
+.cn-tile-chevron::before,
+.cn-tile-chevron::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  border-radius: 1px;
+}
+.cn-tile-chevron::before {
+  width: 10px;
+  height: 2px;
+  transform: translate(-50%, -50%);
+}
+.cn-tile-chevron::after {
+  width: 2px;
+  height: 10px;
+  transform: translate(-50%, -50%);
+  transition: opacity 220ms ease;
+}
+.cn-tile-expandable.is-open .cn-tile-chevron {
+  transform: rotate(180deg);
+  background: rgba(10, 10, 10, 0.18);
+}
+.cn-tile-expandable.is-open .cn-tile-chevron::after { opacity: 0; }
+.cn-tile-expandable:hover .cn-tile-chevron { background: rgba(10, 10, 10, 0.16); }
+.cn-tile-violet.cn-tile-expandable .cn-tile-chevron,
+.cn-tile-dark.cn-tile-expandable .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.14);
+}
+.cn-tile-violet.cn-tile-expandable.is-open .cn-tile-chevron,
+.cn-tile-dark.cn-tile-expandable.is-open .cn-tile-chevron,
+.cn-tile-violet.cn-tile-expandable:hover .cn-tile-chevron,
+.cn-tile-dark.cn-tile-expandable:hover .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.24);
+}
+
+/* Body height animates via grid-template-rows 0fr → 1fr.
+   Modern Chromium, Safari 17.2+, and Firefox 118+ interpolate this. */
+.cn-tile-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-tile-expandable.is-open .cn-tile-body-wrap { grid-template-rows: 1fr; }
+.cn-tile-body-wrap > .cn-tile-body {
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 22px;
+  border-top: 0 solid rgba(10, 10, 10, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  transition: padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-top-width 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-tile-expandable.is-open .cn-tile-body-wrap > .cn-tile-body {
+  padding: 16px 22px 22px;
+  border-top-width: 1px;
+}
+.cn-tile-violet.cn-tile-expandable .cn-tile-body-wrap > .cn-tile-body,
+.cn-tile-dark.cn-tile-expandable .cn-tile-body-wrap > .cn-tile-body {
+  border-top-color: rgba(255, 253, 245, 0.18);
+}
+
+/* ============== EXPANDABLE BENTO (single-open focus layout) ==============
+   When the bento has an open tile, the layout morphs to a wide-left + side-rail
+   layout: the open tile takes a wide column, closed tiles compress into a
+   stacked sidebar on the right. Total area stays roughly fixed.
+   Animation between layouts uses the View Transitions API (see <ExpandableBento>).
+   When inside a bento, we disable the per-tile height transition since the
+   view-transition morph handles the resize itself. */
+.cn-bento-expandable .cn-tile-body-wrap,
+.cn-bento-expandable .cn-tile-body-wrap > .cn-tile-body {
+  transition: none;
+}
+
+.cn-bento-expandable.has-open {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  grid-auto-rows: auto;
+  align-items: start;
+}
+/* Reset every tile to the right column by default in has-open mode.
+   Specificity (0,3,0) beats .cn-tile.span-N (0,2,0). */
+.cn-bento-expandable.has-open .cn-tile-expandable {
+  grid-column: 2;
+  grid-row: auto;
+  min-height: 0;
+}
+/* The open tile claims the wide left column and spans all rows. */
+.cn-bento-expandable.has-open .cn-tile-expandable.is-open {
+  grid-column: 1;
+  grid-row: 1 / span 99;
+}
+
+/* Compact appearance for closed siblings while another tile is open.
+   One short line: meta + truncated title. Description/big number hidden. */
+.cn-tile-expandable.is-compact > .cn-tile-summary {
+  padding: 12px 40px 12px 14px;
+  min-height: 0;
+  gap: 4px;
+}
+.cn-tile-expandable.is-compact .cn-tile-meta {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+.cn-tile-expandable.is-compact .cn-tile-title {
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0;
+  /* Single-line truncation so the title fits the rail. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cn-tile-expandable.is-compact .cn-tile-sub,
+.cn-tile-expandable.is-compact .cn-tile-num {
+  display: none;
+}
+.cn-tile-expandable.is-compact .cn-tile-chevron {
+  width: 18px;
+  height: 18px;
+  top: 50%;
+  right: 10px;
+  margin-top: -9px;
+}
+.cn-tile-expandable.is-compact .cn-tile-chevron::before { width: 8px; }
+.cn-tile-expandable.is-compact .cn-tile-chevron::after { height: 8px; }
+/* Hide the second-child wrapper that holds the title block on tiles that
+   use the meta + (h3 + p) structure when collapsed, to drop their padding.
+   We KEEP the h3 visible by promoting it to top-level for compact tiles. */
+.cn-tile-expandable.is-compact > .cn-tile-summary > div:not(.cn-tile-meta) {
+  display: contents;
+}
+
+/* Mobile: collapse to a vertical stack so the rail doesn't squeeze the open tile. */
+@media (max-width: 760px) {
+  .cn-bento-expandable.has-open { grid-template-columns: 1fr; }
+  .cn-bento-expandable.has-open .cn-tile-expandable.is-open {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .cn-bento-expandable.has-open .cn-tile-expandable {
+    grid-column: 1;
+  }
+}
+
+/* ============== VIEW TRANSITIONS (layout morph) ============== */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(*) {
+    animation-duration: 780ms;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0.24, 1);
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 520ms;
+    animation-timing-function: cubic-bezier(0.32, 0.72, 0.24, 1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+.cn-tile-body p { margin: 0; }
+.cn-tile-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: rgba(10, 10, 10, 0.08);
+  padding: 1px 5px;
+}
+.cn-tile-violet.cn-tile-expandable .cn-tile-body code,
+.cn-tile-dark.cn-tile-expandable .cn-tile-body code {
+  background: rgba(255, 253, 245, 0.14);
+}
+.cn-tile-body-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  opacity: 0.65;
+  margin-top: 2px;
+}
+.cn-tile-body-note {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(10, 10, 10, 0.08);
+  opacity: 0.75;
+  font-size: 12.5px;
+}
+.cn-tile-violet.cn-tile-expandable .cn-tile-body-note,
+.cn-tile-dark.cn-tile-expandable .cn-tile-body-note {
+  border-top-color: rgba(255, 253, 245, 0.14);
+}
+.cn-tile-body-link {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  font-weight: 600;
+  align-self: flex-start;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 2px;
+}
+.cn-tile-body-link:hover { opacity: 0.75; }
+.cn-tile-code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  background: rgba(10, 10, 10, 0.92);
+  color: var(--cream);
+  border: 1px solid rgba(255, 253, 245, 0.10);
+  padding: 14px 16px;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+.cn-tile-code code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+.cn-tile-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cn-tile-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cn-tile-list li code {
+  align-self: flex-start;
+  font-size: 12px;
+}
+.cn-tile-list li span {
+  font-size: 12.5px;
+  opacity: 0.78;
+}
+.cn-tile-list-mono li code { font-size: 12.5px; }
+.cn-tile-list-arc li {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 10px;
+}
+.cn-tile-list-arc li strong {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  min-width: 28px;
+  font-weight: 700;
+  opacity: 0.9;
+}
+.cn-tile-list-arc li span { font-size: 12.5px; opacity: 0.82; }
+
+/* ============== CHEVRON FLAGS ============== */
+.cn-flag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 5px 14px 5px 10px;
+  background: var(--cream);
+  color: var(--ink);
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 50%, calc(100% - 9px) 100%, 0 100%);
+}
+.cn-flag-open     { background: var(--cream);  color: var(--ink); }
+.cn-flag-backlog  { background: #FFA082;       color: #4A1500; }
+.cn-flag-todo     { background: var(--sky);    color: #003B5C; }
+.cn-flag-doing    { background: var(--yellow); color: var(--ink); }
+.cn-flag-blocked  { background: var(--pink);   color: var(--ink); }
+.cn-flag-done     { background: var(--neon);   color: var(--ink); }
+.cn-flag-canceled {
+  background: var(--ink);
+  color: var(--on-canvas-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 253, 245, 0.45);
+  text-decoration-thickness: 1px;
+}
+
+/* ============== EMPTY STATE ============== */
+.cn-empty {
+  border: 1px dashed var(--hairline-strong);
+  background: rgba(255, 253, 245, 0.04);
+  padding: 80px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.cn-empty-glyph {
+  width: 56px;
+  height: 56px;
+  background: var(--cream);
+  color: var(--canvas);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 28px;
+  display: inline-grid;
+  place-content: center;
+}
+.cn-empty h3 {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--cream);
+  margin: 0;
+}
+.cn-empty p {
+  font-size: 14px;
+  color: var(--on-canvas-muted);
+  margin: 0;
+  max-width: 48ch;
+  line-height: 1.55;
+}
+.cn-empty .cn-empty-note {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--neon);
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+/* ============== PROGRESSION BAR ============== */
+.cn-prog {
+  display: flex;
+  gap: 6px;
+  margin: 28px 0 36px;
+  flex-wrap: wrap;
+}
+.cn-prog-step {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 10px;
+  background: rgba(255, 253, 245, 0.08);
+  color: var(--on-canvas-muted);
+  border: 1px solid var(--hairline);
+}
+.cn-prog-step-current {
+  background: var(--neon);
+  color: var(--ink);
+  border-color: var(--neon);
+  font-weight: 600;
+}
+.cn-prog-step-future {
+  opacity: 0.5;
+}
+
+/* ============== ROUTE MAP (for v0 home) ============== */
+.cn-routes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) { .cn-routes { grid-template-columns: 1fr; } }
+.cn-route {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 22px 24px;
+  border: 1px solid var(--hairline-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 100ms;
+}
+.cn-route:hover { transform: translate(2px, -2px); }
+.cn-route-path {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--canvas-2);
+}
+.cn-route-title {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+.cn-route-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: 0;
+}
+.cn-route-file {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--card-hairline);
+}
+
+/* ============== INLINE CODE ============== */
+code, .cn-mono {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+}
+.cn-card code {
+  background: rgba(10, 10, 10, 0.06);
+  padding: 2px 6px;
+  color: var(--canvas-2);
+}
+
+/* ============== FOOTER ============== */
+.cn-foot {
+  border-top: 1px solid var(--hairline);
+  background: var(--canvas-2);
+  padding: 28px 0;
+  margin-top: 64px;
+}
+.cn-foot-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--on-canvas-dim);
+  flex-wrap: wrap;
+}
+.cn-foot-link { color: var(--on-canvas-muted); }
+.cn-foot-link:hover { color: var(--neon); }
+@media (max-width: 700px) { .cn-foot-inner { padding: 0 18px; } }
+
+/* ============================================================
+   v1 additions — task cards, summary tiles, banners, skeletons
+   ============================================================ */
+
+.cn-task-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 800px) { .cn-task-list { grid-template-columns: 1fr; } }
+
+.cn-task {
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid var(--hairline-strong);
+  padding: 18px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 100ms;
+}
+.cn-task:hover { transform: translate(2px, -2px); }
+/* Canceled card — dim the whole card and strike the title so a canceled
+   task reads as dead at a glance, on top of the chevron flag. */
+.cn-task-canceled { opacity: 0.62; background: var(--cream-2); }
+.cn-task-canceled .cn-task-title {
+  text-decoration: line-through;
+  text-decoration-color: rgba(10, 10, 10, 0.55);
+  text-decoration-thickness: 1.5px;
+  color: var(--ink-muted);
+}
+.cn-task-canceled .cn-task-desc { color: var(--ink-muted); }
+.cn-task-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cn-task-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-dim);
+  letter-spacing: 0.06em;
+}
+.cn-task-title {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--ink);
+}
+.cn-task-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cn-task-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+  margin-top: auto;
+  border-top: 1px solid var(--card-hairline);
+  flex-wrap: wrap;
+}
+.cn-task-foot-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.cn-task-foot-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cn-prio {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+  font-weight: 500;
+}
+.cn-prio-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cn-task-due {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-muted);
+}
+.cn-task-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 7px;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+  /* fallback when no color slot is applied */
+  color: var(--ink-muted);
+  background: rgba(10, 10, 10, 0.05);
+}
+.cn-task-label-c0 { background: rgba(0, 200, 140, 0.85);   color: #002418; }   /* mint  */
+.cn-task-label-c1 { background: rgba(255, 123, 245, 0.85); color: #4A0044; }   /* pink  */
+.cn-task-label-c2 { background: rgba(255, 210, 80, 0.95);  color: #3D2E00; }   /* yellow */
+.cn-task-label-c3 { background: rgba(125, 200, 252, 0.95); color: #003B5C; }   /* sky   */
+.cn-task-label-c4 { background: rgba(180, 165, 255, 0.92); color: #221169; }   /* lilac */
+.cn-task-label-c5 { background: rgba(255, 160, 130, 0.92); color: #4A1500; }   /* coral */
+.cn-avatar {
+  width: 24px;
+  height: 24px;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  display: inline-grid;
+  place-content: center;
+  box-shadow: 0 0 0 1px rgba(10, 10, 10, 0.18);
+}
+/* Deterministic, non-violet palette so avatars contrast strongly with both
+   the cream task cards and the deep-violet Details aside. */
+.cn-avatar-c0 { background: #00FFB2; color: #002418; }  /* neon mint */
+.cn-avatar-c1 { background: #FF7BF5; color: #4A0044; }  /* pink      */
+.cn-avatar-c2 { background: #FFE066; color: #3D2E00; }  /* yellow    */
+.cn-avatar-c3 { background: #7DD3FC; color: #003B5C; }  /* sky       */
+.cn-avatar-c4 { background: #FFA082; color: #4A1500; }  /* coral     */
+.cn-avatar-c5 { background: #B4A5FF; color: #221169; }  /* lilac     */
+
+/* Summary tiles row */
+.cn-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+@media (max-width: 700px) { .cn-summary { grid-template-columns: repeat(2, 1fr); } }
+.cn-summary-tile {
+  background: rgba(255, 253, 245, 0.06);
+  border: 1px solid var(--hairline);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cn-summary-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+.cn-summary-count {
+  font-family: var(--font-sans);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--cream);
+}
+.cn-summary-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--on-canvas-muted);
+}
+
+/* Banner callout (yellow / pink / green / dark) */
+.cn-banner {
+  background: var(--yellow);
+  color: var(--ink);
+  padding: 18px 22px;
+  margin: 28px 0 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cn-banner-yellow { background: var(--yellow); color: var(--ink); }
+.cn-banner-pink   { background: var(--pink);   color: var(--ink); }
+.cn-banner-green  { background: var(--neon);   color: var(--ink); }
+.cn-banner-dark   { background: var(--ink);    color: var(--cream); }
+/* .cn-banner-info — shares the helper palette so demo annotations
+   read as helper info, not app state (pink/yellow/green are reserved
+   for real status changes — blocked, doing, done). */
+.cn-banner.cn-banner-info {
+  background: var(--helper-bg);
+  color: var(--helper-text);
+  border-left: 4px solid var(--helper-accent);
+  box-shadow: 0 4px 14px rgba(15, 42, 68, 0.10);
+}
+.cn-banner.cn-banner-info .cn-banner-meta { color: var(--helper-accent-strong); opacity: 1; }
+.cn-banner.cn-banner-info p { color: var(--helper-text-muted); }
+.cn-banner.cn-banner-info code {
+  background: var(--helper-code-bg);
+  color: var(--helper-code-text);
+}
+.cn-banner-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.7;
+}
+.cn-banner p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+.cn-banner code { background: rgba(10, 10, 10, 0.10); padding: 2px 6px; }
+
+/* Skeleton bars */
+.cn-skel {
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    rgba(10, 10, 10, 0.04) 0%,
+    rgba(10, 10, 10, 0.10) 50%,
+    rgba(10, 10, 10, 0.04) 100%
+  );
+  background-size: 200% 100%;
+  animation: cn-shimmer 1.4s linear infinite;
+}
+@keyframes cn-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+.cn-task-skel { pointer-events: none; }
+
+/* Code block */
+.cn-code {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  padding: 18px 22px;
+  overflow-x: auto;
+  margin: 0 0 18px;
+  border: 1px solid var(--hairline-strong);
+}
+.cn-code code { background: transparent; padding: 0; color: inherit; }
+
+.cn-aside {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--on-canvas-muted);
+  max-width: 64ch;
+  margin: 0;
+}
+.cn-aside code {
+  background: rgba(255, 253, 245, 0.08);
+  padding: 2px 6px;
+  color: var(--cream);
+}
+
+/* ============================================================
+   v3 additions — filter bar + sort + chip group
+   ============================================================ */
+
+.cn-filter { display: flex; flex-direction: column; gap: 18px; }
+
+.cn-filter-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.cn-filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cn-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 12px;
+  background: rgba(255, 253, 245, 0.06);
+  color: var(--on-canvas-muted);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  transition: background 100ms, border-color 100ms, color 100ms;
+}
+.cn-filter-chip:hover {
+  background: rgba(255, 253, 245, 0.10);
+  color: var(--cream);
+}
+.cn-filter-chip-active {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
+}
+.cn-filter-chip-active:hover {
+  background: var(--cream);
+  color: var(--ink);
+}
+.cn-filter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cn-filter-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 1px 6px;
+  background: rgba(10, 10, 10, 0.08);
+  margin-left: 2px;
+}
+.cn-filter-chip:not(.cn-filter-chip-active) .cn-filter-count {
+  background: rgba(255, 253, 245, 0.08);
+}
+
+.cn-filter-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.cn-filter-sort-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--on-canvas-muted);
+}
+.cn-filter-sort-select {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 28px 7px 12px;
+  background: rgba(255, 253, 245, 0.06);
+  color: var(--cream);
+  border: 1px solid var(--hairline);
+  cursor: pointer;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--on-canvas-muted) 50%),
+    linear-gradient(135deg, var(--on-canvas-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 14px) 14px,
+    calc(100% - 9px) 14px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.cn-filter-sort-select:focus {
+  outline: none;
+  border-color: var(--cream);
+}
+
+.cn-filter-status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--on-canvas-muted);
+}
+.cn-filter-status strong { color: var(--cream); font-weight: 600; }
+
+/* ============================================================
+   v4 additions — task link wrapper, breadcrumb, detail layout
+   ============================================================ */
+
+.cn-task-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.cn-task-list > .cn-task-link {
+  display: flex;
+  height: 100%;
+}
+.cn-task-list > .cn-task-link > .cn-task { flex: 1; }
+.cn-task-link:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 2px;
+}
+
+.cn-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--on-canvas-muted);
+  margin-bottom: 16px;
+}
+.cn-breadcrumb-link {
+  color: var(--on-canvas-muted);
+  text-decoration: none;
+  transition: color 100ms;
+}
+.cn-breadcrumb-link:hover { color: var(--cream); }
+.cn-breadcrumb-sep { color: var(--on-canvas-dim); }
+.cn-breadcrumb-id { color: var(--cream); font-weight: 500; }
+
+.cn-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 12px;
+}
+
+.cn-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 28px;
+  margin-top: 28px;
+}
+@media (max-width: 800px) {
+  .cn-detail-layout { grid-template-columns: 1fr; }
+}
+
+.cn-detail-main {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 28px 32px;
+  border: 1px solid var(--hairline-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+.cn-detail-main section { display: flex; flex-direction: column; gap: 10px; }
+.cn-detail-h2 {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--canvas-2);
+  margin: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--card-hairline);
+}
+.cn-detail-body {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+.cn-detail-body code {
+  background: rgba(10, 10, 10, 0.06);
+  padding: 2px 6px;
+  color: var(--canvas-2);
+}
+.cn-detail-main pre.cn-code { margin: 0; }
+
+.cn-detail-side {
+  background: var(--canvas-3);
+  border: 1px solid var(--hairline-strong);
+  padding: 22px 24px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+.cn-detail-side-h {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--on-canvas-muted);
+  margin: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+.cn-detail-meta { margin: 0; }
+.cn-detail-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--hairline);
+  align-items: center;
+}
+.cn-detail-row:last-child { border-bottom: none; }
+.cn-detail-row dt {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--on-canvas-muted);
+}
+.cn-detail-row dd {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--cream);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* Edit-mode form fields inside the dark aside — cream slots so each
+   select/input reads as a distinct, high-contrast card against the
+   deeper violet panel. */
+.cn-detail-side .cn-detail-row dd {
+  width: 100%;
+}
+.cn-detail-side .cn-newtask-input {
+  width: 100%;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid rgba(10, 10, 10, 0.18);
+  padding: 8px 10px;
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+.cn-detail-side .cn-newtask-input:focus {
+  outline: 2px solid var(--neon);
+  outline-offset: 1px;
+  border-color: var(--neon);
+}
+/* Priority pill — base color is ink-muted for cream task cards; on the
+   violet Details aside it has to flip to cream so it doesn't blend. */
+.cn-detail-side .cn-prio {
+  color: var(--on-canvas);
+}
+.cn-detail-mono {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--on-canvas-muted);
+}
+.cn-detail-labels {
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cn-back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--neon);
+  text-decoration: none;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--neon);
+}
+.cn-back-link:hover { opacity: 0.8; }
+
+/* ============================================================
+   v5 additions — new-task form, edit form, detail actions
+   ============================================================ */
+
+.cn-board-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.cn-newtask-trigger {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 18px;
+  background: var(--neon);
+  color: var(--ink);
+  border: 0;
+  cursor: pointer;
+  transition: opacity 100ms;
+}
+.cn-newtask-trigger:hover { opacity: 0.85; }
+
+.cn-newtask-form {
+  background: var(--cream);
+  color: var(--ink);
+  padding: 22px 24px;
+  border: 1px solid var(--hairline-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.cn-newtask-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cn-newtask-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--canvas-2);
+}
+.cn-newtask-close {
+  background: transparent;
+  border: 0;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--ink-muted);
+  line-height: 1;
+  padding: 0 6px;
+}
+.cn-newtask-close:hover { color: var(--ink); }
+.cn-newtask-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 700px) { .cn-newtask-grid { grid-template-columns: 1fr; } }
+.cn-newtask-field { display: flex; flex-direction: column; gap: 5px; }
+.cn-newtask-field-wide { grid-column: span 3; }
+@media (max-width: 700px) { .cn-newtask-field-wide { grid-column: span 1; } }
+.cn-newtask-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+}
+.cn-newtask-input {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--card-hairline);
+  background: rgba(10, 10, 10, 0.03);
+  color: var(--ink);
+}
+.cn-newtask-input:focus {
+  outline: 2px solid var(--canvas);
+  outline-offset: 1px;
+  border-color: var(--canvas);
+}
+.cn-newtask-textarea {
+  min-height: 70px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.cn-newtask-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cn-newtask-submit {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 0;
+  cursor: pointer;
+}
+.cn-newtask-submit:hover { opacity: 0.88; }
+.cn-newtask-cancel {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--card-hairline);
+  cursor: pointer;
+}
+.cn-newtask-cancel:hover { background: rgba(10, 10, 10, 0.04); }
+.cn-newtask-danger {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 18px;
+  background: var(--pink);
+  color: var(--ink);
+  border: 0;
+  cursor: pointer;
+}
+.cn-newtask-danger:hover { opacity: 0.85; }
+
+/* Detail page actions block */
+/* ============================================================
+   Detail card — inline-editable task
+   ============================================================ */
+.cn-detail-card {
+  margin-top: 4px;
+}
+.cn-detail-card-editing {
+  background: rgba(0, 255, 178, 0.07);
+  border: 1px solid rgba(0, 255, 178, 0.45);
+  box-shadow: 0 0 0 1px rgba(0, 255, 178, 0.15), 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 20px 24px 24px;
+  border-radius: 6px;
+}
+.cn-detail-card-editing .cn-detail-main {
+  background: rgba(255, 253, 245, 0.96);
+}
+.cn-detail-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 4px 0 14px;
+  flex-wrap: wrap;
+}
+.cn-detail-card-actions {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.cn-detail-card-editing-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--neon);
+  padding: 5px 10px;
+  border: 1px solid var(--neon);
+  border-radius: 999px;
+}
+.cn-detail-action-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  cursor: pointer;
+  border-radius: 999px;
+  line-height: 1;
+}
+.cn-detail-action-btn-ghost {
+  background: transparent;
+  color: var(--on-canvas);
+  border: 1px solid var(--hairline-strong);
+  transition: background 100ms, border-color 100ms;
+}
+.cn-detail-action-btn-ghost:hover {
+  background: rgba(255, 253, 245, 0.08);
+  border-color: var(--cream);
+}
+.cn-detail-action-btn-danger {
+  color: var(--pink);
+  border-color: rgba(255, 123, 245, 0.45);
+}
+.cn-detail-action-btn-danger:hover {
+  background: rgba(255, 123, 245, 0.08);
+  border-color: var(--pink);
+}
+.cn-detail-card-title {
+  font-size: clamp(28px, 4.5vw, 48px);
+  margin: 0 0 4px;
+}
+.cn-detail-title-input {
+  display: block;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: clamp(28px, 4.5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--cream);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--neon);
+  padding: 4px 0 8px;
+  margin: 0 0 4px;
+  outline: none;
+}
+.cn-detail-title-input::placeholder { color: var(--on-canvas-dim); }
+.cn-detail-desc-input {
+  min-height: 140px;
+  resize: vertical;
+}
+.cn-detail-card-deleted {
+  background: rgba(255, 123, 245, 0.06);
+  border: 1px solid rgba(255, 123, 245, 0.30);
+  padding: 22px 24px;
+  margin-top: 28px;
+}
+/* ============================================================
+   Helper note — reusable "demo annotation" treatment.
+   Sky-blue is reserved for explanation/teaching components
+   so they're visually flagged as helper info, not app features.
+   ============================================================ */
+/* Helper palette — UNIFIED on the saturated badge orange (#D96618).
+   The orange that previously lived on the "New in v6" badge is now
+   the panel background for every teaching/demo annotation. Dark ink
+   text + dark pill badges keep contrast high. */
+.cn-helper-note,
+.cn-helper-note.cn-helper-variant-d,
+.cn-v6-callout,
+.cn-banner.cn-banner-info {
+  --helper-bg: #D96618;
+  --helper-bg-hover: #C2580F;
+  --helper-border: rgba(31, 14, 4, 0.20);
+  --helper-accent: #1F0E04;
+  --helper-accent-strong: #1F0E04;
+  --helper-text: #1F0E04;
+  --helper-text-muted: rgba(31, 14, 4, 0.72);
+  --helper-text-dim: rgba(31, 14, 4, 0.55);
+  --helper-code-bg: rgba(31, 14, 4, 0.14);
+  --helper-code-text: #1F0E04;
+}
+.cn-helper-note-store { margin-top: 48px; }
+
+/* ============================================================
+   FeaturesStrip — bold typographic feature list.
+   Hover or click a word to swap the one-line caption beneath.
+   Visually distinct from the bento grids elsewhere on the page.
+   ============================================================ */
+.cn-features-section { padding-bottom: 16px; }
+
+.cn-feature-words {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: clamp(20px, 4vw, 56px);
+  row-gap: 6px;
+}
+@media (max-width: 700px) {
+  .cn-feature-words { grid-template-columns: 1fr; }
+}
+
+.cn-feature-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.cn-feature-word {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 14px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(34px, 6vw, 60px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  padding: 4px 0;
+  color: rgba(255, 253, 245, 0.32);
+  transition:
+    color 220ms ease,
+    transform 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  text-align: left;
+}
+.cn-feature-word:hover { color: rgba(255, 253, 245, 0.65); }
+
+.cn-feature-word-num {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.30em;
+  letter-spacing: 0.18em;
+  align-self: flex-start;
+  margin-top: 0.55em;
+  opacity: 0.55;
+  min-width: 1.6em; /* keeps numbers aligned in a column */
+  transition: opacity 220ms ease;
+}
+
+.cn-feature-word-text {
+  position: relative;
+}
+.cn-feature-word-text::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -4px;
+  height: 3px;
+  background: currentColor;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cn-feature-word[data-active="true"] { transform: translateX(6px); }
+.cn-feature-word[data-active="true"] .cn-feature-word-text::after { transform: scaleX(1); }
+.cn-feature-word[data-active="true"] .cn-feature-word-num { opacity: 1; }
+
+/* Tone colors only show when active */
+.cn-feature-word[data-tone="yellow"][data-active="true"] { color: var(--yellow); }
+.cn-feature-word[data-tone="pink"][data-active="true"]   { color: var(--pink); }
+.cn-feature-word[data-tone="green"][data-active="true"]  { color: var(--neon); }
+.cn-feature-word[data-tone="sky"][data-active="true"]    { color: var(--sky); }
+.cn-feature-word[data-tone="cream"][data-active="true"]  { color: var(--cream); }
+.cn-feature-word[data-tone="orange"][data-active="true"] { color: #FF8C42; }
+
+.cn-feature-word:focus-visible {
+  outline: 2px solid var(--neon);
+  outline-offset: 6px;
+  border-radius: 2px;
+}
+
+/* Caption slot — lives inside each row, expands only when that row
+   is active. The grid-template-rows 0fr → 1fr reveal animates height;
+   subsequent rows push down smoothly. */
+.cn-feature-caption-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  transition: grid-template-rows 380ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-feature-row[data-active="true"] .cn-feature-caption-wrap {
+  grid-template-rows: 1fr;
+}
+.cn-feature-caption {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  /* Indent so the caption aligns past the number column, under
+     the start of the word text. Matches .cn-feature-word-num width
+     (1.6em at ~0.30em scale) plus the 14px gap. */
+  padding: 0 0 0 clamp(40px, 5.5vw, 64px);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  color: var(--on-canvas-muted);
+  opacity: 0;
+  transform: translateY(-3px);
+  transition:
+    opacity 240ms ease 120ms,
+    transform 300ms ease 120ms,
+    padding 380ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cn-feature-row[data-active="true"] .cn-feature-caption {
+  opacity: 1;
+  transform: translateY(0);
+  padding-top: 6px;
+  padding-bottom: 10px;
+}
+
+/* ============================================================
+   DemoNote — pill → panel unfold animation (test bed).
+   Collapsed: a compact inline pill. Click: smooth widen + grid-row
+   expansion reveals the body. Runs on the orange helper palette.
+   ============================================================ */
+.cn-demo-note {
+  --dn-orange:        #D96618;
+  --dn-orange-hover:  #C2580F;
+  --dn-ink:           #1F0E04;
+  --dn-ink-muted:     rgba(31, 14, 4, 0.72);
+  --dn-ink-dim:       rgba(31, 14, 4, 0.55);
+  --dn-stroke:        rgba(31, 14, 4, 0.18);
+  --dn-ease:          cubic-bezier(0.22, 1, 0.36, 1); /* expo-out, no overshoot */
+  --dn-dur:           600ms;
+
+  margin: 28px 0;
+  display: block;
+  width: fit-content; /* fallback; JS measures the trigger and applies an inline px width */
+  max-width: 100%;
+  background: var(--dn-orange);
+  color: var(--dn-ink);
+  border: 1px solid var(--dn-stroke);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(15, 42, 68, 0.10);
+  will-change: width;
+  transition:
+    width            var(--dn-dur) var(--dn-ease),
+    border-radius    var(--dn-dur) var(--dn-ease),
+    box-shadow       var(--dn-dur) var(--dn-ease),
+    border-left-width var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note[data-open="true"] {
+  width: 100%;
+  border-radius: 6px;
+  border-left: 4px solid var(--dn-ink);
+  box-shadow: 0 10px 28px rgba(15, 42, 68, 0.20);
+}
+
+.cn-demo-note-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 22px 14px 18px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15.5px;
+  letter-spacing: -0.005em;
+  transition:
+    background 160ms ease,
+    padding    var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note-trigger:hover { background: var(--dn-orange-hover); }
+.cn-demo-note[data-open="true"] .cn-demo-note-trigger { padding: 16px 22px 16px 20px; }
+
+.cn-demo-note-glyph {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+.cn-demo-note-glyph-bar {
+  position: absolute;
+  background: var(--dn-ink);
+  border-radius: 1px;
+  transition:
+    transform var(--dn-dur) var(--dn-ease),
+    opacity   320ms var(--dn-ease);
+}
+.cn-demo-note-glyph-bar-h {
+  left: 0; right: 0;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.cn-demo-note-glyph-bar-v {
+  top: 0; bottom: 0;
+  left: 50%;
+  width: 2px;
+  transform: translateX(-50%);
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-glyph-bar-v {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-glyph-bar-h {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.cn-demo-note-title {
+  white-space: nowrap;
+  line-height: 1.2;
+  flex-shrink: 0; /* never shrink below the title's natural width */
+}
+
+/* Small variant — tight pill sized to sit just above the + New task button. */
+.cn-demo-note-sm {
+  margin: 0 0 10px;
+  box-shadow: 0 1px 3px rgba(15, 42, 68, 0.08);
+}
+.cn-demo-note-sm .cn-demo-note-trigger {
+  padding: 7px 14px 7px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  gap: 8px;
+}
+.cn-demo-note-sm[data-open="true"] .cn-demo-note-trigger {
+  padding: 9px 16px 9px 14px;
+}
+.cn-demo-note-sm .cn-demo-note-glyph { width: 11px; height: 11px; }
+.cn-demo-note-sm .cn-demo-note-glyph-bar-h { height: 1.5px; }
+.cn-demo-note-sm .cn-demo-note-glyph-bar-v { width: 1.5px; }
+
+/* Demo-note slot floats absolutely so it doesn't add vertical space between
+   the section heading and the task board. The slot itself is layout-invisible
+   (display: contents); the demo-note inside positions absolutely against the
+   nearest positioned ancestor (.cn-board-actions), sitting right above the
+   + New task button. */
+.cn-board-note-slot { display: contents; }
+.cn-board-note-slot > .cn-demo-note {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  z-index: 5;
+  margin: 0;
+}
+/* When opened, cap the width so it stays right-anchored and grows leftward
+   above the button instead of stretching across the board. */
+.cn-board-note-slot > .cn-demo-note[data-open="true"] {
+  width: min(560px, 100%) !important;
+}
+
+.cn-demo-note-body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dn-dur) var(--dn-ease);
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-body-wrap {
+  grid-template-rows: 1fr;
+}
+.cn-demo-note-body {
+  overflow: hidden;
+  min-height: 0;
+}
+.cn-demo-note-body-inner {
+  padding: 4px 22px 22px 22px;
+  border-top: 1px solid var(--dn-stroke);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Content settles in after the pill has finished widening */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity   320ms var(--dn-ease) 240ms,
+    transform 360ms var(--dn-ease) 240ms;
+}
+.cn-demo-note[data-open="true"] .cn-demo-note-body-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+.cn-demo-note-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--dn-ink);
+  margin-top: 10px;
+  opacity: 0.8;
+}
+.cn-demo-note-body-inner p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--dn-ink-muted);
+}
+.cn-demo-note-body-inner code {
+  background: rgba(31, 14, 4, 0.14);
+  color: var(--dn-ink);
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+/* Rich body content — sub-heading, aside, code blocks */
+.cn-demo-note-sub {
+  margin: 6px 0 -4px 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--dn-ink);
+}
+.cn-demo-note-aside {
+  font-size: 13px !important;
+  color: var(--dn-ink-dim) !important;
+}
+.cn-demo-note-body-inner .cn-code {
+  margin: 4px 0 0 0;
+}
+.cn-demo-note-body-inner .cn-code code {
+  background: transparent;
+  color: var(--cream);
+  padding: 0;
+}
+
+.cn-helper-note {
+  margin-top: 28px;
+  background: var(--helper-bg);
+  color: var(--helper-text);
+  border: 1px solid var(--helper-border);
+  border-left: 4px solid var(--helper-accent);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(15, 42, 68, 0.10);
+}
+.cn-helper-note-summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 20px 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--helper-text);
+  user-select: none;
+}
+.cn-helper-note-summary::-webkit-details-marker { display: none; }
+.cn-helper-note-summary::after {
+  content: "›";
+  margin-left: auto;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--helper-accent);
+  transform: rotate(0deg);
+  transition: transform 150ms ease;
+}
+.cn-helper-note[open] > .cn-helper-note-summary::after {
+  transform: rotate(90deg);
+}
+.cn-helper-note-summary:hover {
+  background: var(--helper-bg-hover);
+}
+.cn-helper-note-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #FFFFFF;
+  background: var(--helper-accent);
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+.cn-helper-note-title {
+  font-size: 15px;
+  letter-spacing: -0.005em;
+  color: var(--helper-text);
+}
+.cn-helper-note-body {
+  padding: 6px 22px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 1px solid var(--helper-border);
+}
+.cn-helper-note-body p {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--helper-text-muted);
+}
+.cn-helper-note-body code {
+  background: var(--helper-code-bg);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--helper-code-text);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+.cn-helper-note-body .cn-code {
+  /* dark code block keeps its existing chrome — it reads fine inside
+     the light helper panel and matches code blocks elsewhere on the page */
+  margin: 4px 0 0 0;
+}
+.cn-helper-note-body .cn-code code {
+  background: transparent;
+  color: var(--cream);
+  padding: 0;
+}
+.cn-helper-note-sub {
+  margin: 6px 0 -4px 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--helper-accent-strong);
+}
+.cn-helper-note-aside {
+  font-size: 13px !important;
+  color: var(--helper-text-dim) !important;
+}
+
+/* ============================================================
+   v6 demo callout — cream documentation card with canvas-purple
+   accents. Visually distinct from the orange DemoNote pill so
+   the "Trigger error" CTA reads as its own kind of annotation.
+   ============================================================ */
+.cn-v6-callout {
+  /* Local palette override — wins over the shared helper-* vars
+     declared earlier in the file for this same selector. */
+  --helper-bg:           var(--cream);
+  --helper-bg-hover:     var(--cream-2);
+  --helper-border:       rgba(10, 10, 10, 0.12);
+  --helper-accent:       var(--canvas);
+  --helper-accent-strong: var(--canvas-2);
+  --helper-text:         var(--ink);
+  --helper-text-muted:   var(--ink-muted);
+  --helper-text-dim:     var(--ink-dim);
+  --helper-code-bg:      rgba(10, 10, 10, 0.06);
+  --helper-code-text:    var(--ink);
+
+  position: relative;
+  margin-top: 40px;
+  padding: 18px 22px 20px 22px;
+  background: var(--helper-bg);
+  color: var(--helper-text);
+  border: 1px solid var(--helper-border);
+  border-left: 4px solid var(--helper-accent);
+  border-radius: 4px;
+  box-shadow: 0 4px 14px rgba(15, 42, 68, 0.10);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.cn-v6-callout-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cn-v6-callout-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #FFFFFF;
+  background: var(--helper-accent);
+  padding: 4px 9px;
+  border-radius: 3px;
+}
+.cn-v6-callout-file {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--helper-text-muted);
+  letter-spacing: 0.02em;
+}
+.cn-v6-callout-title {
+  margin: 2px 0 0 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--helper-text);
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+.cn-v6-callout-body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--helper-text-muted);
+}
+.cn-v6-callout-body code {
+  background: var(--helper-code-bg);
+  color: var(--helper-code-text);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.cn-v6-callout-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.cn-v6-callout-trigger {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 9px 16px;
+  background: transparent;
+  color: var(--helper-accent-strong);
+  border: 1px solid var(--helper-accent);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 100ms, color 100ms;
+}
+.cn-v6-callout-trigger:hover {
+  background: var(--helper-accent);
+  color: #FFFFFF;
+}
+
+/* ============================================================
+   Progression bar — past steps link, future steps lock
+   ============================================================ */
+.cn-prog-step-past {
+  color: var(--on-canvas);
+  background: rgba(255, 253, 245, 0.10);
+  border-color: var(--hairline-strong);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 100ms, border-color 100ms, color 100ms, transform 100ms;
+}
+.cn-prog-step-past:hover {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
+  transform: translateY(-1px);
+}
+.cn-prog-step-future {
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   View toggle + board (kanban) view
+   ============================================================ */
+
+.cn-filter-right {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.cn-view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--hairline-strong);
+  background: rgba(255, 253, 245, 0.04);
+}
+.cn-view-btn {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 7px 12px;
+  background: transparent;
+  color: var(--on-canvas-muted);
+  border: 0;
+  cursor: pointer;
+  transition: background 100ms, color 100ms;
+}
+.cn-view-btn:hover { color: var(--cream); }
+.cn-view-btn-active {
+  background: var(--cream);
+  color: var(--ink);
+}
+.cn-view-btn-active:hover { color: var(--ink); }
+.cn-view-toggle .cn-view-btn + .cn-view-btn {
+  border-left: 1px solid var(--hairline-strong);
+}
+
+/* Board (kanban) layout */
+.cn-board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(220px, 1fr));
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+@media (max-width: 1100px) {
+  .cn-board { grid-template-columns: repeat(3, minmax(220px, 1fr)); }
+}
+@media (max-width: 700px) {
+  .cn-board { grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+.cn-board-col {
+  background: rgba(255, 253, 245, 0.04);
+  border: 1px solid var(--hairline);
+  padding: 12px 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 220px;
+}
+.cn-board-col-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--hairline);
+}
+.cn-board-col-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cn-board-col-title {
+  margin: 0;
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+}
+.cn-board-col-count {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--on-canvas-muted);
+  background: rgba(255, 253, 245, 0.08);
+  padding: 1px 7px;
+  letter-spacing: 0.04em;
+}
+.cn-board-col-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+.cn-board-col-body .cn-task {
+  /* Slightly tighter cards inside the kanban columns */
+  padding: 14px 14px 12px;
+}
+.cn-board-col-body .cn-task-title {
+  font-size: 14px;
+}
+.cn-board-col-body .cn-task-desc {
+  -webkit-line-clamp: 3;
+}
+.cn-board-col-empty {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--on-canvas-dim);
+  padding: 24px 0;
+}
+.cn-board-col-body .cn-task-link[draggable="true"] { cursor: grab; }
+.cn-board-col-body .cn-task-link[draggable="true"]:active { cursor: grabbing; }
+.cn-task-link-dragging { opacity: 0.45; }
+
+.cn-board-card-slot {
+  position: relative;
+}
+.cn-board-card-slot::before,
+.cn-board-card-slot::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--neon);
+  border-radius: 1px;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 8px var(--neon);
+  transition: opacity 80ms;
+}
+.cn-board-card-slot::before { top: -6px; }
+.cn-board-card-slot::after { bottom: -6px; }
+.cn-board-card-slot-above::before { opacity: 1; }
+.cn-board-card-slot-below::after { opacity: 1; }
+
+.cn-board-col-trailing {
+  flex: 1;
+  min-height: 28px;
+  border-radius: 4px;
+}
+.cn-board-col-trailing-over {
+  background: rgba(0, 255, 178, 0.06);
+  outline: 1px dashed var(--neon);
+  outline-offset: -3px;
+}
+.cn-board-col-empty-over {
+  color: var(--neon);
+  outline: 1px dashed var(--neon);
+  outline-offset: -4px;
+}
+
+/* ============================================================
+   Palette toggle — floating "Palette" button + slide-up panel.
+   Lives in the root layout so every page gets it.
+   ============================================================ */
+.cn-palette-fab {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 80;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 12px;
+  background: var(--ink);
+  color: var(--cream);
+  border: 1px solid rgba(255, 253, 245, 0.18);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.cn-palette-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.34);
+}
+.cn-palette-fab-open {
+  background: var(--cream);
+  color: var(--ink);
+  border-color: var(--cream);
+}
+.cn-palette-fab-dots {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  border-radius: 50%;
+  background: rgba(255, 253, 245, 0.08);
+}
+.cn-palette-fab-open .cn-palette-fab-dots {
+  background: rgba(10, 10, 10, 0.06);
+}
+.cn-palette-fab-dots > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.cn-palette-fab-label { line-height: 1; }
+
+.cn-palette-panel {
+  position: fixed;
+  right: 22px;
+  bottom: 72px;
+  z-index: 79;
+  width: min(360px, calc(100vw - 36px));
+  max-height: min(560px, calc(100vh - 120px));
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  color: var(--ink);
+  border: 1px solid rgba(10, 10, 10, 0.10);
+  border-radius: 10px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
+  animation: cn-palette-pop 140ms ease-out;
+}
+@keyframes cn-palette-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.cn-palette-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+}
+.cn-palette-panel-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--canvas-2);
+}
+.cn-palette-panel-title {
+  margin: 4px 0 0;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.cn-palette-panel-close {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--ink-muted);
+  font-size: 16px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.cn-palette-panel-close:hover { background: rgba(10, 10, 10, 0.06); color: var(--ink); }
+
+.cn-palette-panel-body {
+  padding: 14px 18px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.cn-palette-group { display: flex; flex-direction: column; gap: 8px; }
+.cn-palette-group-h {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--canvas-2);
+}
+.cn-palette-group-blurb {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+.cn-palette-swatches {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cn-palette-swatch {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(10, 10, 10, 0.08);
+  border-radius: 6px;
+  background: rgba(10, 10, 10, 0.02);
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  transition: border-color 100ms, background 100ms;
+}
+.cn-palette-swatch:hover {
+  border-color: rgba(10, 10, 10, 0.20);
+  background: rgba(10, 10, 10, 0.04);
+}
+.cn-palette-chip {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid rgba(10, 10, 10, 0.10);
+  display: block;
+}
+.cn-palette-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.cn-palette-token {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cn-palette-hex {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+.cn-palette-role {
+  font-family: var(--font-sans);
+  font-size: 10.5px;
+  color: var(--ink-muted);
+  text-align: right;
+  max-width: 130px;
+  line-height: 1.35;
+}
+.cn-palette-panel-foot {
+  margin: 2px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid rgba(10, 10, 10, 0.08);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-muted);
+}
+.cn-palette-panel-foot code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: rgba(10, 10, 10, 0.06);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--canvas-2);
+}
+
+@media (max-width: 600px) {
+  .cn-palette-fab { right: 14px; bottom: 14px; padding: 9px 14px 9px 10px; }
+  .cn-palette-panel { right: 14px; bottom: 64px; }
+}
+
+/* ============== LOCKED TILE (Coming Soon — future version) ============== */
+.cn-tile-locked {
+  background: transparent;
+  border: 1px dashed var(--hairline-strong);
+  color: var(--on-canvas-muted);
+  opacity: 0.7;
+  cursor: not-allowed;
+  position: relative;
+}
+.cn-tile-locked::after {
+  content: "LOCKED";
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  opacity: 0.55;
+}
+.cn-tile-locked .cn-tile-meta { opacity: 0.85; }
+.cn-tile-locked .cn-tile-title {
+  color: var(--on-canvas);
+  opacity: 0.78;
+  font-weight: 600;
+}
+.cn-tile-locked .cn-tile-sub { opacity: 0.7; }
+
+
+
+
+
+/* ============== "COMING SOON" TILE ============== */
+.cn-tile-soon {
+  background: var(--canvas-3);
+  color: var(--cream);
+  border: 1px dashed rgba(255, 253, 245, 0.22);
+  position: relative;
+  overflow: hidden;
+}
+.cn-tile-soon::before {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background:
+    radial-gradient(circle at 28% 30%, rgba(255, 224, 102, 0.14), transparent 38%),
+    radial-gradient(circle at 72% 72%, rgba(255, 123, 245, 0.16), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(0, 255, 178, 0.10), transparent 45%);
+  filter: blur(22px);
+  pointer-events: none;
+  z-index: 0;
+}
+.cn-tile-soon > * { position: relative; z-index: 1; }
+
+.cn-tile-soon .cn-tile-summary {
+  min-height: 140px;
+  gap: 16px;
+}
+.cn-tile-soon .cn-tile-meta {
+  color: var(--neon);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  opacity: 1;
+}
+.cn-tile-soon .cn-tile-title {
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+  background: linear-gradient(95deg, #FFE066 0%, #FF7BF5 55%, #00FFB2 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: cn-soon-shimmer 6s ease-in-out infinite;
+  margin: 0;
+}
+@keyframes cn-soon-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cn-tile-soon .cn-tile-title { animation: none; }
+}
+
+/* Chevron: tone it down on the gradient background, keep affordance. */
+.cn-tile-soon .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.10);
+}
+.cn-tile-soon:hover .cn-tile-chevron,
+.cn-tile-soon.is-open .cn-tile-chevron {
+  background: rgba(255, 253, 245, 0.22);
+}
+
+/* Compact (sibling) state inside a bento with an open tile. */
+.cn-tile-soon.is-compact .cn-tile-title {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0;
+}
+
+/* ============== BENTO HEIGHT CAP (open state) ============== */
+/* Cap the bento at a height that fits the tallest opened tile (interactive
+   demo + code block + notes). Marginal bump from the prior 520px so no
+   content is clipped, while still bounding the section so what follows
+   stays in view. overflow: hidden prevents an accidental scrollbar if a
+   tile ever pushes past the cap. */
+.cn-bento-expandable.has-open {
+  max-height: 820px;
+  overflow: hidden;
+}
+@media (max-width: 760px) {
+  .cn-bento-expandable.has-open { max-height: 920px; }
+}

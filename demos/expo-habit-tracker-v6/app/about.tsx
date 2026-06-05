@@ -1,115 +1,139 @@
-import { Text, View } from "react-native";
-import Screen from "@/components/Screen";
-import { Body, Code, Eyebrow, H1, H2, Lede, Section, SectionTag } from "@/components/ui";
-import ExpandableBento from "@/components/ExpandableBento";
-import ExpandableTile from "@/components/ExpandableTile";
-import Progression from "@/components/Progression";
-import { VERSIONS } from "@/components/VersionDemos";
+/* ============================================================
+   /about — the in-app "About Pulse" screen (NOT a web page).
+
+   The home for everything that doesn't belong on the working tabs: what
+   Pulse is, the seven-state build arc, the on-device honesty note, and the
+   source link. Reached from the "More about this version" row on Today and
+   from Settings → About. Pushed like the detail screen (slide-in), so it
+   reads as a real route inside the phone — identical on browser + device.
+
+   On a wide browser this same info also appears as the external rail
+   annotations; here it's the in-app, always-reachable copy.
+   ============================================================ */
+
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
+import { router, Stack } from "expo-router";
+import { useReducedMotion } from "react-native-reanimated";
 import { FONTS } from "@/theme/tokens";
 import { useTheme } from "@/theme/ThemeProvider";
+import Progression from "@/components/Progression";
 
-function VersionSummary({
-  v,
-  title,
-  concept,
-  current,
-}: {
-  v: number;
-  title: string;
-  concept: string;
-  current: boolean;
-}) {
+const SOURCE = "https://github.com/VSchool/AAM-Demos/tree/main/demos/expo-habit-tracker-v6";
+
+function Section({ tag, children }: { tag: string; children: React.ReactNode }) {
   const { theme } = useTheme();
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+    <View style={{ gap: 8 }}>
       <Text
         style={{
-          fontFamily: FONTS.monoBold,
-          fontSize: 13,
-          color: current ? theme.today : theme.aluDk,
-          minWidth: 26,
+          fontFamily: FONTS.mono,
+          fontSize: 9.5,
+          letterSpacing: 1.8,
+          textTransform: "uppercase",
+          color: theme.streak,
         }}
       >
-        v{v}
+        {tag}
       </Text>
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontFamily: FONTS.sansSemi, fontSize: 16, color: theme.print }}>
-          {title}
-          {current ? "  ·  you are here" : ""}
-        </Text>
-        <Text style={{ fontFamily: FONTS.mono, fontSize: 11, color: theme.streak }}>
-          {concept}
-        </Text>
-      </View>
+      {children}
     </View>
   );
 }
 
 export default function About() {
   const { theme } = useTheme();
+  const reduce = useReducedMotion();
+  const animation: "slide_from_right" | "none" = reduce ? "none" : "slide_from_right";
+
   return (
-    <Screen>
-      <Eyebrow>About · the whole arc</Eyebrow>
-      <H1>Pulse, version by version.</H1>
-      <Lede>
-        Pulse is a habit tracker built as a seven-state teaching arc for Week 5 Day 4 (Expo /
-        React Native). Each version is its own deployable app and teaches exactly one concept.
-        Open any tile to preview that version's idea.
-      </Lede>
-
-      <Section>
-        <Progression current={6} />
-      </Section>
-
-      <Section>
-        <SectionTag>The seven versions</SectionTag>
-        <H2>One concept each.</H2>
-        <ExpandableBento>
-          {VERSIONS.map((ver) => {
-            const Demo = ver.Demo;
-            return (
-              <ExpandableTile
-                key={ver.v}
-                summary={
-                  <VersionSummary
-                    v={ver.v}
-                    title={ver.title}
-                    concept={ver.concept}
-                    current={ver.v === 6}
-                  />
-                }
-              >
-                <Body>{ver.blurb}</Body>
-                <Demo />
-              </ExpandableTile>
-            );
-          })}
-        </ExpandableBento>
-      </Section>
-
-      <Section>
-        <SectionTag>Why no backend</SectionTag>
-        <H2>On-device, on purpose.</H2>
+    <>
+      <Stack.Screen options={{ headerShown: false, animation }} />
+      <View style={{ flex: 1, backgroundColor: theme.canvas }}>
+        {/* in-app back bar */}
         <View
           style={{
-            backgroundColor: theme.panel,
-            borderWidth: 1,
-            borderColor: theme.hairline,
-            borderLeftWidth: 3,
-            borderLeftColor: theme.done,
-            borderRadius: 14,
-            padding: 18,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 10,
+            backgroundColor: theme.appbarTo,
+            borderBottomWidth: 1,
+            borderBottomColor: theme.name === "dark" ? "#000" : theme.hairlineStrong,
+            paddingHorizontal: 14,
+            paddingTop: 12,
+            paddingBottom: 12,
           }}
         >
-          <Body style={{ fontSize: 15, lineHeight: 23, color: theme.textMuted }}>
-            As of <Code>v4</Code>, Pulse persists — your roster is saved with{" "}
-            <Code>AsyncStorage</Code> (localStorage on web), so a refresh keeps it. But it's still
-            on-device only: there's no account, no cloud sync, and no database. The point of this
-            demo is the mobile UI, motion, and storage patterns, not a backend — that's a later
-            week. Reset to seed from Settings whenever you want a clean slate.
-          </Body>
+          <Pressable onPress={() => router.back()} accessibilityRole="button" accessibilityLabel="Back" hitSlop={10}>
+            <Text style={{ fontFamily: FONTS.sansBold, fontSize: 18, color: theme.today }}>‹</Text>
+          </Pressable>
+          <Text
+            style={{
+              fontFamily: FONTS.mono,
+              fontSize: 11,
+              letterSpacing: 2.2,
+              textTransform: "uppercase",
+              color: theme.alu,
+            }}
+          >
+            About Pulse
+          </Text>
         </View>
-      </Section>
-    </Screen>
+
+        <ScrollView contentContainerStyle={{ padding: 18, gap: 22 }}>
+          <Section tag="What this is">
+            <Text style={{ fontFamily: FONTS.sansBold, fontSize: 22, lineHeight: 28, color: theme.print }}>
+              A habit tracker, built like a pocket instrument.
+            </Text>
+            <Text style={{ fontFamily: FONTS.sans, fontSize: 14, lineHeight: 21, color: theme.textMuted }}>
+              Pulse is a real Expo / React Native app, built across seven progressive states for Week 5 Day 4 —
+              each version adding exactly one mobile concept. You're looking at the final state, v6.
+            </Text>
+          </Section>
+
+          <Section tag="The seven states">
+            <Progression current={6} />
+            <Text style={{ fontFamily: FONTS.sans, fontSize: 12.5, lineHeight: 19, color: theme.textMuted }}>
+              Scaffold → tabs → list + form → swipe → storage → dynamic-route detail → push + coach. v6 adds
+              push notifications + a Coach tone on top of v5's detail screen.
+            </Text>
+          </Section>
+
+          <Section tag="On-device, on purpose">
+            <View
+              style={{
+                backgroundColor: theme.lcd,
+                borderWidth: 1,
+                borderColor: theme.done,
+                borderLeftWidth: 3,
+                borderRadius: 10,
+                padding: 14,
+              }}
+            >
+              <Text style={{ fontFamily: FONTS.sans, fontSize: 13, lineHeight: 20, color: theme.textMuted }}>
+                Your channels + Coach tone save on this device with AsyncStorage — no account, no cloud, no
+                server. The login is a mock; wiring real auth and sync is an optional next step you choose.
+                Reset to seed any time from Settings.
+              </Text>
+            </View>
+          </Section>
+
+          <Section tag="Source">
+            <Pressable onPress={() => Linking.openURL(SOURCE)} accessibilityRole="link" accessibilityLabel="View source on GitHub">
+              <Text
+                style={{
+                  fontFamily: FONTS.monoBold,
+                  fontSize: 12,
+                  letterSpacing: 1,
+                  textTransform: "uppercase",
+                  color: theme.today,
+                }}
+              >
+                View on GitHub ↗
+              </Text>
+            </Pressable>
+          </Section>
+        </ScrollView>
+      </View>
+    </>
   );
 }

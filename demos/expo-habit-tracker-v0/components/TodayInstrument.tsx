@@ -5,11 +5,22 @@
    lib/habits — no interaction yet. Reused by the home-page device
    preview and the /today route. */
 
+import { type ReactNode } from "react";
 import { View } from "react-native";
 import { channelCode, getAll, todayProgress } from "@/lib/habits";
 import { AppBar, ChannelRow, Stage, TabBar } from "./instrument";
 
-export default function TodayInstrument() {
+export default function TodayInstrument({
+  tabBar = true,
+  footer,
+}: {
+  /** render the fake static tab bar. Off in the app presentation — v0 has no
+      navigation yet (real tabs arrive at v1), so a non-functional bar would
+      mislead inside the phone bezel. */
+  tabBar?: boolean;
+  /** optional footer rendered under the channel list (e.g. the About row). */
+  footer?: ReactNode;
+} = {}) {
   const habits = getAll();
   const { done, total } = todayProgress();
   const seg = `${String(done).padStart(2, "0")}/${String(total).padStart(2, "0")}`;
@@ -29,8 +40,9 @@ export default function TodayInstrument() {
             dim={h.status === "rest"}
           />
         ))}
+        {footer}
       </Stage>
-      <TabBar active="Today" />
+      {tabBar ? <TabBar active="Today" /> : null}
     </View>
   );
 }
