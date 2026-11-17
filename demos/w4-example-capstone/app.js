@@ -4,8 +4,10 @@
    ============================================================ */
 
 // ---------- Configuration ----------
-const API_BASE = 'https://api.nasa.gov/planetary/apod';
-const API_KEY = 'DEMO_KEY';
+// NASA's Astronomy Picture of the Day. No API key needed.
+//   Latest picture:   GET {API_BASE}?per_page=1   (returns a list)
+//   A specific day:   GET {API_BASE}/YYMMDD       (returns one object)
+const API_BASE = 'https://science.nasa.gov/wp-json/wp/v2/apod-basic';
 const FAVORITES_KEY = 'space-explorer-favorites';
 
 // ---------- State ----------
@@ -18,7 +20,6 @@ const heroSpinner = document.getElementById('hero-spinner');
 const heroError = document.getElementById('hero-error');
 const heroCard = document.getElementById('hero-card');
 const heroImageWrapper = document.getElementById('hero-image-wrapper');
-const heroDateBadge = document.getElementById('hero-date-badge');
 const heroTitle = document.getElementById('hero-title');
 const heroCopyright = document.getElementById('hero-copyright');
 const heroExplanation = document.getElementById('hero-explanation');
@@ -98,8 +99,13 @@ function setMaxDate() {
   datePicker.min = '1995-06-16';
 }
 
+// YYYY-MM-DD in the visitor's own time zone. (toISOString() uses UTC,
+// which is already "tomorrow" on a US evening.)
 function formatDate(date) {
-  return date.toISOString().split('T')[0];
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
 }
 
 // Browse button click
@@ -149,30 +155,65 @@ async function fetchAPOD(date, target) {
 }
 
 async function fetchAPODData(date) {
-  let url = `${API_BASE}?api_key=${API_KEY}`;
-  if (date) {
-    url += `&date=${date}`;
-  }
+  // "2026-09-05" becomes "260905", the format this endpoint expects
+  const url = date
+    ? `${API_BASE}/${date.slice(2).replaceAll('-', '')}`
+    : `${API_BASE}?per_page=1`;
 
   const response = await fetch(url);
 
   if (!response.ok) {
-    if (response.status === 429) {
-      throw new Error('Rate limit reached. The DEMO_KEY allows 30 requests per hour. Please wait a moment and try again.');
-    }
     if (response.status === 404) {
       throw new Error('No image found for this date. Try a different date.');
+    }
+    if (response.status === 400) {
+      throw new Error('That date doesn\'t look right. Pick one from the calendar.');
+    }
+    if (response.status === 429) {
+      throw new Error('Too many requests to NASA right now. Wait a moment and try again.');
     }
     throw new Error(`NASA API returned an error (${response.status}). Please try again later.`);
   }
 
-  const data = await response.json();
+  const json = await response.json();
+  // The "latest" call returns a list; a specific date returns one object
+  const raw = Array.isArray(json) ? json[0] : json;
 
-  if (data.error) {
-    throw new Error(data.error.message || 'Unknown API error');
+  return transformAPOD(raw);
+}
+
+// ---------- Data Transformation ----------
+// NASA's data isn't shaped the way this page needs it, so reshape it once,
+// here, and let the rest of the app work with clean fields.
+function transformAPOD(raw) {
+  // Unexpected data should show an error, not a half-empty card
+  if (!raw || !raw.date || !raw.title) {
+    throw new Error('NASA sent back data we didn\'t expect. Please try again later.');
   }
 
-  return data;
+  return {
+    date: raw.date,
+    title: htmlToText(raw.title),
+    // NASA's text includes links, a leading "Explanation:" label, and extras
+    // after a double line break (like "Tomorrow's picture: ..."). Keep the
+    // main explanation only.
+    explanation: htmlToText((raw.explanation || '').split(/<br\s*\/?>\s*<br\s*\/?>/i)[0])
+      .replace(/^Explanation:\s*/, ''),
+    copyright: htmlToText(raw.copyright || raw.credit || ''),
+    media_type: raw.media_type,
+    // The picture itself. On video days this is a still frame from the video.
+    url: raw.hdurl || null,
+    alt: htmlToText(raw.alt || raw.title),
+    // NASA's own page for this day (where the video plays on video days)
+    pageUrl: raw.permalink || raw.url
+  };
+}
+
+// Turn an HTML string into plain text. DOMParser never runs scripts,
+// and we only ever display the result with textContent.
+function htmlToText(html) {
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  return (doc.body.textContent || '').replace(/\s+/g, ' ').trim();
 }
 
 // ---------- State Management ----------
@@ -195,47 +236,60 @@ function showState(section, state, errorMsg) {
 }
 
 // ---------- Rendering ----------
+// Fill an image area with the day's picture. Videos can't play inside this
+// page, so on video days we show a still frame, label it, and the
+// "Watch on NASA" link takes the visitor to the video.
+function renderMedia(wrapper, data, loading) {
+  // Clear and rebuild the image area using safe DOM methods
+  while (wrapper.firstChild) {
+    wrapper.removeChild(wrapper.firstChild);
+  }
+
+  if (data.url) {
+    const img = document.createElement('img');
+    img.src = data.url;
+    img.alt = data.alt;
+    img.loading = loading;
+    wrapper.appendChild(img);
+  } else {
+    const placeholder = document.createElement('p');
+    placeholder.className = 'media-placeholder';
+    placeholder.textContent = 'No preview image for this day. Open it on NASA to see it.';
+    wrapper.appendChild(placeholder);
+  }
+
+  if (data.media_type === 'video') {
+    const videoBadge = document.createElement('span');
+    videoBadge.className = 'hero-date-badge media-badge--video';
+    videoBadge.textContent = '▶ Video';
+    wrapper.appendChild(videoBadge);
+  }
+}
+
+// Point the "View on NASA" button at NASA's page for this day
+function updateNasaLink(link, data) {
+  if (data.pageUrl) {
+    link.href = data.pageUrl;
+    link.textContent = data.media_type === 'video' ? 'Watch on NASA' : 'View on NASA';
+    link.style.display = 'inline-flex';
+  } else {
+    link.style.display = 'none';
+  }
+}
+
 function renderHero(data) {
-  heroDateBadge.textContent = data.date;
   heroTitle.textContent = data.title;
   heroCopyright.textContent = data.copyright ? `Credit: ${data.copyright}` : '';
   heroExplanation.textContent = data.explanation;
 
-  // Clear and rebuild image area using safe DOM methods
-  while (heroImageWrapper.firstChild) {
-    heroImageWrapper.removeChild(heroImageWrapper.firstChild);
-  }
+  renderMedia(heroImageWrapper, data, 'eager');
 
   const dateBadge = document.createElement('span');
   dateBadge.className = 'hero-date-badge';
-  dateBadge.id = 'hero-date-badge';
   dateBadge.textContent = data.date;
-
-  if (data.media_type === 'video') {
-    const iframe = document.createElement('iframe');
-    iframe.src = data.url;
-    iframe.title = data.title;
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('loading', 'lazy');
-    heroImageWrapper.appendChild(iframe);
-  } else {
-    const img = document.createElement('img');
-    img.src = data.url;
-    img.alt = data.title;
-    img.loading = 'eager';
-    heroImageWrapper.appendChild(img);
-  }
   heroImageWrapper.appendChild(dateBadge);
 
-  // HD link
-  if (data.hdurl) {
-    heroHdLink.href = data.hdurl;
-    heroHdLink.style.display = 'inline-flex';
-  } else {
-    heroHdLink.style.display = 'none';
-  }
-
-  // Favorite button state
+  updateNasaLink(heroHdLink, data);
   updateFavButton(heroFavBtn, data.date);
 }
 
@@ -243,35 +297,9 @@ function renderBrowse(data) {
   browseTitle.textContent = data.title;
   browseExplanation.textContent = data.explanation;
 
-  // Clear and rebuild image area using safe DOM methods
-  while (browseImageWrapper.firstChild) {
-    browseImageWrapper.removeChild(browseImageWrapper.firstChild);
-  }
+  renderMedia(browseImageWrapper, data, 'lazy');
 
-  if (data.media_type === 'video') {
-    const iframe = document.createElement('iframe');
-    iframe.src = data.url;
-    iframe.title = data.title;
-    iframe.setAttribute('allowfullscreen', '');
-    iframe.setAttribute('loading', 'lazy');
-    browseImageWrapper.appendChild(iframe);
-  } else {
-    const img = document.createElement('img');
-    img.src = data.url;
-    img.alt = data.title;
-    img.loading = 'lazy';
-    browseImageWrapper.appendChild(img);
-  }
-
-  // HD link
-  if (data.hdurl) {
-    browseHdLink.href = data.hdurl;
-    browseHdLink.style.display = 'inline-flex';
-  } else {
-    browseHdLink.style.display = 'none';
-  }
-
-  // Favorite button state
+  updateNasaLink(browseHdLink, data);
   updateFavButton(browseFavBtn, data.date);
 }
 
@@ -279,7 +307,11 @@ function renderBrowse(data) {
 function loadFavorites() {
   try {
     const stored = localStorage.getItem(FAVORITES_KEY);
-    return stored ? JSON.parse(stored) : [];
+    const saved = stored ? JSON.parse(stored) : [];
+    // While NASA was moving APOD to a new address (fall 2026), the old API
+    // sent the NASA logo in place of every picture. Drop any favorites saved
+    // from that placeholder data so visitors can re-save the real picture.
+    return saved.filter(f => !(f.url || '').includes('nasa-logo'));
   } catch {
     return [];
   }
@@ -308,7 +340,7 @@ function toggleFavorite(data) {
       title: data.title,
       url: data.url,
       media_type: data.media_type,
-      hdurl: data.hdurl || null
+      pageUrl: data.pageUrl || null
     });
   }
 
@@ -361,7 +393,10 @@ function renderFavorites() {
     article.className = 'favorite-card';
     article.dataset.date = fav.date;
 
-    if (fav.media_type === 'image') {
+    // Video favorites saved before the API move hold a video link, not a
+    // picture, so they get the play-icon placeholder instead
+    const isPicture = fav.media_type === 'image' || (fav.url || '').startsWith('https://assets.science.nasa.gov/');
+    if (fav.url && isPicture) {
       const img = document.createElement('img');
       img.className = 'favorite-card-image';
       img.src = fav.url;
